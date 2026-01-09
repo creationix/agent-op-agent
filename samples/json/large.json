@@ -1,0 +1,63 @@
+{
+  "apiVersion": "2.0",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "web-server",
+    "namespace": "production",
+    "labels": {
+      "app": "web",
+      "tier": "frontend",
+      "environment": "production"
+    }
+  },
+  "spec": {
+    "replicas": 3,
+    "selector": {
+      "matchLabels": {
+        "app": "web",
+        "tier": "frontend"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "web",
+          "tier": "frontend",
+          "version": "1.2.3"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:1.21",
+            "ports": [
+              {"containerPort": 80, "protocol": "TCP"},
+              {"containerPort": 443, "protocol": "TCP"}
+            ],
+            "resources": {
+              "requests": {"cpu": "100m", "memory": "128Mi"},
+              "limits": {"cpu": "500m", "memory": "512Mi"}
+            },
+            "env": [
+              {"name": "NODE_ENV", "value": "production"},
+              {"name": "LOG_LEVEL", "value": "info"},
+              {"name": "MAX_CONNECTIONS", "value": "1000"}
+            ]
+          },
+          {
+            "name": "sidecar",
+            "image": "envoy:1.20",
+            "ports": [
+              {"containerPort": 8080, "protocol": "TCP"}
+            ],
+            "resources": {
+              "requests": {"cpu": "50m", "memory": "64Mi"},
+              "limits": {"cpu": "200m", "memory": "256Mi"}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

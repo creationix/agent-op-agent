@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "lmstudio-mcp": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--network=host", "ghcr.io/infinitimeless/lmstudio-mcp:latest"]
+    }
+  }
+}

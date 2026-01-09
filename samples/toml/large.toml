@@ -1,0 +1,71 @@
+apiVersion = "2.0"
+kind = "Deployment"
+
+[metadata]
+name = "web-server"
+namespace = "production"
+
+[metadata.labels]
+app = "web"
+tier = "frontend"
+environment = "production"
+
+[spec]
+replicas = 3
+
+[spec.selector.matchLabels]
+app = "web"
+tier = "frontend"
+
+[spec.template.metadata.labels]
+app = "web"
+tier = "frontend"
+version = "1.2.3"
+
+[[spec.template.spec.containers]]
+name = "nginx"
+image = "nginx:1.21"
+
+[[spec.template.spec.containers.ports]]
+containerPort = 80
+protocol = "TCP"
+
+[[spec.template.spec.containers.ports]]
+containerPort = 443
+protocol = "TCP"
+
+[spec.template.spec.containers.resources.requests]
+cpu = "100m"
+memory = "128Mi"
+
+[spec.template.spec.containers.resources.limits]
+cpu = "500m"
+memory = "512Mi"
+
+[[spec.template.spec.containers.env]]
+name = "NODE_ENV"
+value = "production"
+
+[[spec.template.spec.containers.env]]
+name = "LOG_LEVEL"
+value = "info"
+
+[[spec.template.spec.containers.env]]
+name = "MAX_CONNECTIONS"
+value = "1000"
+
+[[spec.template.spec.containers]]
+name = "sidecar"
+image = "envoy:1.20"
+
+[[spec.template.spec.containers.ports]]
+containerPort = 8080
+protocol = "TCP"
+
+[spec.template.spec.containers.resources.requests]
+cpu = "50m"
+memory = "64Mi"
+
+[spec.template.spec.containers.resources.limits]
+cpu = "200m"
+memory = "256Mi"
