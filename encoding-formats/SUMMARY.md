@@ -11,6 +11,7 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 <!-- TOKEN_EFFICIENCY_START -->
 | Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
 |-----------------------------------------------------|-------:|---------:|-------:|---------:|
+| [Jot-mix](jot-mix/)                                 |  6,463 |     -17% | 16,389 |     -29% |
 | **[Jot](jot/)**                                     |  6,584 |     -15% | 17,058 |     -26% |
 | [JSONito](https://github.com/creationix/jsonito)    |  7,615 |      -2% | 13,733 |     -41% |
 | [Lax](lax/)                                         |  7,678 |      -1% | 20,595 |     -11% |
@@ -37,6 +38,20 @@ Features:
 - **Key folding**: `{a:{b:{c:1}}}` → `(a.b.c:1)`
 - **Tables**: `[{a:1},{a:2}]` → `[a|1|2]`
 - **Count guards**: `Nx[...]` for arrays, `Nr[...]` for tables (truncation detection)
+
+### Jot-mix
+
+Jot with mixed table support for heterogeneous object arrays.
+
+```
+3m[:a,b|1,2|:a|3|:a,b|4,5]
+```
+
+When array objects have different schemas:
+
+- `[:schema|row|row|:newschema|row...]` - schema rows start with `:`
+- Schema stays active until next `:` row
+- LLM-friendly: clear separation between schema and data rows
 
 ### Lax
 

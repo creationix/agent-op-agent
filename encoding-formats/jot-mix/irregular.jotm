@@ -1,0 +1,1 @@
+{events:4m[:type,x,y|click,100,200|:type,offset|scroll,450|:type,key,shift|keypress,Enter,true|:type,width,height|resize,1920,1080]}
