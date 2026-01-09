@@ -1,1 +1,1 @@
-{2|users:[3|{5|id:1 name:"Alice Johnson" email:"alice@example.com" role:"admin" active:true} {5|id:2 name:"Bob Smith" email:"bob@example.com" role:"user" active:true} {5|id:3 name:"Carol Davis" email:"carol@example.com" role:"user" active:false}] metadata:{3|total:3 page:1 perPage:10}}
+{users:[3|{id:1 name:"Alice Johnson" email:"alice@example.com" role:"admin" active:true} {id:2 name:"Bob Smith" email:"bob@example.com" role:"user" active:true} {id:3 name:"Carol Davis" email:"carol@example.com" role:"user" active:false}] metadata:{total:3 page:1 perPage:10}}
