@@ -15,14 +15,11 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 | Format | Tokens | vs JSON | LLM Can Generate |
 |--------|-------:|--------:|------------------|
-| Jot | 857 | **-16%** | Yes |
-| Jot-safe | 886 | -13% | Yes |
-| JSON | 1,015 | baseline | Yes |
-| TOON | 1,023 | +1% | Yes |
+| Jot | 4,556 | **-17%** | Yes |
+| JSON | 5,462 | baseline | Yes |
+| TOON | 5,405 | -1% | Yes |
 
-**Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax (`[schema|row|row]`).
-
-**Jot-safe**: Jot + count guards (`Nx[...]` for arrays, `Nr[...]` for tables).
+**Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax + count guards.
 
 ### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
 

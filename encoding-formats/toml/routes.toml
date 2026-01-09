@@ -1,0 +1,303 @@
+[[before_filesystem]]
+src = "^/_analytics/script\\.js$"
+dest = "https://cdn.analytics.io/v1/script.js"
+
+[[before_filesystem]]
+src = "^/_analytics/events$"
+dest = "https://events.analytics.io/v1/collect?key=abc123&env=prod"
+
+[[before_filesystem]]
+src = "^/(?:_metrics|perf)/(script\\.js)$"
+dest = "https://cdn.metrics.io/v1/$1"
+
+[[before_filesystem]]
+src = "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+status = 308
+continue = true
+
+[before_filesystem.headers]
+Location = "/$1"
+
+[[before_filesystem]]
+src = "^/_internal/trace$"
+dest = "/404"
+status = 404
+continue = true
+
+[[before_filesystem]]
+src = "^/404/?$"
+status = 404
+continue = true
+
+[[before_filesystem.missing]]
+type = "header"
+key = "x-prerender"
+
+[[before_filesystem]]
+src = "^/500$"
+status = 500
+continue = true
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "a1b2c3d4e5f6"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/submit.ts#submitForm"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "f6e5d4c3b2a1"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/auth.ts#loginUser"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "1a2b3c4d5e6f"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/auth.ts#logoutUser"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "6f5e4d3c2b1a"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/data.ts#fetchItems"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "abcdef123456"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/data.ts#updateItem"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(.*)$"
+
+[[before_filesystem.has]]
+type = "header"
+key = "x-action"
+value = "654321fedcba"
+
+[[before_filesystem.transforms]]
+type = "request.headers"
+op = "append"
+args = "app/api/data.ts#deleteItem"
+
+[before_filesystem.transforms.target]
+key = "x-action-name"
+
+[[before_filesystem]]
+src = "^/(?<path>.+?)(?:/)?$"
+dest = "/$path.segments/$segmentPath.segment.rsc"
+continue = true
+override = true
+
+[[before_filesystem.has]]
+type = "header"
+key = "rsc"
+value = "1"
+
+[[before_filesystem.has]]
+type = "header"
+key = "prefetch"
+value = "1"
+
+[[before_filesystem.has]]
+type = "header"
+key = "segment-prefetch"
+value = "/(?<segmentPath>.+)"
+
+[[before_filesystem]]
+src = "^/?$"
+dest = "/index.segments/$segmentPath.segment.rsc"
+continue = true
+override = true
+
+[[before_filesystem.has]]
+type = "header"
+key = "rsc"
+value = "1"
+
+[[before_filesystem.has]]
+type = "header"
+key = "prefetch"
+value = "1"
+
+[[before_filesystem.has]]
+type = "header"
+key = "segment-prefetch"
+value = "/(?<segmentPath>.+)"
+
+[[before_filesystem]]
+src = "^/?$"
+dest = "/index.rsc"
+continue = true
+override = true
+
+[[before_filesystem.has]]
+type = "header"
+key = "rsc"
+value = "1"
+
+[before_filesystem.headers]
+vary = "rsc, state-tree, prefetch, segment-prefetch"
+
+[[before_filesystem]]
+src = "^/((?!.+\\.rsc).+?)(?:/)?$"
+dest = "/$1.rsc"
+continue = true
+override = true
+
+[[before_filesystem.has]]
+type = "header"
+key = "rsc"
+value = "1"
+
+[before_filesystem.headers]
+vary = "rsc, state-tree, prefetch, segment-prefetch"
+
+[[filesystem]]
+src = "^/index(\\.action|\\.rsc)$"
+dest = "/"
+continue = true
+
+[[filesystem]]
+src = "^/\\.rsc$"
+dest = "/index.rsc"
+check = true
+
+[[filesystem]]
+src = "^/(.+)/\\.rsc$"
+dest = "/$1.rsc"
+check = true
+
+[[resource]]
+src = "^/.*$"
+status = 404
+
+[[miss]]
+src = "^/_static/.+$"
+status = 404
+check = true
+dest = "/_static/not-found.txt"
+
+[miss.headers]
+content-type = "text/plain; charset=utf-8"
+
+[[rewrite]]
+src = "^/blog/(?<slug>[^/]+?)\\.segments/blog/\\$slug(?<seg>/__PAGE__\\.segment\\.rsc|\\.segment\\.rsc)$"
+dest = "/blog/[slug].segments/blog/$slug$seg?slug=$slug"
+check = true
+override = true
+
+[[rewrite]]
+src = "^/blog/(?<slug>[^/]+?)(?<rsc>\\.rsc|\\.segments/.+\\.segment\\.rsc)$"
+dest = "/blog/[slug]$rsc?slug=$slug"
+check = true
+override = true
+
+[[rewrite]]
+src = "^/blog/(?<slug>[^/]+?)(?:/)?$"
+dest = "/blog/[slug]?slug=$slug"
+check = true
+override = true
+
+[[rewrite]]
+src = "^/items/(?<id>[^/]+?)\\.segments/items/\\$id(?<seg>/__PAGE__\\.segment\\.rsc|\\.segment\\.rsc)$"
+dest = "/items/[id].segments/items/$id$seg?id=$id"
+check = true
+override = true
+
+[[rewrite]]
+src = "^/items/(?<id>[^/]+?)(?<rsc>\\.rsc|\\.segments/.+\\.segment\\.rsc)$"
+dest = "/items/[id]$rsc?id=$id"
+check = true
+override = true
+
+[[rewrite]]
+src = "^/items/(?<id>[^/]+?)(?:/)?$"
+dest = "/items/[id]?id=$id"
+check = true
+override = true
+
+[[hit]]
+src = "^/_static/(?:[^/]+/pages|chunks|runtime|css|media)/.+$"
+continue = true
+important = true
+
+[hit.headers]
+cache-control = "public,max-age=31536000,immutable"
+
+[[hit]]
+src = "^/index(?:/)?$"
+continue = true
+important = true
+
+[hit.headers]
+x-matched-path = "/"
+
+[[hit]]
+src = "^/((?!index$).*?)(?:/)?$"
+continue = true
+important = true
+
+[hit.headers]
+x-matched-path = "/$1"
+
+[[error]]
+src = "^/.*$"
+dest = "/404"
+status = 404
+
+[[error]]
+src = "^/.*$"
+dest = "/500"
+status = 500

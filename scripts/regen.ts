@@ -116,3 +116,63 @@ for (const row of rows) {
 console.log(table)
 writeFileSync(join(ROOT, "TOKEN_COUNTS.md"), table)
 console.log("Token counts written to TOKEN_COUNTS.md")
+
+// Generate Token Efficiency table for SUMMARY.md
+const jsonRow = rows.find(r => r.format === "JSON (mini)")!
+const jsonTotalTokens = jsonRow.total
+const jsonTotalBytes = jsonRow.bytes
+
+// Format links
+const formatLinks: Record<string, string> = {
+  "jot": "**[Jot](jot/)**",
+  "lax": "[Lax](lax/)",
+  "toon": "[TOON](toon/)",
+  "jsonito": "[JSONito](https://github.com/creationix/jsonito)",
+  "d2": "[D2](https://github.com/creationix/d2)",
+  "yaml": "[YAML](https://yaml.org/)",
+  "toml": "[TOML](https://toml.io/)",
+  "JSON (mini)": "[JSON](https://www.json.org/) (mini)",
+}
+
+function pct(val: number, baseline: number): string {
+  if (val === baseline) return "baseline"
+  const diff = ((val - baseline) / baseline) * 100
+  const sign = diff > 0 ? "+" : ""
+  return `${sign}${Math.round(diff)}%`
+}
+
+let summaryTable = `| Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
+|-----------------------------------------------------|-------:|---------:|-------:|---------:|
+`
+
+for (const row of rows) {
+  const link = formatLinks[row.format] || row.format
+  const tokenPct = row.format === "JSON (mini)" ? "baseline" : pct(row.total, jsonTotalTokens)
+  const bytePct = row.format === "JSON (mini)" ? "baseline" : pct(row.bytes, jsonTotalBytes)
+  const padLink = link.padEnd(51)
+  const padTokens = row.total.toLocaleString().padStart(6)
+  const padTokenPct = tokenPct.padStart(8)
+  const padBytes = row.bytes.toLocaleString().padStart(6)
+  const padBytePct = bytePct.padStart(8)
+  summaryTable += `| ${padLink} | ${padTokens} | ${padTokenPct} | ${padBytes} | ${padBytePct} |\n`
+}
+
+// Update SUMMARY.md
+const summaryPath = join(ROOT, "SUMMARY.md")
+let summary = readFileSync(summaryPath, "utf-8")
+
+// Replace between markers
+const startMarker = "<!-- TOKEN_EFFICIENCY_START -->"
+const endMarker = "<!-- TOKEN_EFFICIENCY_END -->"
+
+if (summary.includes(startMarker) && summary.includes(endMarker)) {
+  const before = summary.slice(0, summary.indexOf(startMarker) + startMarker.length)
+  const after = summary.slice(summary.indexOf(endMarker))
+  summary = before + "\n" + summaryTable + after
+  writeFileSync(summaryPath, summary)
+  console.log("Token Efficiency table written to SUMMARY.md")
+} else {
+  console.log("Add markers to SUMMARY.md: <!-- TOKEN_EFFICIENCY_START --> and <!-- TOKEN_EFFICIENCY_END -->")
+  console.log("\nGenerated table:\n")
+  console.log(summaryTable)
+}

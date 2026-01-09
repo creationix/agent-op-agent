@@ -1,0 +1,266 @@
+active = true
+
+[ruleGroups.php_attacks]
+active = true
+action = "deny"
+
+[ruleGroups.php_attacks.rules.php_suffix]
+phase = "finalize"
+system = true
+
+[[ruleGroups.php_attacks.rules.php_suffix.has]]
+type = "path"
+
+[ruleGroups.php_attacks.rules.php_suffix.has.value]
+suf = ".php"
+
+[[ruleGroups.php_attacks.rules.php_suffix.missing]]
+type = "header"
+key = "x-secret"
+
+[ruleGroups.php_attacks.rules.php_suffix.missing.value]
+eq = "bypass"
+
+[ruleGroups.php_attacks.rules.jsp_suffix]
+phase = "init"
+system = true
+
+[[ruleGroups.php_attacks.rules.jsp_suffix.has]]
+type = "path"
+
+[ruleGroups.php_attacks.rules.jsp_suffix.has.value]
+suf = ".jsp"
+
+[[ruleGroups.php_attacks.rules.jsp_suffix.has]]
+type = "status"
+
+[ruleGroups.php_attacks.rules.jsp_suffix.has.value]
+eq = 404
+
+[[ruleGroups.php_attacks.rules.jsp_suffix.missing]]
+type = "header"
+key = "x-secret"
+
+[ruleGroups.php_attacks.rules.jsp_suffix.missing.value]
+eq = "bypass"
+
+[ruleGroups.php_attacks.rules.asp_suffix]
+phase = "finalize"
+system = true
+
+[[ruleGroups.php_attacks.rules.asp_suffix.has]]
+type = "path"
+
+[ruleGroups.php_attacks.rules.asp_suffix.has.value]
+suf = ".asp"
+
+[[ruleGroups.php_attacks.rules.asp_suffix.missing]]
+type = "header"
+key = "x-secret"
+
+[ruleGroups.php_attacks.rules.asp_suffix.missing.value]
+eq = "bypass"
+
+[ruleGroups.php_attacks.rules.cgi_suffix]
+phase = "finalize"
+system = true
+
+[[ruleGroups.php_attacks.rules.cgi_suffix.has]]
+type = "path"
+
+[ruleGroups.php_attacks.rules.cgi_suffix.has.value]
+suf = ".cgi"
+
+[[ruleGroups.php_attacks.rules.cgi_suffix.missing]]
+type = "header"
+key = "x-secret"
+
+[ruleGroups.php_attacks.rules.cgi_suffix.missing.value]
+eq = "bypass"
+
+[ruleGroups.sql_injection]
+active = true
+action = "deny"
+
+[ruleGroups.sql_injection.rules.union_select]
+phase = "init"
+system = true
+
+[[ruleGroups.sql_injection.rules.union_select.has]]
+type = "query"
+
+[ruleGroups.sql_injection.rules.union_select.has.value]
+contains = "UNION SELECT"
+
+[ruleGroups.sql_injection.rules.drop_table]
+phase = "init"
+system = true
+
+[[ruleGroups.sql_injection.rules.drop_table.has]]
+type = "query"
+
+[ruleGroups.sql_injection.rules.drop_table.has.value]
+contains = "DROP TABLE"
+
+[ruleGroups.sql_injection.rules.or_1_equals_1]
+phase = "init"
+system = true
+
+[[ruleGroups.sql_injection.rules.or_1_equals_1.has]]
+type = "query"
+
+[ruleGroups.sql_injection.rules.or_1_equals_1.has.value]
+regex = "OR\\s+1\\s*=\\s*1"
+
+[ruleGroups.rate_limiting]
+active = true
+action = "ratelimit"
+
+[ruleGroups.rate_limiting.rules.api_endpoints]
+phase = "init"
+system = false
+
+[[ruleGroups.rate_limiting.rules.api_endpoints.has]]
+type = "path"
+
+[ruleGroups.rate_limiting.rules.api_endpoints.has.value]
+pre = "/api/"
+
+[ruleGroups.rate_limiting.rules.api_endpoints.rateLimit]
+requests = 100
+window = 60
+key = "ip"
+
+[ruleGroups.rate_limiting.rules.auth_endpoints]
+phase = "init"
+system = false
+
+[[ruleGroups.rate_limiting.rules.auth_endpoints.has]]
+type = "path"
+
+[ruleGroups.rate_limiting.rules.auth_endpoints.has.value]
+pre = "/auth/"
+
+[ruleGroups.rate_limiting.rules.auth_endpoints.rateLimit]
+requests = 10
+window = 60
+key = "ip"
+
+[ruleGroups.rate_limiting.rules.search_endpoint]
+phase = "init"
+system = false
+
+[[ruleGroups.rate_limiting.rules.search_endpoint.has]]
+type = "path"
+
+[ruleGroups.rate_limiting.rules.search_endpoint.has.value]
+eq = "/search"
+
+[ruleGroups.rate_limiting.rules.search_endpoint.rateLimit]
+requests = 30
+window = 60
+key = "ip"
+
+[ruleGroups.geo_blocking]
+active = false
+action = "deny"
+
+[ruleGroups.geo_blocking.rules.blocked_countries]
+phase = "init"
+system = false
+
+[[ruleGroups.geo_blocking.rules.blocked_countries.has]]
+type = "geo"
+key = "country"
+
+[ruleGroups.geo_blocking.rules.blocked_countries.has.value]
+in = [ "XX", "YY", "ZZ" ]
+
+[[ruleGroups.geo_blocking.rules.blocked_countries.missing]]
+type = "header"
+key = "x-bypass-geo"
+
+[ruleGroups.geo_blocking.rules.blocked_countries.missing.value]
+eq = "allowed"
+
+[ruleGroups.bot_protection]
+active = true
+action = "challenge"
+
+[ruleGroups.bot_protection.rules.missing_ua]
+phase = "init"
+system = true
+
+[[ruleGroups.bot_protection.rules.missing_ua.missing]]
+type = "header"
+key = "user-agent"
+
+[ruleGroups.bot_protection.rules.missing_ua.missing.value]
+exists = true
+
+[ruleGroups.bot_protection.rules.known_bad_bots]
+phase = "init"
+system = true
+
+[[ruleGroups.bot_protection.rules.known_bad_bots.has]]
+type = "header"
+key = "user-agent"
+
+[ruleGroups.bot_protection.rules.known_bad_bots.has.value]
+regex = "(BadBot|Scraper|Harvester)"
+
+[ruleGroups.bot_protection.rules.suspicious_rate]
+phase = "finalize"
+system = false
+
+[[ruleGroups.bot_protection.rules.suspicious_rate.has]]
+type = "rate"
+key = "ip"
+
+[ruleGroups.bot_protection.rules.suspicious_rate.has.value]
+gt = 50
+
+[[ruleGroups.bot_protection.rules.suspicious_rate.has]]
+type = "header"
+key = "user-agent"
+
+[ruleGroups.bot_protection.rules.suspicious_rate.has.value]
+regex = "^Mozilla"
+
+[ruleGroups.custom_rules]
+active = true
+action = "log"
+
+[ruleGroups.custom_rules.rules.admin_access]
+phase = "init"
+system = false
+
+[[ruleGroups.custom_rules.rules.admin_access.has]]
+type = "path"
+
+[ruleGroups.custom_rules.rules.admin_access.has.value]
+pre = "/admin"
+
+[[ruleGroups.custom_rules.rules.admin_access.missing]]
+type = "header"
+key = "x-admin-token"
+
+[ruleGroups.custom_rules.rules.admin_access.missing.value]
+exists = true
+
+[ruleGroups.custom_rules.rules.api_key_required]
+phase = "init"
+system = false
+
+[[ruleGroups.custom_rules.rules.api_key_required.has]]
+type = "path"
+
+[ruleGroups.custom_rules.rules.api_key_required.has.value]
+pre = "/api/v2/"
+
+[[ruleGroups.custom_rules.rules.api_key_required.missing]]
+type = "header"
+key = "x-api-key"
+
+[ruleGroups.custom_rules.rules.api_key_required.missing.value]
+exists = true
