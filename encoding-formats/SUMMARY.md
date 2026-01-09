@@ -62,9 +62,9 @@ The count prefix enables truncation detection (+3% tokens vs LJSON).
 | JSON (mini)   |    569 | baseline|
 | TOON          |    583 |     +2% |
 | JSONito       |    618 |     +9% |
-| D2            |    632 |    +11% |
+| D2            |    648 |    +14% |
 | YAML          |    693 |    +22% |
-| TOML          |    738 |    +30% |
+| TOML          |    740 |    +30% |
 
 ## Why Not Byte-Optimized Formats?
 
@@ -90,9 +90,9 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 | JSON (mini)   |    48 |     97 |   266 |   158 |   569 |
 | TOON          |    51 |     84 |   324 |   124 |   583 |
 | JSONito       |    45 |    103 |   312 |   158 |   618 |
-| D2            |    53 |     99 |   307 |   173 |   632 |
+| D2            |    55 |    104 |   316 |   173 |   648 |
 | YAML          |    56 |    123 |   327 |   187 |   693 |
-| TOML          |    54 |    118 |   377 |   189 |   738 |
+| TOML          |    56 |    118 |   377 |   189 |   740 |
 
 **Note**: NQJSON2 dominates across all documents — hikes: 110 (-30% vs JSON), large: 240, medium: 69. Combines minimal quoting with CSV-style uniform arrays.
 
@@ -107,4 +107,4 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 
 - **Model**: Qwen3-Coder-30b @ 5-bit quantization
 - **API**: LM Studio localhost:1234
-- **Date**: 2025-01-09
+- **Date**: 2026-01-09

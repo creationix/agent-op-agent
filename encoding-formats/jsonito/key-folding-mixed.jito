@@ -1,0 +1,1 @@
+{app'{name'MyApp'version'5~2.1.0}server'{host'9~localhostport'3Yw.ssl'{enabled'!cert'h~/path/to/cert.pem}}database'{a~connection{url'w~postgresql://localhost:5432/mydb}}feature'{flags'{beta'!}}}

@@ -1,0 +1,1 @@
+{server'{host'9~localhost}database'{a~connection{username'admin'}}app'{info'{name'MyApp'}}release'{meta'{version'5~1.0.0}}cache'{layer'{a~ttlSeconds9o.}}}

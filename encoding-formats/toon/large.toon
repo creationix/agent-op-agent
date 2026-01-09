@@ -1,4 +1,4 @@
-apiVersion: 2.0
+apiVersion: "2.0"
 kind: Deployment
 metadata:
   name: web-server
@@ -9,40 +9,39 @@ metadata:
     environment: production
 spec:
   replicas: 3
-  selector:
-    matchLabels:
+  selector.matchLabels:
+    app: web
+    tier: frontend
+  template:
+    metadata.labels:
       app: web
       tier: frontend
-  template:
-    metadata:
-      labels:
-        app: web
-        tier: frontend
-        version: 1.2.3
-    spec:
-      containers[2]{name,image}:
-        nginx,nginx:1.21
-        sidecar,envoy:1.20
-      containers[0].ports[2]{containerPort,protocol}:
-        80,TCP
-        443,TCP
-      containers[0].resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 500m
-          memory: 512Mi
-      containers[0].env[3]{name,value}:
-        NODE_ENV,production
-        LOG_LEVEL,info
-        MAX_CONNECTIONS,1000
-      containers[1].ports[1]{containerPort,protocol}:
-        8080,TCP
-      containers[1].resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 200m
-          memory: 256Mi
+      version: 1.2.3
+    spec.containers[2]:
+      - name: nginx
+        image: "nginx:1.21"
+        ports[2]{containerPort,protocol}:
+          80,TCP
+          443,TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env[3]{name,value}:
+          NODE_ENV,production
+          LOG_LEVEL,info
+          MAX_CONNECTIONS,"1000"
+      - name: sidecar
+        image: "envoy:1.20"
+        ports[1]{containerPort,protocol}:
+          8080,TCP
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi

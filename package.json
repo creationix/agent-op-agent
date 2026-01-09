@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@toon-format/toon": "^2.1.0",
     "smol-toml": "^1.6.0",
     "yaml": "^2.8.2"
   }

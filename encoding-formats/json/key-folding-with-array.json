@@ -1,0 +1,22 @@
+{
+  "api": {
+    "endpoint": {
+      "url": "https://api.example.com"
+    }
+  },
+  "data": {
+    "meta": {
+      "items": ["widget", "gadget", "tool"]
+    }
+  },
+  "stats": {
+    "meta": {
+      "count": 3
+    }
+  },
+  "user": {
+    "preferences": {
+      "tags": ["productivity", "development"]
+    }
+  }
+}

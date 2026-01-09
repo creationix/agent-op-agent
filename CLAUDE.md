@@ -12,18 +12,16 @@ LM Studio bridge on `localhost:1234`:
 - `list_models()` / `get_current_model()` - model info
 - `chat_completion(prompt, system_prompt, temperature, max_tokens)` - query local model
 
-For accurate token counts, use curl directly:
-```bash
-curl -s http://localhost:1234/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"...","messages":[...],"max_tokens":1}' | jq '.usage.prompt_tokens'
-```
+## Scripts
+
+- `bun scripts/regen.ts` - regenerate all encodings and output token count table
+- `bun scripts/count-tokens.ts file1 file2...` - count tokens for specific files
 
 ## Key Files
 
-- `samples/SUMMARY.md` - encoding comparison results
-- `samples/*/gen.ts` - encoders for each format
-- `samples/json/*.json` - source test data
+- `encoding-formats/SUMMARY.md` - encoding comparison results
+- `encoding-formats/*/gen.ts` - encoders for each format
+- `encoding-formats/json/*.json` - source test data
 
 ## Research Principles
 
