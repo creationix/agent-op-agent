@@ -1,0 +1,18 @@
+[[events]]
+type = "click"
+x = 100
+y = 200
+
+[[events]]
+type = "scroll"
+offset = 450
+
+[[events]]
+type = "keypress"
+key = "Enter"
+shift = true
+
+[[events]]
+type = "resize"
+width = 1920
+height = 1080

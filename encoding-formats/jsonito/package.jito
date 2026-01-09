@@ -1,0 +1,1 @@
+vite'vitest'7~^18.2.06~^5.0.0{name'my-app'version'5~1.0.0scripts'{dev'*build'h~tsc && vite buildtest'1*}c~dependencies{react'2*9~react-dom2*}f~devDependencies{a~typescript3**3*1*6~^1.0.0}}

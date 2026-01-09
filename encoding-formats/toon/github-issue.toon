@@ -1,0 +1,10 @@
+id: 12345
+title: "Bug: Memory leak in worker threads"
+state: open
+user:
+  login: devuser
+  id: 789
+labels[2]{name,color}:
+  bug,d73a4a
+  priority-high,ff0000
+body: "When running multiple workers, memory increases continuously without garbage collection."

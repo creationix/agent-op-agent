@@ -1,0 +1,190 @@
+[catalog]
+version = "2.1"
+updated = "2024-01-15"
+currency = "USD"
+
+[[categories]]
+id = "electronics"
+name = "Electronics"
+
+[[categories]]
+id = "computers"
+name = "Computers"
+parent = "electronics"
+
+[[categories]]
+id = "phones"
+name = "Phones"
+parent = "electronics"
+
+[[categories]]
+id = "clothing"
+name = "Clothing"
+
+[[categories]]
+id = "mens"
+name = "Men's"
+parent = "clothing"
+
+[[categories]]
+id = "womens"
+name = "Women's"
+parent = "clothing"
+
+[[products]]
+sku = "LAPTOP-001"
+name = "ProBook 15"
+category = "computers"
+price = 1299.99
+stock = 45
+tags = [ "laptop", "business", "portable" ]
+rating = 4.5
+reviews = 234
+
+[products.specs]
+cpu = "Intel i7"
+ram = "16GB"
+storage = "512GB SSD"
+display = "15.6 inch"
+
+[[products]]
+sku = "LAPTOP-002"
+name = "GameMaster X"
+category = "computers"
+price = 1899.99
+stock = 23
+tags = [ "laptop", "gaming", "high-performance" ]
+rating = 4.8
+reviews = 567
+
+[products.specs]
+cpu = "AMD Ryzen 9"
+ram = "32GB"
+storage = "1TB NVMe"
+gpu = "RTX 4070"
+
+[[products]]
+sku = "PHONE-001"
+name = "SmartPhone Pro"
+category = "phones"
+price = 999
+stock = 150
+tags = [ "smartphone", "flagship", "5G" ]
+rating = 4.6
+reviews = 1023
+
+[products.specs]
+screen = "6.7 inch OLED"
+camera = "108MP"
+battery = "5000mAh"
+
+[[products]]
+sku = "PHONE-002"
+name = "BudgetPhone SE"
+category = "phones"
+price = 299
+stock = 500
+tags = [ "smartphone", "budget", "value" ]
+rating = 4.2
+reviews = 445
+
+[products.specs]
+screen = "6.1 inch LCD"
+camera = "48MP"
+battery = "4000mAh"
+
+[[products]]
+sku = "SHIRT-001"
+name = "Classic Oxford Shirt"
+category = "mens"
+price = 59.99
+stock = 200
+tags = [ "shirt", "formal", "cotton" ]
+rating = 4.4
+reviews = 89
+
+[[products.variants]]
+size = "S"
+color = "white"
+stock = 40
+
+[[products.variants]]
+size = "M"
+color = "white"
+stock = 60
+
+[[products.variants]]
+size = "L"
+color = "white"
+stock = 50
+
+[[products.variants]]
+size = "M"
+color = "blue"
+stock = 30
+
+[[products.variants]]
+size = "L"
+color = "blue"
+stock = 20
+
+[[products]]
+sku = "DRESS-001"
+name = "Summer Floral Dress"
+category = "womens"
+price = 79.99
+stock = 75
+tags = [ "dress", "casual", "summer" ]
+rating = 4.7
+reviews = 156
+
+[[products.variants]]
+size = "XS"
+color = "floral-pink"
+stock = 15
+
+[[products.variants]]
+size = "S"
+color = "floral-pink"
+stock = 20
+
+[[products.variants]]
+size = "M"
+color = "floral-pink"
+stock = 25
+
+[[products.variants]]
+size = "L"
+color = "floral-pink"
+stock = 15
+
+[[products]]
+sku = "MONITOR-001"
+name = "UltraWide 34"
+category = "electronics"
+price = 549.99
+stock = 67
+tags = [ "monitor", "ultrawide", "gaming" ]
+rating = 4.6
+reviews = 312
+
+[products.specs]
+size = "34 inch"
+resolution = "3440x1440"
+refresh = "144Hz"
+panel = "IPS"
+
+[[products]]
+sku = "KEYBOARD-001"
+name = "Mechanical Pro"
+category = "electronics"
+price = 149.99
+stock = 120
+tags = [ "keyboard", "mechanical", "gaming" ]
+rating = 4.5
+reviews = 678
+
+[products.specs]
+switches = "Cherry MX Brown"
+layout = "full"
+backlight = "RGB"

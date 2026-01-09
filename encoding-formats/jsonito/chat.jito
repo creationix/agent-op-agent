@@ -1,0 +1,1 @@
+role'content'user'{messages'[{*2*1*J~How do I configure TypeScript for a monorepo?}{*9~assistant1*1P~For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.}{*2*1*o~What about path aliases?}]}

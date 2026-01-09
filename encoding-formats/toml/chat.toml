@@ -1,0 +1,11 @@
+[[messages]]
+role = "user"
+content = "How do I configure TypeScript for a monorepo?"
+
+[[messages]]
+role = "assistant"
+content = "For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package."
+
+[[messages]]
+role = "user"
+content = "What about path aliases?"

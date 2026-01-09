@@ -1,0 +1,1 @@
+id'name'color'{*61O.title'y~Bug: Memory leak in worker threadsstate'open'user'{login'devuser'*oG.}labels'[{1*bug'2*d73a4a'}{1*d~priority-high2*ff0000'}]body'1o~When running multiple workers, memory increases continuously without garbage collection.}

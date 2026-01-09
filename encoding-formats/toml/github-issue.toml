@@ -1,0 +1,16 @@
+id = 12345
+title = "Bug: Memory leak in worker threads"
+state = "open"
+body = "When running multiple workers, memory increases continuously without garbage collection."
+
+[user]
+login = "devuser"
+id = 789
+
+[[labels]]
+name = "bug"
+color = "d73a4a"
+
+[[labels]]
+name = "priority-high"
+color = "ff0000"

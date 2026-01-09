@@ -1,0 +1,99 @@
+"info"
+"api"
+["ts","level","service","msg"]
+[-3,"2024-01-15T10:00:01Z",1,2,"Server started on port 3000"]
+"db"
+[-3,"2024-01-15T10:00:02Z",1,5,"Connected to database"]
+"debug"
+"auth"
+[-3,"2024-01-15T10:00:05Z",7,8,"Loading JWT keys"]
+[-3,"2024-01-15T10:00:10Z",1,2,"Health check endpoint ready"]
+"Request received"
+"GET"
+["ts","level","service","msg","method","path"]
+[-13,"2024-01-15T10:01:23Z",1,2,11,12,"/users"]
+"2024-01-15T10:01:24Z"
+"Query executed"
+45
+["ts","level","service","msg","duration_ms"]
+[-18,15,7,5,16,17]
+"Response sent"
+200
+["ts","level","service","msg","status"]
+[-22,15,1,2,20,21]
+"warn"
+{"ts":"2024-01-15T10:02:15Z","level":24,"service":8,"msg":"Invalid token attempt","ip":"192.168.1.100"}
+"POST"
+[-13,"2024-01-15T10:02:45Z",1,2,11,26,"/login"]
+"2024-01-15T10:02:46Z"
+42
+["ts","level","service","msg","user_id"]
+[-30,28,1,8,"User authenticated",29]
+[-22,28,1,2,20,21]
+"cache"
+["ts","level","service","msg","key"]
+[-34,"2024-01-15T10:03:00Z",1,33,"Cache hit","user:42"]
+"error"
+1
+{"ts":"2024-01-15T10:03:30Z","level":36,"service":5,"msg":"Connection timeout","retry":37}
+[-3,"2024-01-15T10:03:31Z",1,5,"Reconnected to database"]
+[-13,"2024-01-15T10:04:00Z",1,2,11,"PUT","/users/42"]
+"2024-01-15T10:04:01Z"
+12
+[-18,41,7,5,16,42]
+[-22,41,1,2,20,21]
+"scheduler"
+[-3,"2024-01-15T10:05:00Z",1,45,"Running cleanup job"]
+156
+["ts","level","service","msg","count"]
+[-48,"2024-01-15T10:05:02Z",1,33,"Expired keys removed",47]
+[-13,"2024-01-15T10:05:10Z",1,2,11,"DELETE","/sessions/old"]
+"2024-01-15T10:05:11Z"
+23
+[-48,51,1,5,"Rows deleted",52]
+204
+[-22,51,1,2,20,54]
+["ts","level","service","msg","client"]
+[-56,"2024-01-15T10:06:00Z",24,2,"Rate limit approaching","app-xyz"]
+[-13,"2024-01-15T10:06:30Z",1,2,11,12,"/products"]
+"products:all"
+[-34,"2024-01-15T10:06:31Z",7,33,"Cache miss",59]
+"2024-01-15T10:06:32Z"
+89
+[-18,61,7,5,16,62]
+300
+{"ts":61,"level":1,"service":33,"msg":"Cache set","key":59,"ttl":64}
+[-22,61,1,2,20,21]
+{"ts":"2024-01-15T10:07:00Z","level":1,"service":"metrics","msg":"Metrics exported","endpoint":"/metrics"}
+"2024-01-15T10:07:45Z"
+{"ts":68,"level":36,"service":2,"msg":"Unhandled exception","error":"TypeError: Cannot read property 'id' of undefined"}
+500
+[-22,68,1,2,20,70]
+"2024-01-15T10:08:00Z"
+[-13,72,1,2,11,12,"/health"]
+[-22,72,1,2,20,21]
+[-30,"2024-01-15T10:09:00Z",1,8,"Token refreshed",29]
+[-3,"2024-01-15T10:10:00Z",1,45,"Sending daily digest"]
+127
+[-48,"2024-01-15T10:10:05Z",1,"email","Email queued",77]
+1250
+{"ts":"2024-01-15T10:11:00Z","level":24,"service":5,"msg":"Slow query detected","duration_ms":79,"query":"SELECT * FROM orders WHERE..."}
+[-13,"2024-01-15T10:12:00Z",1,2,11,26,"/orders"]
+[-3,"2024-01-15T10:12:01Z",1,5,"Transaction started"]
+"2024-01-15T10:12:02Z"
+[-3,83,1,5,"Transaction committed"]
+201
+[-22,83,1,2,20,85]
+"webhook"
+{"ts":"2024-01-15T10:13:00Z","level":1,"service":87,"msg":"Webhook triggered","event":"order.created"}
+[-22,"2024-01-15T10:13:01Z",1,87,"Webhook delivered",21]
+[-56,"2024-01-15T10:14:00Z",7,2,"Request timeout","mobile-app"]
+[-13,"2024-01-15T10:15:00Z",1,2,11,12,"/orders/123"]
+[-22,"2024-01-15T10:15:01Z",1,2,20,21]
+245
+512
+{"ts":"2024-01-15T10:16:00Z","level":1,"service":33,"msg":"Memory usage","used_mb":93,"max_mb":94}
+{"ts":"2024-01-15T10:17:00Z","level":24,"service":2,"msg":"Deprecated endpoint called","path":"/v1/legacy"}
+[-13,"2024-01-15T10:18:00Z",1,2,11,"PATCH","/users/42/settings"]
+[4,6,9,10,14,19,23,25,27,31,32,35,38,39,40,43,44,46,49,50,53,55,57,58,60,63,65,66,67,69,71,73,74,75,76,78,80,81,82,84,86,88,89,90,91,92,95,96,97]
+{"logs":98}
