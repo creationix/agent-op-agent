@@ -20,7 +20,7 @@ Comparison of byte size and token count (Qwen3-Coder-30b) across different seria
 | YAML          |   107 |     56 |        1.91 |
 | TOML          |   115 |     54 |        2.13 |
 | JSONito       |    90 |     45 |        2.00 |
-| D2            |   123 |     59 |        2.08 |
+| D2            |   120 |     53 |        2.26 |
 
 ### Medium Document
 
@@ -32,7 +32,7 @@ Comparison of byte size and token count (Qwen3-Coder-30b) across different seria
 | YAML          |   331 |    123 |        2.69 |
 | TOML          |   328 |    118 |        2.78 |
 | JSONito       |   224 |    103 |        2.17 |
-| D2            |   280 |    128 |        2.19 |
+| D2            |   267 |     99 |        2.70 |
 
 ### Large Document
 
@@ -44,7 +44,7 @@ Comparison of byte size and token count (Qwen3-Coder-30b) across different seria
 | YAML          |  1221 |    327 |        3.73 |
 | TOML          |  1263 |    377 |        3.35 |
 | JSONito       |   588 |    312 |        1.88 |
-| D2            |   930 |    458 |        2.03 |
+| D2            |   774 |    307 |        2.52 |
 
 ## Summary Table (All Sizes)
 
@@ -56,25 +56,26 @@ Comparison of byte size and token count (Qwen3-Coder-30b) across different seria
 | YAML          |    107 / 56 |    331 / 123 |  1221 / 327 |        1659 |          506 |
 | TOML          |    115 / 54 |    328 / 118 |  1263 / 377 |        1706 |          549 |
 | JSONito       |     90 / 45 |    224 / 103 |   588 / 312 |         902 |          460 |
-| D2            |    123 / 59 |    280 / 128 |   930 / 458 |        1333 |          645 |
+| D2            |    120 / 53 |     267 / 99 |   774 / 307 |        1161 |          459 |
 
 ## Key Findings
 
 ### Byte Efficiency (vs minified JSON baseline)
 
 - **JSONito**: 32% smaller (-421 bytes) - best compression
+- **D2**: 12% smaller (-162 bytes)
 - **LJSON**: 12% smaller (-164 bytes)
-- **D2**: -1% (roughly same)
 - **YAML**: 25% larger (+336 bytes)
 - **TOML**: 29% larger (+383 bytes)
 
 ### Token Efficiency (vs minified JSON baseline)
+
 - **LJSON**: **BEST** - 402 tokens (-2% fewer)
 - **JSON (mini)**: 411 tokens (baseline)
+- **D2**: 12% more tokens (+48)
 - **JSONito**: 12% more tokens (+49)
 - **YAML**: 23% more tokens (+95)
 - **TOML**: 34% more tokens (+138)
-- **D2**: 57% more tokens (+234)
 
 ## Critical Insight
 
@@ -99,11 +100,12 @@ JSONito is **34% smaller** but uses **17% more tokens** on the large document.
 
 | Format   | Byte Rank | Token Rank | Notes |
 |----------|-----------|------------|-------|
-| JSONito  | **1st**   | 3rd        | Best compression, moderate tokens |
-| JSON     | 4th       | **1st**    | Larger bytes, best tokens |
-| D2       | 2nd       | 5th        | Good bytes, terrible tokens |
-| YAML     | 3rd       | 2nd        | Balanced |
-| TOML     | 5th       | 4th        | Poor on both |
+| JSONito  | **1st**   | 4th        | Best compression, moderate tokens |
+| LJSON    | 2nd       | **1st**    | Good compression, best tokens |
+| D2       | 3rd       | 3rd        | Balanced (with real encoder) |
+| JSON     | 4th       | 2nd        | Larger bytes, good tokens |
+| YAML     | 5th       | 5th        | Poor on both |
+| TOML     | 6th       | 6th        | Worst on both |
 
 ## Recommendations
 
