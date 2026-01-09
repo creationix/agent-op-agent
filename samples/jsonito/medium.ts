@@ -1,0 +1,1 @@
+export const medium = id'name'email'role'active'user'{users'[{*2.1*d~Alice Johnson2*h~alice@example.com3*admin'4*!}{*4.1*9~Bob Smith2*f~bob@example.com3*5*4*!}{*6.1*b~Carol Davis2*h~carol@example.com3*5*4*F!}]metadata'{total'6.page'2.perPage'k.}}
