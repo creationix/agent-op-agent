@@ -9,11 +9,11 @@ export function stringify(data: unknown): string {
     // Primitive value
     return JSON.stringify(data)
   } else if (Array.isArray(data)) {
-    return `[${data.map(item => stringify(item)).join(" ")}]`
+    return `[${data.map(item => stringify(item)).join(",")}]`
   } else {
     return `{${Object.entries(data).map(
       ([key, value]) => `${key}:${stringify(value)}`
-    ).join(" ")}}`
+    ).join(",")}}`
   }
 }
 
@@ -42,7 +42,7 @@ function needsQuoting(str: string): boolean {
   // Looks like a number
   if (!isNaN(Number(str))) return true;
   if (unsafeChars.some(char => str.includes(char))) return true;
-  if (/[^\w\s.-]/.test(str)) return true; // Contains special characters
+  if ([...str].some(c => c.charCodeAt(0) < 32)) return true; // Control characters
   return false;
 }
 
