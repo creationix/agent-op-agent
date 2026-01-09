@@ -1,0 +1,1 @@
+{6|name:"config" version:"1.0.0" enabled:true maxRetries:3 timeout:30000 tags:[3|"production" "api" "v1"]}

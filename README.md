@@ -18,10 +18,11 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 | LJSON | 402 | -2% | Yes |
 | JSON | 411 | baseline | Yes |
 | TOON | 459 | +12% | Yes |
-| D2 | 459 | +12% | No |
-| JSONito | 460 | +12% | No |
+| LJSON-safe | 475 | +16% | Yes |
 
 **LJSON**: "JSON, but no commas and no quotes on keys."
+
+**LJSON-safe**: LJSON + `n|` count prefix on arrays/objects for truncation detection.
 
 ### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
 

@@ -4,16 +4,25 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Recommendation
 
-**Use LJSON** for LLM systems. Rule: "JSON, but no commas and no quotes on keys."
+**Use LJSON** for minimal tokens, **LJSON-safe** when truncation detection matters.
 
-```ljson
-{name:"Alice" age:30 active:true items:["a" "b" "c"]}
+### LJSON
+
+Rule: "JSON, but no commas and no quotes on keys."
+
+```
+{name:"Alice" age:30 items:["a" "b" "c"]}
 ```
 
-- 2% fewer tokens than JSON
-- 12% smaller than JSON
-- LLMs can generate it from a one-sentence description
-- Trivial to convert to/from JSON
+### LJSON-safe
+
+Rule: "JSON, but no commas, no quotes on keys, and `n|` count prefix on arrays and objects."
+
+```
+{3|name:"Alice" age:30 items:[3|"a" "b" "c"]}
+```
+
+The count prefix enables truncation detection and validation (+18% tokens).
 
 ## Token Efficiency (Total across all test documents)
 
@@ -24,6 +33,7 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 | TOON          |    459 |    +12% |
 | D2            |    459 |    +12% |
 | JSONito       |    460 |    +12% |
+| LJSON-safe    |    475 |    +16% |
 | YAML          |    506 |    +23% |
 | TOML          |    549 |    +34% |
 
@@ -49,6 +59,7 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 | TOON          |    51 |     84 |   324 |   459 |
 | D2            |    53 |     99 |   307 |   459 |
 | JSONito       |    45 |    103 |   312 |   460 |
+| LJSON-safe    |    50 |    104 |   321 |   475 |
 | YAML          |    56 |    123 |   327 |   506 |
 | TOML          |    54 |    118 |   377 |   549 |
 
