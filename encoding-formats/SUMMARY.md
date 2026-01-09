@@ -4,9 +4,29 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Recommendation
 
-**Use LJSON** for minimal tokens, **LJSON-safe** when truncation detection matters.
+**Use LJSON v2** for minimal tokens with uniform array optimization.
 
-### LJSON
+### LJSON v2
+
+Rule: "JSON, but no commas, no quotes on keys, and uniform arrays use `[keys|{vals}...]` header syntax."
+
+```
+{name:"Alice" age:30 users:[id name|{1 "Alice"}{2 "Bob"}]}
+```
+
+The header syntax avoids repeating keys in arrays of same-schema objects (-7% vs LJSON).
+
+### NQJSON
+
+Rule: "JSON, but no quotes unless needed."
+
+```
+{name:Alice,age:30,items:[a,b,c]}
+```
+
+Simplest rule set. Quote only when value contains comma or needs forced string type.
+
+### LJSON (simple)
 
 Rule: "JSON, but no commas and no quotes on keys."
 
@@ -22,13 +42,15 @@ Rule: "JSON, but no commas, no quotes on keys, and `n|` count prefix on arrays a
 {3|name:"Alice" age:30 items:[3|"a" "b" "c"]}
 ```
 
-The count prefix enables truncation detection and validation (+18% tokens).
+The count prefix enables truncation detection and validation (+18% tokens vs LJSON).
 
 ## Token Efficiency (Total across all test documents)
 
 | Format        | Tokens | vs JSON |
 |---------------|-------:|--------:|
-| **LJSON**     |    402 |     -2% |
+| **LJSON v2**  |    373 |     -9% |
+| NQJSON        |    388 |     -6% |
+| LJSON         |    402 |     -2% |
 | JSON (mini)   |    411 | baseline|
 | TOON          |    459 |    +12% |
 | D2            |    459 |    +12% |
@@ -54,6 +76,8 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 
 | Format        | Small | Medium | Large | Total |
 |---------------|------:|-------:|------:|------:|
+| **LJSON v2**  |    45 |     78 |   250 |   373 |
+| NQJSON        |    44 |     86 |   258 |   388 |
 | LJSON         |    45 |     92 |   265 |   402 |
 | JSON (mini)   |    48 |     97 |   266 |   411 |
 | TOON          |    51 |     84 |   324 |   459 |
@@ -63,7 +87,7 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 | YAML          |    56 |    123 |   327 |   506 |
 | TOML          |    54 |    118 |   377 |   549 |
 
-**Note**: TOON excels at uniform arrays (medium: 84 tokens, beats LJSON's 92), but loses on nested structures (large: 324 vs LJSON's 265).
+**Note**: LJSON v2's header syntax beats TOON on uniform arrays (medium: 78 vs 84) while maintaining LJSON's advantage on nested structures (large: 250 vs 324).
 
 ### Test Data
 

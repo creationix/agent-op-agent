@@ -15,14 +15,16 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 | Format | Tokens | vs JSON | LLM Can Generate |
 |--------|-------:|--------:|------------------|
+| LJSON v2 | 373 | -9% | Yes |
+| NQJSON | 388 | -6% | Yes |
 | LJSON | 402 | -2% | Yes |
 | JSON | 411 | baseline | Yes |
-| TOON | 459 | +12% | Yes |
-| LJSON-safe | 475 | +16% | Yes |
+
+**LJSON v2**: "JSON, but no commas, no quotes on keys, and uniform arrays use `[keys|{vals}...]` header syntax."
+
+**NQJSON**: "JSON, but no quotes unless needed."
 
 **LJSON**: "JSON, but no commas and no quotes on keys."
-
-**LJSON-safe**: LJSON + `n|` count prefix on arrays/objects for truncation detection.
 
 ### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
 

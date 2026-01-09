@@ -1,0 +1,1 @@
+{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[production,api,v1]}
