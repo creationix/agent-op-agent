@@ -1,6 +1,6 @@
 # LLM Encoding Research
 
-Testing alternative data encodings for LLM systems, optimizing for token efficiency.
+Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 ## Setup
 
@@ -11,13 +11,23 @@ Testing alternative data encodings for LLM systems, optimizing for token efficie
 
 ## Results
 
-See [samples/SUMMARY.md](samples/SUMMARY.md) for encoding comparison results.
+### Data Encoding ([encoding-formats/](encoding-formats/SUMMARY.md))
 
-**Key finding**: LJSON (JSON without commas or key quotes) is the most token-efficient format that LLMs can reliably generate.
+| Format | Tokens | vs JSON | LLM Can Generate |
+|--------|-------:|--------:|------------------|
+| LJSON | 402 | -2% | Yes |
+| JSON | 411 | baseline | Yes |
+| TOON | 459 | +12% | Yes |
+| D2 | 459 | +12% | No |
+| JSONito | 460 | +12% | No |
 
-| Format | Bytes | Tokens | LLM Can Generate |
-|--------|------:|-------:|------------------|
-| LJSON | 1159 | 402 | Yes |
-| JSON | 1323 | 411 | Yes |
-| JSONito | 902 | 460 | No |
-| D2 | 1161 | 459 | No |
+**LJSON**: "JSON, but no commas and no quotes on keys."
+
+### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
+
+| Format | Tokens (13 tools) | Reduction |
+|--------|------------------:|----------:|
+| Positional | 188 | **89%** |
+| JSON Schema | 1696 | baseline |
+
+**Positional**: `<tool>name("arg", opt=val)</tool>` with `<result>...</result>` responses

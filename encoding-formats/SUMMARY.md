@@ -21,6 +21,7 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 |---------------|-------:|--------:|
 | **LJSON**     |    402 |     -2% |
 | JSON (mini)   |    411 | baseline|
+| TOON          |    459 |    +12% |
 | D2            |    459 |    +12% |
 | JSONito       |    460 |    +12% |
 | YAML          |    506 |    +23% |
@@ -35,6 +36,8 @@ Formats like JSONito achieve excellent byte compression (32% smaller than JSON) 
 
 For LLMs, token count is the bottleneck—not bytes.
 
+Also, LLMs cannot generate these formats reliably as they are too complex and require too much state tracking.
+
 ## Full Results
 
 ### By Document Size
@@ -43,10 +46,13 @@ For LLMs, token count is the bottleneck—not bytes.
 |---------------|------:|-------:|------:|------:|
 | LJSON         |    45 |     92 |   265 |   402 |
 | JSON (mini)   |    48 |     97 |   266 |   411 |
+| TOON          |    51 |     84 |   324 |   459 |
 | D2            |    53 |     99 |   307 |   459 |
 | JSONito       |    45 |    103 |   312 |   460 |
 | YAML          |    56 |    123 |   327 |   506 |
 | TOML          |    54 |    118 |   377 |   549 |
+
+**Note**: TOON excels at uniform arrays (medium: 84 tokens, beats LJSON's 92), but loses on nested structures (large: 324 vs LJSON's 265).
 
 ### Test Data
 

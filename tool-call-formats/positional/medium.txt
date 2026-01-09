@@ -1,0 +1,10 @@
+Call: <tool>name("str", opt=5)</tool> — strings quoted, numbers not
+Results: <result>...</result>
+
+Tools:
+- read_file(path) - Read file
+- write_file(path, content) - Write file
+- list_directory(path) - List files
+- search(query, path?, limit?) - Search files
+- execute(command, timeout?) - Run shell command
+- ask_user(question) - Ask user

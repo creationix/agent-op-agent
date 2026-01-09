@@ -1,0 +1,6 @@
+Call: <tool>name("str", opt=5)</tool> — strings quoted, numbers not
+Results: <result>...</result>
+
+Tools:
+- read_file(path) - Read file
+- write_file(path, content) - Write file

@@ -1,0 +1,6 @@
+Call tools: <tool>name{key:"string" num:5 flag:true}</tool>
+Results: <result>...</result>
+
+Tools:
+- read_file{path} - Read file
+- write_file{path content} - Write file
