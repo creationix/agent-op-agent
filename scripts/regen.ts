@@ -45,7 +45,7 @@ function getExtension(formatDir: string): string | null {
 // Count tokens for all formats
 console.log("\nCounting tokens...\n")
 
-type Row = { format: string; tokens: number[]; total: number }
+type Row = { format: string; tokens: number[]; total: number; bytes: number }
 const rows: Row[] = []
 
 // Process each format directory
@@ -59,6 +59,7 @@ for (const dir of readdirSync(ROOT, { withFileTypes: true })) {
 
   const tokens: number[] = []
   let total = 0
+  let bytes = 0
 
   for (const doc of DOCS) {
     const filePath = join(formatDir, `${doc}.${ext}`)
@@ -68,18 +69,20 @@ for (const dir of readdirSync(ROOT, { withFileTypes: true })) {
       console.log(`Counted ${count} tokens for ${dir.name}/${doc}.${ext}`)
       tokens.push(count)
       total += count
+      bytes += new TextEncoder().encode(content).length
     } else {
       tokens.push(-1)
       total += 9999 // Sort missing to bottom
     }
   }
 
-  rows.push({ format: dir.name, tokens, total })
+  rows.push({ format: dir.name, tokens, total, bytes })
 }
 
 // Add JSON baseline (minified)
 const jsonTokens: number[] = []
 let jsonTotal = 0
+let jsonBytes = 0
 for (const doc of DOCS) {
   const filePath = join(ROOT, "json", `${doc}.json`)
   if (existsSync(filePath)) {
@@ -88,25 +91,26 @@ for (const doc of DOCS) {
     const count = await countTokens(minified)
     jsonTokens.push(count)
     jsonTotal += count
+    jsonBytes += new TextEncoder().encode(minified).length
   } else {
     jsonTokens.push(-1)
   }
 }
-rows.push({ format: "JSON (mini)", tokens: jsonTokens, total: jsonTotal })
+rows.push({ format: "JSON (mini)", tokens: jsonTokens, total: jsonTotal, bytes: jsonBytes })
 
 // Sort by total
 rows.sort((a, b) => a.total - b.total)
 
 // Build table as string
-const header = `| Format | ${DOCS.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(" | ")} | Total |`
-const separator = `|--------|${DOCS.map(() => "------:").join("|")}|------:|`
+const header = `| Format | ${DOCS.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(" | ")} | Total | Bytes |`
+const separator = `|--------|${DOCS.map(() => "------:").join("|")}|------:|------:|`
 
 let table = header + "\n" + separator + "\n"
 
 for (const row of rows) {
   const tokenCells = row.tokens.map(t => t === -1 ? "-" : String(t)).join(" | ")
   const actualTotal = row.tokens.reduce((sum, t) => sum + (t === -1 ? 0 : t), 0)
-  table += `| ${row.format} | ${tokenCells} | ${actualTotal} |\n`
+  table += `| ${row.format} | ${tokenCells} | ${actualTotal} | ${row.bytes.toLocaleString()} |\n`
 }
 
 console.log(table)

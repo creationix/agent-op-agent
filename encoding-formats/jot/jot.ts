@@ -1,5 +1,5 @@
 /**
- * NQJSON2 - Token-efficient JSON encoding for LLMs
+ * Jot - JSON Optimized for Tokens
  *
  * Features:
  * 1. Minimal quoting - only quote strings when necessary

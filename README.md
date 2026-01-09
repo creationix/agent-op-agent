@@ -15,14 +15,14 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 | Format | Tokens | vs JSON | LLM Can Generate |
 |--------|-------:|--------:|------------------|
-| NQJSON2 | 467 | **-18%** | Yes |
-| NQJSON2-safe | 487 | -14% | Yes |
+| Jot | 467 | **-18%** | Yes |
+| Jot-safe | 487 | -14% | Yes |
 | JSON | 569 | baseline | Yes |
 | TOON | 563 | -1% | Yes |
 
-**NQJSON2**: Minimal quoting + key folding + table syntax (`[schema|row|row]`).
+**Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax (`[schema|row|row]`).
 
-**NQJSON2-safe**: NQJSON2 + count guards (`Nx[...]` for arrays, `Nr[...]` for tables).
+**Jot-safe**: Jot + count guards (`Nx[...]` for arrays, `Nr[...]` for tables).
 
 ### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
 

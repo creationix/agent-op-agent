@@ -4,26 +4,25 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Recommendation
 
-**Use NQJSON2** for minimal tokens — combines minimal quoting, key folding, and table syntax.
+**Use Jot** for minimal tokens — combines minimal quoting, key folding, and table syntax.
 
 ## Token Efficiency
 
-| Format        | Tokens | vs JSON |
-|---------------|-------:|--------:|
-| **NQJSON2**   |    467 |    -18% |
-| NQJSON2-safe  |    487 |    -14% |
-| LJSON         |    546 |     -4% |
-| LJSON-safe    |    562 |     -1% |
-| TOON          |    563 |     -1% |
-| JSON (mini)   |    569 | baseline|
-| JSONito       |    618 |     +9% |
-| D2            |    648 |    +14% |
-| YAML          |    693 |    +22% |
-| TOML          |    740 |    +30% |
+| Format                                              | Tokens | vs JSON  | Bytes |
+|-----------------------------------------------------|-------:|---------:|------:|
+| **[Jot](jot/)**                                     |    467 |     -18% | 1,224 |
+| [Jot-safe](jot-safe/)                               |    487 |     -14% | 1,240 |
+| [Lax](lax/)                                         |    546 |      -4% | 1,559 |
+| [TOON](toon/)                                       |    563 |      -1% | 1,599 |
+| [JSON](https://www.json.org/) (mini)                |    569 | baseline | 1,775 |
+| [JSONito](https://github.com/creationix/jsonito)    |    618 |      +9% | 1,206 |
+| [D2](https://github.com/creationix/d2)              |    648 |     +14% | 1,525 |
+| [YAML](https://yaml.org/)                           |    693 |     +22% | 2,139 |
+| [TOML](https://toml.io/)                            |    740 |     +30% | 2,178 |
 
 ## Format Descriptions
 
-### NQJSON2
+### Jot
 
 Minimal quoting + key folding + table syntax. **-18% vs JSON**.
 
@@ -37,9 +36,9 @@ Features:
 - **Key folding**: `{a:{b:{c:1}}}` → `(a.b.c:1)`
 - **Tables**: `[{a:1},{a:2}]` → `[a|1|2]`
 
-### NQJSON2-safe
+### Jot-safe
 
-NQJSON2 with count guards for truncation detection. **-14% vs JSON**.
+Jot with count guards for truncation detection. **-14% vs JSON**.
 
 ```
 {name:Alice,users:2r[id,email|1,a@ex.com|2,b@ex.com],tags:3x[a,b,c]}
@@ -50,9 +49,9 @@ Guards:
 - `Nx[...]` for arrays (N = element count)
 - `Nr[...]` for tables (N = row count)
 
-### LJSON
+### Lax
 
-JSON without commas or key quotes. **-4% vs JSON**.
+Relaxed JSON: no commas, no key quotes. **-4% vs JSON**.
 
 ```
 {name:"Alice" age:30 items:["a" "b" "c"]}
@@ -70,18 +69,17 @@ users[2]{id,name}:
 
 ## Full Results
 
-| Format        | Small | Medium | Large | Hikes | Total |
-|---------------|------:|-------:|------:|------:|------:|
-| **NQJSON2**   |    44 |     69 |   244 |   110 |   467 |
-| NQJSON2-safe  |    47 |     71 |   254 |   115 |   487 |
-| LJSON         |    45 |     92 |   265 |   144 |   546 |
-| LJSON-safe    |    47 |     94 |   273 |   148 |   562 |
-| TOON          |    50 |     83 |   308 |   122 |   563 |
-| JSON (mini)   |    48 |     97 |   266 |   158 |   569 |
-| JSONito       |    45 |    103 |   312 |   158 |   618 |
-| D2            |    55 |    104 |   316 |   173 |   648 |
-| YAML          |    56 |    123 |   327 |   187 |   693 |
-| TOML          |    56 |    118 |   377 |   189 |   740 |
+| Format      | Small | Medium | Large | Hikes | Total |
+|-------------|------:|-------:|------:|------:|------:|
+| **Jot**     |    44 |     69 |   244 |   110 |   467 |
+| Jot-safe    |    47 |     71 |   254 |   115 |   487 |
+| Lax         |    45 |     92 |   265 |   144 |   546 |
+| TOON        |    50 |     83 |   308 |   122 |   563 |
+| JSON (mini) |    48 |     97 |   266 |   158 |   569 |
+| JSONito     |    45 |    103 |   312 |   158 |   618 |
+| D2          |    55 |    104 |   316 |   173 |   648 |
+| YAML        |    56 |    123 |   327 |   187 |   693 |
+| TOML        |    56 |    118 |   377 |   189 |   740 |
 
 ### Test Data
 
