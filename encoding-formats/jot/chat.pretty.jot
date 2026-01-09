@@ -1,0 +1,6 @@
+{ messages: 3m[
+ :role, content
+  user, How do I configure TypeScript for a monorepo?
+  assistant, "For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package."
+  user, What about path aliases?
+] }

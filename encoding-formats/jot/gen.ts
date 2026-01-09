@@ -13,5 +13,7 @@ for (const file of readdirSync("../json")) {
     const encodedString = stringify(data, { guards: true })
     writeFileSync(targetFilePath, encodedString, "utf-8")
     console.log(`Generated ${targetFilePath} from ${sourceFilePath}`)
+    const encodedPrettyString = stringify(data, { guards: true, pretty: true })
+    writeFileSync(targetFilePath.replace(".jot", ".pretty.jot"), encodedPrettyString, "utf-8")
   }
 }

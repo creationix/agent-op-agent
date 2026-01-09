@@ -1,0 +1,6 @@
+{
+  api.endpoint.url: "https://api.example.com",
+  data.meta.items: 3x[ widget, gadget, tool ],
+  stats.meta.count: 3,
+  user.preferences.tags: 2x[ productivity, development ]
+}

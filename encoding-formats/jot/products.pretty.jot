@@ -1,0 +1,69 @@
+{
+  catalog: {
+    version: "2.1",
+    updated: 2024-01-15,
+    currency: USD
+  },
+  categories: 6m[
+   :id, name, parent
+    electronics, Electronics, null
+    computers, Computers, electronics
+    phones, Phones, electronics
+    clothing, Clothing, null
+    mens, Men's, clothing
+    womens, Women's, clothing
+  ],
+  products: 8m[
+   :sku, name, category, price, stock, specs, tags, rating, reviews
+    LAPTOP-001, ProBook 15, computers, 1299.99, 45, {
+      cpu: Intel i7,
+      ram: 16GB,
+      storage: 512GB SSD,
+      display: 15.6 inch
+    }, 3x[ laptop, business, portable ], 4.5, 234
+    LAPTOP-002, GameMaster X, computers, 1899.99, 23, {
+      cpu: AMD Ryzen 9,
+      ram: 32GB,
+      storage: 1TB NVMe,
+      gpu: RTX 4070
+    }, 3x[ laptop, gaming, high-performance ], 4.8, 567
+    PHONE-001, SmartPhone Pro, phones, 999, 150, {
+      screen: 6.7 inch OLED,
+      camera: 108MP,
+      battery: 5000mAh
+    }, 3x[ smartphone, flagship, 5G ], 4.6, 1023
+    PHONE-002, BudgetPhone SE, phones, 299, 500, {
+      screen: 6.1 inch LCD,
+      camera: 48MP,
+      battery: 4000mAh
+    }, 3x[ smartphone, budget, value ], 4.2, 445
+   :sku, name, category, price, stock, variants, tags, rating, reviews
+    SHIRT-001, Classic Oxford Shirt, mens, 59.99, 200, 5m[
+     :size, color, stock
+      S, white, 40
+      M, white, 60
+      L, white, 50
+      M, blue, 30
+      L, blue, 20
+    ], 3x[ shirt, formal, cotton ], 4.4, 89
+    DRESS-001, Summer Floral Dress, womens, 79.99, 75, 4m[
+     :size, color, stock
+      XS, floral-pink, 15
+      S, floral-pink, 20
+      M, floral-pink, 25
+      L, floral-pink, 15
+    ], 3x[ dress, casual, summer ], 4.7, 156
+   :sku, name, category, price, stock, specs, tags, rating, reviews
+    MONITOR-001, UltraWide 34, electronics, 549.99, 67, {
+      size: 34 inch,
+      resolution: 3440x1440,
+      refresh: 144Hz,
+      panel: IPS
+    }, 3x[ monitor, ultrawide, gaming ], 4.6, 312
+    KEYBOARD-001, Mechanical Pro, electronics, 149.99, 120, {
+      switches: Cherry MX Brown,
+      layout: full,
+      backlight: RGB
+    }, 3x[ keyboard, mechanical, gaming ], 4.5, 678
+  ]
+}
