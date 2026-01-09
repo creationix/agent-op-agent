@@ -14,7 +14,14 @@ Rule: "NQJSON with uniform arrays using `[keys|vals|vals|...]` header syntax."
 {name:config,users:[id,name,email|1,Alice,a@ex.com|2,Bob,b@ex.com]}
 ```
 
-Combines NQJSON's minimal quoting with CSV-style uniform arrays. Best overall: **-19% vs JSON**.
+Combines minimal quoting with CSV-style uniform arrays. Best overall: **-19% vs JSON**.
+
+**Quoting rules** - quote string values only if:
+
+1. Parses as a number (`"123"`, `"1.0"` — not `api5`, `v2`)
+2. Contains unsafe chars: `: , { } [ ] ( ) "`
+3. Equals `true`, `false`, or `null`
+4. Contains control characters (newlines, tabs, etc.)
 
 ### NQJSON2-safe
 
@@ -26,41 +33,7 @@ Rule: "NQJSON2 with `n|` count prefix on arrays (like TOON)."
 
 For uniform arrays, count is the number of rows. **-16% vs JSON** (vs TOON's +2%).
 
-### LJSON v2
-
-Rule: "JSON, but no commas, no quotes on keys, and uniform arrays use `[keys|{vals}...]` header syntax."
-
-```
-{name:"Alice" age:30 users:[id name|{1 "Alice"}{2 "Bob"}]}
-```
-
-The header syntax avoids repeating keys in arrays of same-schema objects (-14% vs JSON).
-
-### NQJSON
-
-Rule: "JSON, but no quotes unless needed."
-
-```
-{name:config,version:"1.0",api:api5,items:[a,b,c]}
-```
-
-**Generation rules** - quote string values only if:
-1. Parses as a number (`"123"`, `"1.0"` — not `api5`, `v2`)
-2. Contains unsafe chars: `: , { } [ ] ( ) "`
-3. Equals `true`, `false`, or `null`
-4. Contains control characters (newlines, tabs, etc.)
-
-### NQJSON-safe
-
-Rule: "NQJSON with `n|` count prefix on arrays (like TOON)."
-
-```
-{name:config,version:"1.0",items:[3|a,b,c]}
-```
-
-The count prefix enables truncation detection (+3% tokens vs NQJSON).
-
-### LJSON (simple)
+### LJSON
 
 Rule: "JSON, but no commas and no quotes on keys."
 
@@ -84,10 +57,7 @@ The count prefix enables truncation detection (+3% tokens vs LJSON).
 |---------------|-------:|--------:|
 | **NQJSON2**   |    463 |    -19% |
 | NQJSON2-safe  |    479 |    -16% |
-| LJSON v2      |    491 |    -14% |
-| NQJSON        |    536 |     -6% |
 | LJSON         |    546 |     -4% |
-| NQJSON-safe   |    552 |     -3% |
 | LJSON-safe    |    562 |     -1% |
 | JSON (mini)   |    569 | baseline|
 | TOON          |    583 |     +2% |
@@ -115,10 +85,7 @@ Also, LLMs cannot generate these formats reliably as they are too complex and re
 |---------------|------:|-------:|------:|------:|------:|
 | **NQJSON2**   |    44 |     69 |   240 |   110 |   463 |
 | NQJSON2-safe  |    46 |     71 |   248 |   114 |   479 |
-| LJSON v2      |    45 |     78 |   250 |   118 |   491 |
-| NQJSON        |    44 |     86 |   259 |   147 |   536 |
 | LJSON         |    45 |     92 |   265 |   144 |   546 |
-| NQJSON-safe   |    46 |     88 |   267 |   151 |   552 |
 | LJSON-safe    |    47 |     94 |   273 |   148 |   562 |
 | JSON (mini)   |    48 |     97 |   266 |   158 |   569 |
 | TOON          |    51 |     84 |   324 |   124 |   583 |
