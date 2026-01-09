@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-import { readdirSync, readFileSync, existsSync } from "node:fs"
+import { readdirSync, readFileSync, existsSync, writeFileSync } from "node:fs"
 import { execSync } from "node:child_process"
 import { join, dirname } from "node:path"
 
@@ -97,18 +97,18 @@ rows.push({ format: "JSON (mini)", tokens: jsonTokens, total: jsonTotal })
 // Sort by total
 rows.sort((a, b) => a.total - b.total)
 
-// Print table
+// Build table as string
 const header = `| Format | ${DOCS.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(" | ")} | Total |`
 const separator = `|--------|${DOCS.map(() => "------:").join("|")}|------:|`
 
-console.log(header)
-console.log(separator)
-
-// Sort the rows by total tokens ascending
-rows.sort((a, b) => a.total - b.total)
+let table = header + "\n" + separator + "\n"
 
 for (const row of rows) {
   const tokenCells = row.tokens.map(t => t === -1 ? "-" : String(t)).join(" | ")
   const actualTotal = row.tokens.reduce((sum, t) => sum + (t === -1 ? 0 : t), 0)
-  console.log(`| ${row.format} | ${tokenCells} | ${actualTotal} |`)
+  table += `| ${row.format} | ${tokenCells} | ${actualTotal} |\n`
 }
+
+console.log(table)
+writeFileSync(join(ROOT, "TOKEN_COUNTS.md"), table)
+console.log("Token counts written to TOKEN_COUNTS.md")
