@@ -1,9 +1,9 @@
 === LLM Conversation Log ===
-Started: 2026-01-10T17:06:22.534Z
+Started: 2026-01-10T17:09:43.669Z
 
 
 ================================================================================
-[2026-01-10T17:06:24.202Z] jot/chat run 1
+[2026-01-10T17:09:45.039Z] jot/chat run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -34,7 +34,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:06:26.288Z] jot/metrics run 1
+[2026-01-10T17:09:47.162Z] jot/metrics run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -66,7 +66,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:06:30.482Z] jot/large run 1
+[2026-01-10T17:09:51.446Z] jot/large run 1
 ❌ FAILED
 ================================================================================
 
@@ -117,7 +117,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:06:32.034Z] jot/key-folding-mixed run 1
+[2026-01-10T17:09:53.062Z] jot/key-folding-mixed run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -151,7 +151,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:00.277Z] jot/logs run 1
+[2026-01-10T17:10:21.376Z] jot/logs run 1
 ❌ FAILED
 ================================================================================
 
@@ -183,7 +183,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:20.483Z] jot/firewall run 1
+[2026-01-10T17:10:41.029Z] jot/firewall run 1
 ❌ FAILED
 ================================================================================
 
@@ -211,76 +211,80 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 🤖 QWEN RESPONSE:
 {
   active: true,
-  ruleGroups: {
-    php_attacks: {
-      active: true,
-      action: deny,
-      rules: {
-        php_suffix: {
-          has: [{type: path, key: null, value: {suf: .php}}],
-          missing: [{type: header, key: x-secret, value: {eq: bypass}}],
-          phase: finalize,
-          system: true
-        },
-        jsp_suffix: {
-          has: [{type: path, key: null, value: {suf: .jsp}}, {type: status, value: {eq: 404}}],
-          missing: [{type: header, key: x-secret, value: {eq: bypass}}],
-          phase: init,
-          system: true
-        },
-        asp_suffix: {
-          has: [{type: path, key: null, value: {suf: .asp}}],
-          missing: [{type: header, key: x-secret, value: {eq: bypass}}],
-          phase: finalize,
-          system: true
-        },
-        cgi_suffix: {
-          has: [{type: path, key: null, value: {suf: .cgi}}],
-          missing: [{type: header, key: x-secret, value: {eq: bypass}}],
-          phase: finalize,
-          system: true
-        }
+  ruleGroups.php_attacks: {
+    active: true,
+    action: deny,
+    rules: {
+      php_suffix: {
+        has: [{type: path, key: null, value: {suf: .php}}],
+        missing: [{type: header, key: x-secret, value: {eq: bypass}}],
+        phase: finalize,
+        system: true
+      },
+      jsp_suffix: {
+        has: [{type: path, key: null, value: {suf: .jsp}}, {type: status, value: {eq: 404}}],
+        missing: [{type: header, key: x-secret, value: {eq: bypass}}],
+        phase: init,
+        system: true
+      },
+      asp_suffix: {
+        has: [{type: path, key: null, value: {suf: .asp}}],
+        missing: [{type: header, key: x-secret, value: {eq: bypass}}],
+        phase: finalize,
+        system: true
+      },
+      cgi_suffix: {
+        has: [{type: path, key: null, value: {suf: .cgi}}],
+        missing: [{type: header, key: x-secret, value: {eq: bypass}}],
+        phase: finalize,
+        system: true
       }
-    },
-    sql_injection: {
-      active: true,
-      action: deny,
-      rules: {
-        union_select: {
-          has: [{type: query, key: null, value: {contains: UNION SELECT}}],
-          phase: init,
-          system: true
-        },
-        drop_table: {
-          has: [{type: query, key: null, value: {contains: DROP TABLE}}],
-          phase: init,
-          system: true
-        },
-        or_1_equals_1: {
-          has: [{type: query, key: null, value: {regex: OR\\s+1\\s*=\\s*1}}],
-          phase: init,
-          system: true
-        }
+    }
+  },
+  ruleGroups.sql_injection: {
+    active: true,
+    action: deny,
+    rules: {
+      union_select: {
+        has: [{type: query, key: null, value: {contains: UNION SELECT}}],
+        phase: init,
+        system: true
+      },
+      drop_table: {
+        has: [{type: query, key: null, value: {contains: DROP TABLE}}],
+        phase: init,
+        system: true
+      },
+      or_1_equals_1: {
+        has: [{type: query, key: null, value: {regex: OR\\s+1\\s*=\\s*1}}],
+        phase: init,
+        system: true
       }
-    },
-    rate_limiting: {
-      active: true,
-      action: ratelimit,
-      rules: {
-        api_endpoints: {
-          has: [{type: path, key: null, value: {pre: /api/}}],
-          rateLimit: {requests: 100, window: 60, key: ip},
-          phase: init,
-          system: false
-        },
-        auth_endpoints: {
-          has: [{type: path, key: null, value: {pre: /auth/}}],
-          rateLimit: {requests: 10, wind
+    }
+  },
+  ruleGroups.rate_limiting: {
+    active: true,
+    action: ratelimit,
+    rules: {
+      api_endpoints: {
+        has: [{type: path, key: null, value: {pre: /api/}}],
+        rateLimit: {requests: 100, window: 60, key: ip},
+        phase: init,
+        system: false
+      },
+      auth_endpoints: {
+        has: [{type: path, key: null, value: {pre: /auth/}}],
+        rateLimit: {requests: 10, window: 60, key: ip},
+        phase: init,
+        system: false
+      },
+      search_endpoint: {
+        has: [{t
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T17:07:21.754Z] jot/small run 1
+[2026-01-10T17:10:42.239Z] jot/small run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -316,8 +320,8 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:23.535Z] jot/github-issue run 1
-❌ FAILED
+[2026-01-10T17:10:43.976Z] jot/github-issue run 1
+✅ SEMANTIC MATCH
 ================================================================================
 
 🧪 SYSTEM PROMPT (test harness):
@@ -352,7 +356,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:36.548Z] jot/users-50 run 1
+[2026-01-10T17:10:56.758Z] jot/users-50 run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -378,13 +382,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  users: (id,name,email,role,active|1,Alice Chen,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false|4,Dan Wilson,dan@example.com,moderator,true|5,Eve Brown,eve@example.com,user,true|6,Frank Lee,frank@example.com,user,true|7,Grace Kim,grace@example.com,admin,true|8,Henry Park,henry@example.com,user,false|9,Ivy Zhang,ivy@example.com,user,true|10,Jack Miller,jack@example.com,moderator,true|11,Kate Johnson,kate@example.com,user,true|12,Leo Garcia,leo@example.com,user,true|13,Mia Taylor,mia@example.com,user,false|14,Noah White,noah@example.com,user,true|15,Olivia Moore,olivia@example.com,admin,true|16,Peter Hall,peter@example.com,user,true|17,Quinn Adams,quinn@example.com,user,true|18,Ruby Scott,ruby@example.com,moderator,false|19,Sam Turner,sam@example.com,user,true|20,Tina Clark,tina@example.com,user,true|21,Uma Patel,uma@example.com,user,true|22,Victor Young,victor@example.com,user,false|23,Wendy King,wendy@example.com,admin,true|24,Xander Cruz,xander@example.com,user,true|25,Yuki Tanaka,yuki@example.com,user,true|26,Zoe Martin,zoe@example.com,moderator,true|27,Aaron Ross,aaron@example.com,user,true|28,Beth Cooper,beth@example.com,user,false|29,Chris Evans,chris@example.com,user,true|30,Diana Reed,diana@example.com,user,true|31,Eric Foster,eric@example.com,admin,true|32,Fiona Grant,fiona@example.com,user,true|33,George Hill,george@example.com,user,true|34,Hannah Irwin,hannah@example.com,moderator,false|35,Ian James,ian@example.com,user,true|36,Julia Kent,julia@example.com,user,true|37,Kevin Long,kevin@example.com,user,true|38,Laura Mason,laura@example.com,user,false|39,Mike Nelson,mike@example.com,admin,true|40,Nina Owen,nina@example.com,user,true|41,Oscar Price,oscar@example.com,user,true|42,Paula Quinn,paula@example.com,moderator,true|43,Quincy Ray,quincy@example.com,user,true|44,Rachel Stone,rachel@example.com,user,false|45,Steve Thomas,steve@example.com,user,true|46,Tara Underwood,tara@example.com,user,t
+{users: (id,name,email,role,active|1,Alice Chen,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false|4,Dan Wilson,dan@example.com,moderator,true|5,Eve Brown,eve@example.com,user,true|6,Frank Lee,frank@example.com,user,true|7,Grace Kim,grace@example.com,admin,true|8,Henry Park,henry@example.com,user,false|9,Ivy Zhang,ivy@example.com,user,true|10,Jack Miller,jack@example.com,moderator,true|11,Kate Johnson,kate@example.com,user,true|12,Leo Garcia,leo@example.com,user,true|13,Mia Taylor,mia@example.com,user,false|14,Noah White,noah@example.com,user,true|15,Olivia Moore,olivia@example.com,admin,true|16,Peter Hall,peter@example.com,user,true|17,Quinn Adams,quinn@example.com,user,true|18,Ruby Scott,ruby@example.com,moderator,false|19,Sam Turner,sam@example.com,user,true|20,Tina Clark,tina@example.com,user,true|21,Uma Patel,uma@example.com,user,true|22,Victor Young,victor@example.com,user,false|23,Wendy King,wendy@example.com,admin,true|24,Xander Cruz,xander@example.com,user,true|25,Yuki Tanaka,yuki@example.com,user,true|26,Zoe Martin,zoe@example.com,moderator,true|27,Aaron Ross,aaron@example.com,user,true|28,Beth Cooper,beth@example.com,user,false|29,Chris Evans,chris@example.com,user,true|30,Diana Reed,diana@example.com,user,true|31,Eric Foster,eric@example.com,admin,true|32,Fiona Grant,fiona@example.com,user,true|33,George Hill,george@example.com,user,true|34,Hannah Irwin,hannah@example.com,moderator,false|35,Ian James,ian@example.com,user,true|36,Julia Kent,julia@example.com,user,true|37,Kevin Long,kevin@example.com,user,true|38,Laura Mason,laura@example.com,user,false|39,Mike Nelson,mike@example.com,admin,true|40,Nina Owen,nina@example.com,user,true|41,Oscar Price,oscar@example.com,user,true|42,Paula Quinn,paula@example.com,moderator,true|43,Quincy Ray,quincy@example.com,user,true|44,Rachel Stone,rachel@example.com,user,false|45,Steve Thomas,steve@example.com,user,true|46,Tara Underwood,tara@example.com,user,true
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T17:07:38.066Z] jot/medium run 1
+[2026-01-10T17:10:58.301Z] jot/medium run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -410,13 +413,13 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 🤖 QWEN RESPONSE:
 {
-  users: (id,name,email,role,active|1,Alice Johnson,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false),
+  users: (id,name,email,role,active|1,"Alice Johnson","alice@example.com",admin,true|2,"Bob Smith","bob@example.com",user,true|3,"Carol Davis","carol@example.com",user,false),
   metadata: {total: 3, page: 1, perPage: 10}
 }
 
 
 ================================================================================
-[2026-01-10T17:07:40.198Z] jot/hikes run 1
+[2026-01-10T17:11:00.489Z] jot/hikes run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -449,7 +452,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:42.149Z] jot/package run 1
+[2026-01-10T17:11:02.441Z] jot/package run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -484,7 +487,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:43.328Z] jot/key-folding-basic run 1
+[2026-01-10T17:11:03.636Z] jot/key-folding-basic run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -519,7 +522,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:44.654Z] jot/irregular run 1
+[2026-01-10T17:11:05.003Z] jot/irregular run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -548,7 +551,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:45.807Z] jot/key-folding-with-array run 1
+[2026-01-10T17:11:06.170Z] jot/key-folding-with-array run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -582,7 +585,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:07:58.895Z] jot/products run 1
+[2026-01-10T17:11:19.522Z] jot/products run 1
 ❌ FAILED
 ================================================================================
 
@@ -616,7 +619,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T17:08:22.986Z] jot/routes run 1
+[2026-01-10T17:11:44.204Z] jot/routes run 1
 ❌ FAILED
 ================================================================================
 
