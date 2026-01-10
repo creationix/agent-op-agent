@@ -1,0 +1,47 @@
+
+=== .json files ===
+
+chat.json                       95 tokens     323 bytes
+firewall.json                 1301 tokens    4460 bytes
+github-issue.json              116 tokens     327 bytes
+hikes.json                     251 tokens     680 bytes
+irregular.json                  98 tokens     215 bytes
+key-folding-basic.json         116 tokens     305 bytes
+key-folding-mixed.json         134 tokens     356 bytes
+key-folding-with-array.json    109 tokens     308 bytes
+large.json                     444 tokens    1549 bytes
+logs.json                     2658 tokens    5894 bytes
+medium.json                    170 tokens     498 bytes
+metrics.json                   150 tokens     216 bytes
+package.json                   121 tokens     272 bytes
+products.json                 1300 tokens    3522 bytes
+routes.json                   2007 tokens    5898 bytes
+small.json                      68 tokens     142 bytes
+users-50.json                 1784 tokens    5063 bytes
+                             -----        ------
+Total                        10922 tokens   30028 bytes
+
+=== .smart.json files ===
+
+chat.smart.json                      100 tokens     331 bytes
+firewall.smart.json                 1364 tokens    4768 bytes
+github-issue.smart.json              126 tokens     357 bytes
+hikes.smart.json                     234 tokens     627 bytes
+irregular.smart.json                 107 tokens     239 bytes
+key-folding-basic.smart.json          96 tokens     233 bytes
+key-folding-mixed.smart.json         118 tokens     300 bytes
+key-folding-with-array.smart.json     95 tokens     246 bytes
+large.smart.json                     440 tokens    1409 bytes
+logs.smart.json                     2931 tokens    6686 bytes
+medium.smart.json                    156 tokens     458 bytes
+metrics.smart.json                   158 tokens     252 bytes
+package.smart.json                   131 tokens     296 bytes
+products.smart.json                 1355 tokens    3842 bytes
+routes.smart.json                   2041 tokens    6124 bytes
+small.smart.json                      69 tokens     142 bytes
+users-50.smart.json                 2032 tokens    5859 bytes
+                                   -----        ------
+Total                              11553 tokens   32169 bytes
+
+=== Grand Total ===
+22475 tokens, 62197 bytes

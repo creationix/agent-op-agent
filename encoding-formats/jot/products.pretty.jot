@@ -1,9 +1,6 @@
-{
-  catalog: {
-    version: "2.1",
+{ catalog: { version: "2.1",
     updated: 2024-01-15,
-    currency: USD
-  },
+    currency: USD },
   categories: [
    :id, name, parent
     electronics, Electronics, null
@@ -15,28 +12,20 @@
   ],
   products: [
    :sku, name, category, price, stock, specs, tags, rating, reviews
-    LAPTOP-001, ProBook 15, computers, 1299.99, 45, {
-      cpu: Intel i7,
+    LAPTOP-001, ProBook 15, computers, 1299.99, 45, { cpu: Intel i7,
       ram: 16GB,
       storage: 512GB SSD,
-      display: 15.6 inch
-    }, [ laptop, business, portable ], 4.5, 234
-    LAPTOP-002, GameMaster X, computers, 1899.99, 23, {
-      cpu: AMD Ryzen 9,
+      display: 15.6 inch }, [ laptop, business, portable ], 4.5, 234
+    LAPTOP-002, GameMaster X, computers, 1899.99, 23, { cpu: AMD Ryzen 9,
       ram: 32GB,
       storage: 1TB NVMe,
-      gpu: RTX 4070
-    }, [ laptop, gaming, high-performance ], 4.8, 567
-    PHONE-001, SmartPhone Pro, phones, 999, 150, {
-      screen: 6.7 inch OLED,
+      gpu: RTX 4070 }, [ laptop, gaming, high-performance ], 4.8, 567
+    PHONE-001, SmartPhone Pro, phones, 999, 150, { screen: 6.7 inch OLED,
       camera: 108MP,
-      battery: 5000mAh
-    }, [ smartphone, flagship, 5G ], 4.6, 1023
-    PHONE-002, BudgetPhone SE, phones, 299, 500, {
-      screen: 6.1 inch LCD,
+      battery: 5000mAh }, [ smartphone, flagship, 5G ], 4.6, 1023
+    PHONE-002, BudgetPhone SE, phones, 299, 500, { screen: 6.1 inch LCD,
       camera: 48MP,
-      battery: 4000mAh
-    }, [ smartphone, budget, value ], 4.2, 445
+      battery: 4000mAh }, [ smartphone, budget, value ], 4.2, 445
    :sku, name, category, price, stock, variants, tags, rating, reviews
     SHIRT-001, Classic Oxford Shirt, mens, 59.99, 200, [
      :size, color, stock
@@ -54,16 +43,11 @@
       L, floral-pink, 15
     ], [ dress, casual, summer ], 4.7, 156
    :sku, name, category, price, stock, specs, tags, rating, reviews
-    MONITOR-001, UltraWide 34, electronics, 549.99, 67, {
-      size: 34 inch,
+    MONITOR-001, UltraWide 34, electronics, 549.99, 67, { size: 34 inch,
       resolution: 3440x1440,
       refresh: 144Hz,
-      panel: IPS
-    }, [ monitor, ultrawide, gaming ], 4.6, 312
-    KEYBOARD-001, Mechanical Pro, electronics, 149.99, 120, {
-      switches: Cherry MX Brown,
+      panel: IPS }, [ monitor, ultrawide, gaming ], 4.6, 312
+    KEYBOARD-001, Mechanical Pro, electronics, 149.99, 120, { switches: Cherry MX Brown,
       layout: full,
-      backlight: RGB
-    }, [ keyboard, mechanical, gaming ], 4.5, 678
-  ]
-}
+      backlight: RGB }, [ keyboard, mechanical, gaming ], 4.5, 678
+  ] }

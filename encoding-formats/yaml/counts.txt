@@ -1,0 +1,22 @@
+
+=== .yaml files ===
+
+chat.yaml                       82 tokens     292 bytes
+firewall.yaml                 1029 tokens    4390 bytes
+github-issue.yaml               98 tokens     278 bytes
+hikes.yaml                     187 tokens     480 bytes
+irregular.yaml                  87 tokens     179 bytes
+key-folding-basic.yaml          64 tokens     171 bytes
+key-folding-mixed.yaml          89 tokens     227 bytes
+key-folding-with-array.yaml     69 tokens     218 bytes
+large.yaml                     327 tokens    1221 bytes
+logs.yaml                     2487 tokens    5387 bytes
+medium.yaml                    123 tokens     331 bytes
+metrics.yaml                   140 tokens     176 bytes
+package.yaml                   104 tokens     213 bytes
+products.yaml                 1095 tokens    3028 bytes
+routes.yaml                   1696 tokens    4968 bytes
+small.yaml                      56 tokens     107 bytes
+users-50.yaml                 1597 tokens    4700 bytes
+                             -----        ------
+Total                         9330 tokens   26366 bytes

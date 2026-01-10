@@ -1,0 +1,22 @@
+
+=== .lax files ===
+
+chat.lax                       79 tokens     276 bytes
+firewall.lax                  785 tokens    2540 bytes
+github-issue.lax               88 tokens     267 bytes
+hikes.lax                     144 tokens     403 bytes
+irregular.lax                  69 tokens     144 bytes
+key-folding-basic.lax          55 tokens     158 bytes
+key-folding-mixed.lax          73 tokens     207 bytes
+key-folding-with-array.lax     58 tokens     175 bytes
+large.lax                     265 tokens     780 bytes
+logs.lax                     2166 tokens    4695 bytes
+medium.lax                     92 tokens     274 bytes
+metrics.lax                   117 tokens     139 bytes
+package.lax                    95 tokens     211 bytes
+products.lax                  876 tokens    2279 bytes
+routes.lax                   1442 tokens    4093 bytes
+small.lax                      45 tokens     102 bytes
+users-50.lax                 1229 tokens    3852 bytes
+                            -----        ------
+Total                        7678 tokens   20595 bytes

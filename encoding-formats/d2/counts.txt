@@ -1,0 +1,22 @@
+
+=== .d2 files ===
+
+chat.d2                       80 tokens     266 bytes
+firewall.d2                  894 tokens    1924 bytes
+github-issue.d2               97 tokens     290 bytes
+hikes.d2                     173 tokens     364 bytes
+irregular.d2                  81 tokens     180 bytes
+key-folding-basic.d2          60 tokens     188 bytes
+key-folding-mixed.d2          80 tokens     239 bytes
+key-folding-with-array.d2     67 tokens     206 bytes
+large.d2                     316 tokens     774 bytes
+logs.d2                     2092 tokens    3548 bytes
+medium.d2                    104 tokens     267 bytes
+metrics.d2                   138 tokens     173 bytes
+package.d2                    90 tokens     226 bytes
+products.d2                  994 tokens    1930 bytes
+routes.d2                   1536 tokens    3409 bytes
+small.d2                      55 tokens     120 bytes
+users-50.d2                 1202 tokens    2787 bytes
+                           -----        ------
+Total                       8059 tokens   16891 bytes

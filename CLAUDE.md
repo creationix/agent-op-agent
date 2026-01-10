@@ -8,12 +8,19 @@ Research project testing data encodings for LLM token efficiency. You (Claude) d
 
 **Jot** is the leading format at -19% tokens vs JSON. See `encoding-formats/SUMMARY.md` for full comparison.
 
+**Compact** (vs minified JSON):
+
 | Format | vs JSON |
 | ------ | ------- |
 | Jot | -19% |
-| Jot (pretty) | +3% |
-| JSON | baseline |
-| YAML | +20% |
+| JSON (mini) | baseline |
+
+**Pretty** (vs pretty JSON):
+
+| Format | vs JSON |
+| ------ | ------- |
+| Jot (pretty) | -37% |
+| JSON (pretty) | baseline |
 
 ## Jot Format
 
@@ -41,18 +48,19 @@ LM Studio bridge on `localhost:1234`:
 
 ## Scripts
 
-- `bun scripts/regen.ts` - regenerate all encodings and token counts
-- `bun scripts/count-tokens.ts file1 file2...` - count tokens for specific files
+- `bun encoding-formats/gen.ts` - regenerate all format encodings
+- `bun scripts/count-format.ts <format|all>` - count tokens for a format folder
+- `bun scripts/update-summary.ts` - update SUMMARY.md from counts.txt files
 
 ## Next Steps
 
-1. **Implement decoders** for Lax and Jot (parse back to JSON)
-2. **Verify round-trip** encode/decode for top formats
-3. **LLM read/write testing** - measure model accuracy generating these formats
+1. **LLM read/write testing** - measure model accuracy generating these formats
+2. **Optimize tokenization** - investigate why certain patterns tokenize poorly
 
 ## Key Files
 
 - `encoding-formats/SUMMARY.md` - token comparison results
-- `encoding-formats/jot/jot.ts` - Jot encoder (stringify + tests)
-- `encoding-formats/jot/gen.ts` - generates .jot and .pretty.jot files
+- `encoding-formats/gen.ts` - unified generator for all formats
+- `encoding-formats/jot/jot.ts` - Jot encoder/decoder
 - `encoding-formats/json/*.json` - 17 source test documents
+- `encoding-formats/json/smart-json.ts` - smart JSON formatter

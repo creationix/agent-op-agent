@@ -1,0 +1,22 @@
+
+=== .jito files ===
+
+chat.jito                       86 tokens     252 bytes
+firewall.jito                  919 tokens    1524 bytes
+github-issue.jito               89 tokens     249 bytes
+hikes.jito                     158 tokens     304 bytes
+irregular.jito                  59 tokens     113 bytes
+key-folding-basic.jito          62 tokens     154 bytes
+key-folding-mixed.jito          82 tokens     194 bytes
+key-folding-with-array.jito     63 tokens     165 bytes
+large.jito                     312 tokens     588 bytes
+logs.jito                     1941 tokens    2877 bytes
+medium.jito                    103 tokens     224 bytes
+metrics.jito                    89 tokens     116 bytes
+package.jito                   101 tokens     188 bytes
+products.jito                  846 tokens    1545 bytes
+routes.jito                   1426 tokens    2713 bytes
+small.jito                      45 tokens      90 bytes
+users-50.jito                 1234 tokens    2437 bytes
+                             -----        ------
+Total                         7615 tokens   13733 bytes

@@ -141,11 +141,19 @@ function stringifyArray(arr: unknown[]): string {
 
   // Regular array
   if (currentOptions.pretty && arr.length > 0 && hasComplexItems(arr)) {
-    // Complex arrays: split across lines
+    // Complex arrays: items on separate lines, closing bracket on last line
     depth++
-    const items = arr.map(v => ind() + stringifyValue(v)).join("," + nl())
+    const items: string[] = []
+    for (let i = 0; i < arr.length; i++) {
+      const v = stringifyValue(arr[i])
+      if (i === arr.length - 1) {
+        items.push(`${ind()}${v} ]`)
+      } else {
+        items.push(`${ind()}${v}`)
+      }
+    }
     depth--
-    return `[${nl()}${items}${nl()}${ind()}]`
+    return `[\n${items.join(",\n")}`
   }
   // Simple arrays: keep on one line, add spaces in pretty mode
   const sep = currentOptions.pretty ? ", " : ","
@@ -212,10 +220,21 @@ function stringifyObject(obj: Record<string, unknown>): string {
 
   // Regular object
   if (currentOptions.pretty && keys.length > 1) {
+    // Multi-key objects: first key on same line as brace, closing brace on last line
     depth++
-    const pairs = keys.map(k => ind() + stringifyPair(k, true)).join(",\n")
+    const pairs: string[] = []
+    for (let i = 0; i < keys.length; i++) {
+      const p = stringifyPair(keys[i], true)
+      if (i === 0) {
+        pairs.push(p)
+      } else if (i === keys.length - 1) {
+        pairs.push(`${ind()}${p} }`)
+      } else {
+        pairs.push(`${ind()}${p}`)
+      }
+    }
     depth--
-    return `{\n${pairs}\n${ind()}}`
+    return `{ ${pairs.join(",\n")}`
   }
   // Single-key objects stay inline even in pretty mode
   if (currentOptions.pretty && keys.length === 1) {

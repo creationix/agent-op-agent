@@ -1,0 +1,22 @@
+
+=== .toon files ===
+
+chat.toon                       68 tokens     241 bytes
+firewall.toon                 1073 tokens    4412 bytes
+github-issue.toon               90 tokens     254 bytes
+hikes.toon                     122 tokens     286 bytes
+irregular.toon                  88 tokens     181 bytes
+key-folding-basic.toon          63 tokens     170 bytes
+key-folding-mixed.toon          88 tokens     228 bytes
+key-folding-with-array.toon     63 tokens     185 bytes
+large.toon                     313 tokens    1086 bytes
+logs.toon                     2492 tokens    5494 bytes
+medium.toon                     83 tokens     213 bytes
+metrics.toon                   110 tokens     123 bytes
+package.toon                   104 tokens     214 bytes
+products.toon                  954 tokens    2413 bytes
+routes.toon                   1574 tokens    4503 bytes
+small.toon                      50 tokens      97 bytes
+users-50.toon                  763 tokens    2280 bytes
+                             -----        ------
+Total                         8098 tokens   22380 bytes

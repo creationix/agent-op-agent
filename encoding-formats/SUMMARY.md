@@ -8,19 +8,34 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Token Efficiency
 
-<!-- TOKEN_EFFICIENCY_START -->
+### Compact Formats
+
+For machine-to-machine or LLM contexts where readability isn't required.
+
+<!-- COMPACT_START -->
 | Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
 |-----------------------------------------------------|-------:|---------:|-------:|---------:|
 | **[Jot](jot/)**                                     |  6,305 |     -19% | 16,228 |     -30% |
 | [JSONito](https://github.com/creationix/jsonito)    |  7,615 |      -2% | 13,733 |     -41% |
 | [Lax](lax/)                                         |  7,678 |      -1% | 20,595 |     -11% |
 | [JSON](https://www.json.org/) (mini)                |  7,748 | baseline | 23,119 | baseline |
-| [Jot](jot/) (pretty)                                |  7,978 |      +3% | 22,560 |      -2% |
 | [D2](https://github.com/creationix/d2)              |  8,059 |      +4% | 16,891 |     -27% |
-| [TOON](toon/)                                       |  8,098 |      +5% | 22,380 |      -3% |
-| [YAML](https://yaml.org/)                           |  9,330 |     +20% | 26,366 |     +14% |
-| [TOML](https://toml.io/)                            |  9,980 |     +29% | 28,549 |     +23% |
-<!-- TOKEN_EFFICIENCY_END -->
+<!-- COMPACT_END -->
+
+### Pretty-Printed Formats
+
+For human-readable output or when LLMs need to read/write structured data.
+
+<!-- PRETTY_START -->
+| Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
+|-----------------------------------------------------|-------:|---------:|-------:|---------:|
+| **[Jot](jot/) (pretty)**                            |  7,670 |     -39% | 20,954 |     -47% |
+| [TOON](toon/)                                       |  8,098 |     -36% | 22,380 |     -44% |
+| [YAML](https://yaml.org/)                           |  9,330 |     -26% | 26,366 |     -34% |
+| [TOML](https://toml.io/)                            |  9,980 |     -21% | 28,549 |     -28% |
+| [JSON](json/smart-json.ts) (smart)                  | 11,553 |      -9% | 32,169 |     -19% |
+| [JSON](https://www.json.org/) (pretty)              | 12,656 | baseline | 39,884 | baseline |
+<!-- PRETTY_END -->
 
 ## Format Descriptions
 

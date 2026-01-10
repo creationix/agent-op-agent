@@ -1,0 +1,22 @@
+
+=== .toml files ===
+
+chat.toml                       84 tokens     311 bytes
+firewall.toml                 1495 tokens    5699 bytes
+github-issue.toml               99 tokens     298 bytes
+hikes.toml                     189 tokens     470 bytes
+irregular.toml                  86 tokens     195 bytes
+key-folding-basic.toml          60 tokens     163 bytes
+key-folding-mixed.toml          85 tokens     229 bytes
+key-folding-with-array.toml     61 tokens     184 bytes
+large.toml                     377 tokens    1263 bytes
+logs.toml                     2498 tokens    5574 bytes
+medium.toml                    118 tokens     328 bytes
+metrics.toml                   139 tokens     201 bytes
+package.toml                   104 tokens     233 bytes
+products.toml                 1114 tokens    2931 bytes
+routes.toml                   1790 tokens    5561 bytes
+small.toml                      56 tokens     117 bytes
+users-50.toml                 1625 tokens    4792 bytes
+                             -----        ------
+Total                         9980 tokens   28549 bytes
