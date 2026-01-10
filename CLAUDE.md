@@ -48,10 +48,54 @@ LM Studio bridge on `localhost:1234`:
 
 ## Scripts
 
-- `bun encoding-formats/gen.ts` - regenerate all format encodings
-- `bun scripts/count-format.ts <format|all>` - count tokens for a format folder (uses LM Studio)
-- `bun scripts/update-summary.ts` - update SUMMARY.md from counts.txt files
-- `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` - count tokens using Claude API (manual, requires API key)
+### Regenerating Encodings
+
+```bash
+bun encoding-formats/gen.ts
+```
+
+Regenerates all format files (.jot, .lax, .yaml, etc.) from source JSON files.
+
+### Counting Tokens
+
+**Qwen (via LM Studio)** - requires LM Studio running on localhost:1234:
+
+```bash
+bun scripts/count-format.ts <format|all>
+```
+
+Writes results to `encoding-formats/<format>/counts.txt`.
+
+**Claude API** - requires API key, FREE (token counting endpoint has no usage cost):
+
+```bash
+ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts [model]
+```
+
+Models: `sonnet` (default), `opus`, `haiku` - all share the same tokenizer.
+Writes results to `encoding-formats/claude-counts-<model>.txt`.
+
+### Updating Summary Tables
+
+```bash
+bun scripts/update-summary.ts
+```
+
+Reads counts from:
+
+- `encoding-formats/*/counts.txt` - Qwen token counts
+- `encoding-formats/claude-counts-sonnet.txt` - Claude token counts
+- Computes legacy tokenizer counts using `@anthropic-ai/tokenizer`
+
+Caches slow LM Studio JSON mini/pretty counts for 24 hours.
+
+### Full Workflow
+
+1. Edit source JSON files in `encoding-formats/json/`
+2. `bun encoding-formats/gen.ts` - regenerate all formats
+3. `bun scripts/count-format.ts all` - recount Qwen tokens (requires LM Studio)
+4. `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` - recount Claude tokens
+5. `bun scripts/update-summary.ts` - regenerate SUMMARY.md tables
 
 ## Next Steps
 
