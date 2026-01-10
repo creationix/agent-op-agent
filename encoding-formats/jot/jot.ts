@@ -5,24 +5,23 @@
  * 1. Minimal quoting - only quote strings when necessary
  *    {name:Alice,age:30,city:New York}
  *
- * 2. Key folding - collapse single-property object chains with dots
- *    {a:{b:{c:1}}} => {a.b.c:1}
- *    Use quoted keys for literal dots: {"a.b":1}
- *
- * 3. Tables - object arrays with {{schema;row;row}} syntax
- *    [{a:1},{a:2}] => {{a;1;2}}
- *    Different schemas use regular array: [{a:1},{b:2}]
+ * 2. Repeated objects - when an object has the same keys as previous,
+ *    use {:val,val,...} syntax (values only, same key order)
+ *    [{id:1,name:Alice},{id:2,name:Bob}] => [{id:1,name:Alice},{:2,Bob}]
  *
  * Quoting rules - quote string values only if:
  *   - Parses as a number ("123", "1.0" - not "api5", "v2")
- *   - Contains unsafe chars: : , { } [ ] " ;
+ *   - Contains unsafe chars: : , { } [ ] "
  *   - Equals true, false, or null
  *   - Has leading/trailing whitespace or is empty
  *   - Contains control characters (codepoint < 32)
  */
 
 const UNSAFE_STRINGS = new Set(["true", "false", "null"])
-const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', ';', '\\']
+const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', '\\']
+
+// Track previous object keys for {:...} syntax
+let prevObjectKeys: string[] | null = null
 
 function needsQuoting(str: string): boolean {
   if (str === "") return true
@@ -40,38 +39,6 @@ function quoteString(str: string): string {
 
 function getObjectKeys(obj: object): string[] {
   return Object.keys(obj)
-}
-
-// Check if value is a foldable chain: single-key objects nested
-function getFoldPath(value: unknown): { path: string[], leaf: unknown } | null {
-  const path: string[] = []
-  let current = value
-
-  while (
-    current !== null &&
-    typeof current === "object" &&
-    !Array.isArray(current)
-  ) {
-    const keys = getObjectKeys(current)
-    if (keys.length !== 1) break
-    path.push(keys[0])
-    current = (current as Record<string, unknown>)[keys[0]]
-  }
-
-  // Need at least 1 level to fold
-  if (path.length < 1) return null
-  return { path, leaf: current }
-}
-
-// Check if array is all objects
-function isObjectArray(arr: unknown[]): boolean {
-  return arr.length > 0 && arr.every(item =>
-    item !== null && typeof item === "object" && !Array.isArray(item)
-  )
-}
-
-function getSchemaKey(obj: Record<string, unknown>): string {
-  return getObjectKeys(obj).sort().join(",")
 }
 
 function stringifyValue(value: unknown): string {
@@ -114,101 +81,84 @@ function hasComplexItems(arr: unknown[]): boolean {
   return arr.some(item => item !== null && typeof item === "object")
 }
 
-// Check if ALL objects have identical keys (for table format)
-function hasUniformSchema(arr: Record<string, unknown>[]): boolean {
-  if (arr.length < 2) return false
-  const firstKeys = getObjectKeys(arr[0]).sort().join(",")
-  return arr.every(obj => getObjectKeys(obj).sort().join(",") === firstKeys)
+// Check if two key arrays are identical (same keys, same order)
+function sameKeys(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false
+  }
+  return true
 }
 
 function stringifyArray(arr: unknown[]): string {
-  // Object arrays with uniform schemas use table format
-  if (isObjectArray(arr) && hasUniformSchema(arr as Record<string, unknown>[])) {
-    return stringifyTable(arr as Record<string, unknown>[])
-  }
+  // Save previous keys state and reset for this array
+  const savedPrevKeys = prevObjectKeys
+  prevObjectKeys = null
 
-  // Single-item arrays: no guard prefix, no extra indentation
-  if (arr.length === 1) {
-    const item = stringifyValue(arr[0])
-    return `[${item}]`
-  }
+  const items: string[] = []
 
-  // Regular array
-  if (currentOptions.pretty && arr.length > 0 && hasComplexItems(arr)) {
-    // Complex arrays: items on separate lines, closing bracket on last line
-    depth++
-    const items: string[] = []
-    for (let i = 0; i < arr.length; i++) {
-      const v = stringifyValue(arr[i])
-      if (i === arr.length - 1) {
-        items.push(`${ind()}${v} ]`)
+  for (const item of arr) {
+    if (item !== null && typeof item === "object" && !Array.isArray(item)) {
+      // It's an object - check if keys match previous
+      const obj = item as Record<string, unknown>
+      const keys = getObjectKeys(obj)
+
+      if (prevObjectKeys && sameKeys(keys, prevObjectKeys)) {
+        // Same keys as previous - use {:val,val,...} syntax
+        const vals = keys.map(k => stringifyValue(obj[k]))
+        const sep = currentOptions.pretty ? ", " : ","
+        items.push(`{:${vals.join(sep)}}`)
       } else {
-        items.push(`${ind()}${v}`)
+        // Different keys or first object - use full syntax
+        items.push(stringifyObject(obj))
+        prevObjectKeys = keys
+      }
+    } else {
+      // Not an object - reset previous keys and stringify normally
+      prevObjectKeys = null
+      items.push(stringifyValue(item))
+    }
+  }
+
+  // Restore previous keys state
+  prevObjectKeys = savedPrevKeys
+
+  // Single-item arrays: compact
+  if (arr.length === 1) {
+    return `[${items[0]}]`
+  }
+
+  // Regular array formatting
+  if (currentOptions.pretty && arr.length > 0 && hasComplexItems(arr)) {
+    depth++
+    const formatted: string[] = []
+    for (let i = 0; i < items.length; i++) {
+      if (i === items.length - 1) {
+        formatted.push(`${ind()}${items[i]} ]`)
+      } else {
+        formatted.push(`${ind()}${items[i]}`)
       }
     }
     depth--
-    return `[\n${items.join(",\n")}`
+    return `[\n${formatted.join(",\n")}`
   }
-  // Simple arrays: keep on one line, add spaces in pretty mode
+
   const sep = currentOptions.pretty ? ", " : ","
-  const items = arr.map(stringifyValue).join(sep)
-  return currentOptions.pretty ? `[ ${items} ]` : `[${items}]`
-}
-
-function stringifyTable(arr: Record<string, unknown>[]): string {
-  // All objects have uniform schema
-  const keys = getObjectKeys(arr[0])
-  const parts: string[] = []
-
-  // First row is schema
-  const sep = currentOptions.pretty ? ", " : ","
-  parts.push(keys.join(sep))
-
-  // Data rows
-  for (const obj of arr) {
-    if (currentOptions.pretty) depth++
-    parts.push(keys.map(k => stringifyValue(obj[k])).join(sep))
-    if (currentOptions.pretty) depth--
-  }
-
-  if (currentOptions.pretty) {
-    // Schema row indents one char less than data rows
-    depth++
-    const dataInd = ind()
-    const schemaInd = dataInd.slice(1)  // One char less
-    const rows = parts.map((p, i) => (i === 0 ? schemaInd + p : dataInd + p)).join("\n")
-    depth--
-    return `{{\n${rows}\n${ind()}}}`
-  }
-  return `{{${parts.join(";")}}}`
+  return currentOptions.pretty ? `[ ${items.join(sep)} ]` : `[${items.join(sep)}]`
 }
 
 function stringifyObject(obj: Record<string, unknown>): string {
   const keys = getObjectKeys(obj)
 
-  // Helper to stringify a key-value pair with folding
   const stringifyPair = (k: string, forPretty: boolean): string => {
     const val = obj[k]
-    // Try to fold key + value chain (e.g., server:{host:x} → server.host:x)
-    if (val !== null && typeof val === "object" && !Array.isArray(val)) {
-      const fold = getFoldPath(val)
-      if (fold) {
-        const foldedKey = `${k}.${fold.path.join(".")}`
-        if (forPretty) {
-          return `${foldedKey}: ${stringifyValue(fold.leaf)}`
-        }
-        return `${foldedKey}:${stringifyValue(fold.leaf)}`
-      }
-    }
     if (forPretty) {
       return `${k}: ${stringifyValue(val)}`
     }
     return `${k}:${stringifyValue(val)}`
   }
 
-  // Regular object
   if (currentOptions.pretty && keys.length > 1) {
-    // Multi-key objects: first key on same line as brace, closing brace on last line
     depth++
     const pairs: string[] = []
     for (let i = 0; i < keys.length; i++) {
@@ -224,7 +174,6 @@ function stringifyObject(obj: Record<string, unknown>): string {
     depth--
     return `{ ${pairs.join(",\n")}`
   }
-  // Single-key objects stay inline even in pretty mode
   if (currentOptions.pretty && keys.length === 1) {
     const pairs = keys.map(k => stringifyPair(k, true))
     return `{ ${pairs.join(", ")} }`
@@ -236,6 +185,7 @@ function stringifyObject(obj: Record<string, unknown>): string {
 export function stringify(data: unknown, options: StringifyOptions = {}): string {
   currentOptions = { pretty: false, indent: "  ", ...options }
   depth = 0
+  prevObjectKeys = null
   return stringifyValue(data)
 }
 
@@ -243,11 +193,13 @@ export function stringify(data: unknown, options: StringifyOptions = {}): string
 
 class JotParser {
   private pos = 0
+  private prevKeys: string[] | null = null  // Track previous object keys for {:...}
+
   constructor(private input: string) {}
 
   parse(): unknown {
     this.skipWhitespace()
-    const result = this.parseValue("") // empty terminators = read to end for top-level atoms
+    const result = this.parseValue("")
     this.skipWhitespace()
     if (this.pos < this.input.length) {
       throw new Error(`Unexpected character at position ${this.pos}: '${this.input[this.pos]}'`)
@@ -265,21 +217,18 @@ class JotParser {
     return this.input[this.pos] || ""
   }
 
-  // Parse a value with specified terminators for unquoted strings
-  // terminators: characters that end an unquoted string value
   private parseValue(terminators = ""): unknown {
     this.skipWhitespace()
     const ch = this.peek()
 
     if (ch === "{") {
-      // Check if it's {{ (table) or { (object)
-      if (this.input[this.pos + 1] === "{") return this.parseTable()
+      // Check if it's {: (values-only object)
+      if (this.input[this.pos + 1] === ":") return this.parseValuesOnlyObject()
       return this.parseObject()
     }
     if (ch === "[") return this.parseArray()
     if (ch === '"') return this.parseQuotedString()
 
-    // Unquoted value - read until terminator
     return this.parseAtom(terminators)
   }
 
