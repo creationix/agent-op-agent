@@ -10,6 +10,7 @@ const LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
 const SCRIPT_DIR = dirname(import.meta.path)
 const ROOT = join(SCRIPT_DIR, "..", "encoding-formats")
 const SUMMARY_PATH = join(ROOT, "SUMMARY.md")
+const TOKEN_COUNTS_PATH = join(ROOT, "TOKEN_COUNTS.md")
 const CLAUDE_COUNTS_PATH = join(ROOT, "claude-counts-sonnet.txt")
 
 async function countTokens(content: string): Promise<number> {
@@ -478,6 +479,14 @@ async function main() {
   summary = updateSection(summary, "<!-- COMPACT_START -->", "<!-- COMPACT_END -->", compactTable, hasLegacy, hasClaude)
   summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)
+
+  // Update TOKEN_COUNTS.md chart
+  if (existsSync(TOKEN_COUNTS_PATH)) {
+    let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
+    tokenCounts = updateChart(tokenCounts, chart)
+    writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
+    console.log("Updated TOKEN_COUNTS.md")
+  }
 
   console.log("Updated SUMMARY.md")
 }

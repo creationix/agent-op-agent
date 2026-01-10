@@ -1,3 +1,17 @@
+# Token Counts by Format
+
+<!-- CHART_START -->
+```mermaid
+xychart-beta
+    title "Token Counts by Format (Qwen3)"
+    x-axis ["Jot", "JSONito", "Jot-P", "Lax", "JSON-m", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
+    y-axis "Tokens" 0 --> 14000
+    bar [6305, 7615, 7670, 7678, 7748, 8059, 8098, 9330, 9980, 11553, 12656]
+```
+<!-- CHART_END -->
+
+## Per-File Breakdown
+
 | Format | Chat | Metrics | Large | Key-folding-mixed | Logs | Firewall | Small | Github-issue | Users-50 | Medium | Hikes | Package | Key-folding-basic | Irregular | Key-folding-with-array | Products | Routes | Total | Bytes |
 |--------|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|
 | jot | 67 | 100 | 244 | 69 | 2043 | 666 | 44 | 78 | 662 | 70 | 111 | 85 | 47 | 63 | 43 | 693 | 1220 | 6305 | 16,228 |
