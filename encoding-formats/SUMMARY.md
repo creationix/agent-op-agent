@@ -1,22 +1,10 @@
 # Encoding Format Comparison
 
-Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more than bytes**.
+Token counts for 18 test documents across three tokenizers. For LLM systems, **tokens matter more than bytes**.
 
 ## Recommendation
 
-**Use Jot** for LLM contexts — unquoted keys save ~19% tokens while achieving **94% LLM encoding accuracy**.
-
-## LLM Encoding Accuracy
-
-Tested Qwen3-Coder-30b 8-bit on encoding JSON → Jot (3 runs per document, 17 docs):
-
-| Format Variant         | Semantic Accuracy | Notes               |
-|------------------------|------------------:|---------------------|
-| **Unquoted keys only** |        **94.1%**  | Simple, one rule    |
-| Tables + unquoted      |            76.5%  | Models misuse tables|
-| Tables + key folding   |           ~70.6%  | Over-folding issues |
-
-Simpler formats are easier for LLMs to learn. The only failure (routes.json) was due to output truncation on a 6KB file with complex regex patterns.
+**Use Jot** for LLM contexts — saves 16-17% tokens vs JSON while achieving 94% LLM encoding accuracy.
 
 ## Token Efficiency
 
@@ -61,25 +49,36 @@ For human-readable output or when LLMs need to read/write structured data.
 | [JSON](https://www.json.org/) (pretty)              |         12,656 |         11,937 |         14,403 |         39,884 |
 <!-- PRETTY_END -->
 
+## LLM Encoding Accuracy
+
+Tested Qwen3-Coder-30b encoding JSON to format (3 runs per document, 17 docs):
+
+| Format Variant         | Semantic Accuracy | Notes                |
+|------------------------|------------------:|----------------------|
+| **Unquoted keys only** |        **94.1%**  | Simple, one rule     |
+| Tables + unquoted      |            76.5%  | Models misuse tables |
+| Tables + key folding   |           ~70.6%  | Over-folding issues  |
+
+Simpler formats are easier for LLMs to learn. The single failure (routes.json) was output truncation on a 6KB file.
+
 ## Format Descriptions
 
 ### Jot
 
-JSON with unquoted keys. Simple rule, high LLM accuracy.
+JSON with minimal quoting. Unquoted keys and string values where safe.
 
 ```jot
 {name:Alice,age:30,items:[a,b,c],active:true}
 ```
 
-Features:
+Optional features (enabled in encoder, tested separately for LLM accuracy):
 
-- **Unquoted keys**: Keys don't need quotes unless they contain special characters
-- **Minimal string quoting**: Only quote strings containing unsafe chars (`: , { } [ ] "`), reserved words, or whitespace
-- **94% LLM encoding accuracy**: Simple format that LLMs can reliably learn and produce
+- **Key folding**: `{a:{b:1}}` → `{a.b:1}` for single-key nested objects
+- **Tables**: `[{a:1},{a:2}]` → `{{:a;1;2}}` for uniform object arrays
 
 ### Lax
 
-Relaxed JSON: no commas, no key quotes. **0% vs JSON**.
+Whitespace-separated JSON: no commas between elements.
 
 ```lax
 {name:"Alice" age:30 items:["a" "b" "c"]}
@@ -87,54 +86,55 @@ Relaxed JSON: no commas, no key quotes. **0% vs JSON**.
 
 ### TOON
 
-YAML-like with count guards and table syntax. **-1% vs JSON**.
+YAML-like indentation with optional table syntax and count guards.
 
-```yaml
+```toon
 users[2]{id,name}:
   1,Alice
   2,Bob
 ```
 
-## Full Results
+### JSONito
 
-| Format      | Small | Medium | Large | Hikes | Chat | Metrics | Package | Issue | Irregular | Users-50 | Logs  | Firewall | Products | Routes |
-|-------------|------:|-------:|------:|------:|-----:|--------:|--------:|------:|----------:|---------:|------:|---------:|---------:|-------:|
-| **Jot**     |    44 |     70 |   244 |   111 |   67 |     100 |      85 |    78 |        63 |      662 | 2,043 |      666 |      693 |  1,220 |
-| JSONito     |    45 |    103 |   312 |   158 |   86 |      89 |     101 |    89 |        59 |    1,234 | 1,941 |      919 |      846 |  1,426 |
-| Lax         |    45 |     92 |   265 |   144 |   79 |     117 |      95 |    88 |        69 |    1,229 | 2,166 |      785 |      876 |  1,442 |
-| JSON (mini) |    48 |     97 |   266 |   158 |   76 |     117 |      97 |    88 |        68 |    1,279 | 2,108 |      827 |      866 |  1,459 |
-| TOON        |    50 |     83 |   313 |   122 |   68 |     110 |     104 |    90 |        88 |      763 | 2,492 |    1,073 |      954 |  1,574 |
-| D2          |    55 |    104 |   316 |   173 |   80 |     138 |      90 |    97 |        81 |    1,202 | 2,092 |      894 |      994 |  1,536 |
-| YAML        |    56 |    123 |   327 |   187 |   82 |     140 |     104 |    98 |        87 |    1,597 | 2,487 |    1,029 |    1,095 |  1,696 |
-| TOML        |    56 |    118 |   377 |   189 |   84 |     139 |     104 |    99 |        86 |    1,625 | 2,498 |    1,495 |    1,114 |  1,790 |
+Byte-optimized JSON with string deduplication via preamble dictionary.
 
-### Test Data
+### D2
 
-- **small**: Config object (6 fields, 3-item array)
-- **medium**: User list (3 records + metadata)
-- **large**: Kubernetes deployment spec (nested config)
-- **hikes**: Tabular records (3 hikes with uniform schema)
-- **chat**: LLM conversation (3 messages, text-heavy)
-- **metrics**: Time series (5 data points, numeric-heavy)
-- **package**: npm manifest (flat object with nested deps)
-- **issue**: GitHub issue (mixed nesting, labels array)
-- **irregular**: Event log (objects with different keys)
-- **users-50**: 50 user records (uniform schema, table-friendly)
-- **logs**: 50 log entries (semi-uniform with varying fields)
-- **firewall**: WAF rules (deeply nested, mixed schemas)
-- **products**: E-commerce catalog (nested specs, variants)
-- **routes**: API routing config (large uniform tables)
+Declarative data format using `=` assignment and shell-like quoting.
 
 ## Why Not Byte-Optimized Formats?
 
-Formats like JSONito achieve excellent byte compression and can save tokens on large uniform datasets (-4% here), but:
+Formats like JSONito achieve excellent byte compression (-39%) but:
 
-- Gains are inconsistent (small docs often cost more tokens than JSON)
+- Token savings are inconsistent (small docs often cost more than JSON)
 - Deduplication preambles add overhead that doesn't scale down
 - LLMs cannot reliably generate formats requiring state tracking
 
-## Environment
+## Tokenizers
 
-- **Model**: Qwen3-Coder-30b @ 5-bit quantization
-- **API**: LM Studio localhost:1234
-- **Date**: 2026-01-09
+- **Qwen**: Qwen3-Coder-30b via LM Studio API
+- **Legacy**: Anthropic legacy tokenizer (`@anthropic-ai/tokenizer`)
+- **Claude**: Claude API token counting endpoint (Sonnet/Opus/Haiku share tokenizer)
+
+## Test Data
+
+18 documents covering diverse structures:
+
+| Document          | Description                      |
+|-------------------|----------------------------------|
+| small             | Config object (6 fields)         |
+| medium            | User list with metadata          |
+| large             | Kubernetes deployment spec       |
+| hikes             | Tabular records (uniform schema) |
+| chat              | LLM conversation (text-heavy)    |
+| metrics           | Time series (numeric-heavy)      |
+| package           | npm manifest (nested deps)       |
+| github-issue      | Mixed nesting with labels        |
+| irregular         | Event log (varying keys)         |
+| users-50          | 50 user records (table-friendly) |
+| logs              | 50 log entries (semi-uniform)    |
+| firewall          | WAF rules (deeply nested)        |
+| products          | E-commerce catalog (variants)    |
+| routes            | API routing config (large tables)|
+| key-folding-*     | Key folding test cases           |
+| json-counts-cache | Cached token counts              |
