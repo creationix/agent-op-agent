@@ -1,6 +1,10 @@
 # Token Counts by Format
 
-<!-- CHART_START -->
+## Qwen Tokenizer (LM Studio)
+
+Tokens measured using **Qwen3-Coder-30b** via LM Studio API. This is the primary tokenizer used for testing local model efficiency.
+
+<!-- QWEN_CHART_START -->
 ```mermaid
 xychart-beta
     title "Token Savings vs JSON (negative = better)"
@@ -12,15 +16,9 @@ xychart-beta
     line "YAML" [25, 18, 27, 19, 26, 24, 10, 16, 20, 7, 8, 14, 11, 17, 23, 28, 18]
     line "TOON" [-40, -23, -14, 9, 10, 30, 9, 8, -6, 7, -11, 13, 2, 4, 18, 29, 18]
 ```
-<!-- CHART_END -->
+<!-- QWEN_CHART_END -->
 
-- JSON (blue) - baseline for comparison
-- Jot (green) — best compact, consistently lowest
-- Lax (white) — alternative compact, middle ground
-- YAML (yellow) — pretty baseline, consistently highest
-- TOON (red) — interesting variation, good on tabular data
-
-## Per-File Breakdown
+### Per-File Breakdown (Qwen)
 
 | Format | Chat | Metrics | Large | Key-folding-mixed | Logs | Firewall | Small | Github-issue | Users-50 | Medium | Hikes | Package | Key-folding-basic | Irregular | Key-folding-with-array | Products | Routes | Total | Bytes |
 |--------|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|
@@ -33,3 +31,25 @@ xychart-beta
 | toon | 68 | 110 | 313 | 88 | 2492 | 1073 | 50 | 90 | 763 | 83 | 122 | 104 | 63 | 88 | 63 | 954 | 1574 | 8098 | 22,380 |
 | yaml | 82 | 140 | 327 | 89 | 2487 | 1029 | 56 | 98 | 1597 | 123 | 187 | 104 | 64 | 87 | 69 | 1095 | 1696 | 9330 | 26,366 |
 | toml | 84 | 139 | 377 | 85 | 2498 | 1495 | 56 | 99 | 1625 | 118 | 189 | 104 | 60 | 86 | 61 | 1114 | 1790 | 9980 | 28,549 |
+
+---
+
+## Legacy Claude Tokenizer
+
+Tokens measured using **@anthropic-ai/tokenizer** (Claude's legacy tokenizer). This is the older tokenizer used by earlier Claude models.
+
+<!-- LEGACY_CHART_START -->
+```mermaid
+xychart-beta
+    title "Token Savings vs JSON (negative = better)"
+    x-axis ["Users50", "Hikes", "Products", "Metrics", "Medium", "Routes", "Chat", "KF-arr", "Large", "KF-basic", "Issue", "KF-mix", "Firewall", "Package", "Logs", "Small", "Irregular"]
+    y-axis "% vs JSON" -50 --> 30
+    line "JSON" [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    line "Jot" [-37, -27, -22, -21, -21, -12, -11, -10, -8, -8, -7, -6, -2, -2, 0, 0, 2]
+    line "Lax" [0, -5, 1, 0, -3, -1, 4, 4, -3, -8, -1, -7, -1, -2, 1, 0, 4]
+    line "YAML" [3, 3, 4, 5, 4, 4, 4, 15, 9, 8, 7, 4, 8, 0, 2, 11, 8]
+    line "TOON" [-37, -24, -7, -21, -20, 3, -11, 12, 4, 6, 0, 6, 13, 0, 8, 3, 10]
+```
+<!-- LEGACY_CHART_END -->
+
+Note: The legacy tokenizer may produce different results than modern Claude models, but is useful for comparison and runs locally without API calls.

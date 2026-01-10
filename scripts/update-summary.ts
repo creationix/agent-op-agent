@@ -501,9 +501,9 @@ ${formatLines.join("\n")}
 \`\`\``
 }
 
-function updateChart(content: string, chart: string): string {
-  const startMarker = "<!-- CHART_START -->"
-  const endMarker = "<!-- CHART_END -->"
+function updateChart(content: string, chart: string, markerName = "CHART"): string {
+  const startMarker = `<!-- ${markerName}_START -->`
+  const endMarker = `<!-- ${markerName}_END -->`
   if (content.includes(startMarker) && content.includes(endMarker)) {
     const before = content.slice(0, content.indexOf(startMarker) + startMarker.length)
     const afterMarker = content.slice(content.indexOf(endMarker))
@@ -670,20 +670,33 @@ async function main() {
   summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)
 
-  // Update TOKEN_COUNTS.md with per-file chart (% savings vs JSON)
-  // Use Qwen counts from perFileData to match the table
+  // Update TOKEN_COUNTS.md with per-file charts
   if (existsSync(TOKEN_COUNTS_PATH)) {
     let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
 
+    // Qwen chart (from perFileData, matches table)
     const jsonMiniPerFile = perFileData.get("json-mini")
     if (jsonMiniPerFile && jsonMiniPerFile.size > 0) {
-      const perFileChart = buildPerFileChart(perFileData, jsonMiniPerFile)
-      tokenCounts = updateChart(tokenCounts, perFileChart)
-      writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
-      console.log("Updated TOKEN_COUNTS.md")
+      const qwenChart = buildPerFileChart(perFileData, jsonMiniPerFile)
+      tokenCounts = updateChart(tokenCounts, qwenChart, "QWEN_CHART")
     } else {
-      console.log("Skipping TOKEN_COUNTS.md chart - no JSON per-file data (delete cache to regenerate)")
+      console.log("Skipping Qwen chart - no JSON per-file data (delete cache to regenerate)")
     }
+
+    // Legacy chart (computed fresh using legacy tokenizer)
+    const legacyPerFile = new Map<string, PerFileStats>()
+    legacyPerFile.set("json-mini", computePerFileLegacyCounts("json", "json", (c) => JSON.stringify(JSON.parse(c))))
+    legacyPerFile.set("jot", computePerFileLegacyCounts("jot", "jot"))
+    legacyPerFile.set("lax", computePerFileLegacyCounts("lax", "lax"))
+    legacyPerFile.set("yaml", computePerFileLegacyCounts("yaml", "yaml"))
+    legacyPerFile.set("toon", computePerFileLegacyCounts("toon", "toon"))
+
+    const legacyJsonMini = legacyPerFile.get("json-mini")!
+    const legacyChart = buildPerFileChart(legacyPerFile, legacyJsonMini)
+    tokenCounts = updateChart(tokenCounts, legacyChart, "LEGACY_CHART")
+
+    writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
+    console.log("Updated TOKEN_COUNTS.md")
   }
 
   console.log("Updated SUMMARY.md")
