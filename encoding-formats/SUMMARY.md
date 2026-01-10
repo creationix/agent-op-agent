@@ -4,7 +4,9 @@ Token counts for 18 test documents across three tokenizers. For LLM systems, **t
 
 ## Recommendation
 
-**Use Jot** for LLM contexts — saves 16-17% tokens vs JSON while achieving 94% LLM encoding accuracy.
+**Use Jot** for LLM contexts — saves 16-17% tokens vs JSON.
+
+Note: Small models (e.g., Qwen3-30b) may struggle to encode large Jot documents accurately due to the format's advanced features like tables and key folding.
 
 ## Token Efficiency
 
@@ -48,18 +50,6 @@ For human-readable output or when LLMs need to read/write structured data.
 | [JSON](json/smart-json.ts) (smart)                  |   11,799 (-7%) |   10,966 (-8%) |  12,687 (-12%) |  32,657 (-18%) |
 | [JSON](https://www.json.org/) (pretty)              |         12,656 |         11,937 |         14,403 |         39,884 |
 <!-- PRETTY_END -->
-
-## LLM Encoding Accuracy
-
-Tested Qwen3-Coder-30b encoding JSON to format (3 runs per document, 17 docs):
-
-| Format Variant         | Semantic Accuracy | Notes                |
-|------------------------|------------------:|----------------------|
-| **Unquoted keys only** |        **94.1%**  | Simple, one rule     |
-| Tables + unquoted      |            76.5%  | Models misuse tables |
-| Tables + key folding   |           ~70.6%  | Over-folding issues  |
-
-Simpler formats are easier for LLMs to learn. The single failure (routes.json) was output truncation on a 6KB file.
 
 ## Format Descriptions
 

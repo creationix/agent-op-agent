@@ -6,21 +6,12 @@ Research project testing data encodings for LLM token efficiency. You (Claude) d
 
 ## Current Results
 
-**Jot** is the leading format at -19% tokens vs JSON. See `encoding-formats/SUMMARY.md` for full comparison.
+**Jot** is the leading format. See `encoding-formats/SUMMARY.md` for full comparison.
 
-**Compact** (vs minified JSON):
-
-| Format | vs JSON |
-| ------ | ------- |
-| Jot | -19% |
-| JSON (mini) | baseline |
-
-**Pretty** (vs pretty JSON):
-
-| Format | vs JSON |
-| ------ | ------- |
-| Jot (pretty) | -37% |
-| JSON (pretty) | baseline |
+| Mode    | Jot vs JSON  |
+|---------|--------------|
+| Compact | -16% to -17% |
+| Pretty  | -35% to -41% |
 
 ## Jot Format
 
@@ -28,23 +19,16 @@ Encoder: `encoding-formats/jot/jot.ts`
 
 Features:
 
-- Minimal quoting (only quote strings with unsafe chars)
+- Minimal quoting (only quote strings with unsafe chars like `: ; , { } [ ] "`)
 - Key folding: `{a:{b:1}}` → `{a.b:1}` (quote keys with literal dots: `{"a.b":1}`)
-- Tables: `[{a:1},{a:2}]` → `[:a|1|2]` (only when schema reused)
+- Tables: `[{a:1},{a:2}]` → `{{:a;1;2}}` (only when 2+ consecutive objects share schema)
 - Pretty-print mode with `stringify(data, { pretty: true })`
 
 Pretty-print rules:
 
-- Single-key objects inline: `{ key: value }`
-- Single-item arrays compact: `[{...}]`
-- Schema rows indent 1 char less than data rows
-- Tables start on same line as key: `labels: [`
-
-## MCP Tools
-
-LM Studio bridge on `localhost:1234`:
-
-- `chat_completion(prompt, system_prompt, temperature, max_tokens)` - query local model
+- Single-key objects always inline: `{ key: value }`
+- Array items use compact format unless last value is multi-line
+- Tables: schema rows at 1 indent level, data rows at 2 indent levels
 
 ## Scripts
 
@@ -87,8 +71,6 @@ Reads counts from:
 - `encoding-formats/claude-counts-sonnet.txt` - Claude token counts
 - Computes legacy tokenizer counts using `@anthropic-ai/tokenizer`
 
-Caches slow LM Studio JSON mini/pretty counts for 24 hours.
-
 ### Testing LLM Accuracy
 
 **Quick test (3 docs):**
@@ -105,27 +87,7 @@ bun scripts/test-llm-comprehensive.ts [format|all] [runs=3]
 
 Both scripts test Qwen's ability to encode/decode formats using FORMAT.md as reference. Requires LM Studio running on localhost:1234.
 
-- **Exact match**: Output matches reference encoder exactly
-- **Semantic**: Output parses back to correct JSON (allows formatting differences)
-
-The comprehensive test logs all conversations to `encoding-formats/llm-conversations.log` for debugging:
-
-```bash
-tail -f encoding-formats/llm-conversations.log
-```
-
 Results saved to `encoding-formats/llm-accuracy-<date>.json` or `encoding-formats/llm-comprehensive-<timestamp>.json`.
-
-### Iterating on FORMAT.md
-
-When running comprehensive tests, monitor results and stop if accuracy is low:
-
-1. Run test in background: `bun scripts/test-llm-comprehensive.ts all 3 &`
-2. Watch progress: `tail -f encoding-formats/llm-conversations.log`
-3. If seeing failures, kill the test: `pkill -f test-llm-comprehensive`
-4. Check failure patterns in the log (look for ❌ FAILED entries)
-5. Update the relevant `FORMAT.md` to clarify the confusing syntax
-6. Re-run and iterate until accuracy improves
 
 ### Full Workflow
 
@@ -135,16 +97,11 @@ When running comprehensive tests, monitor results and stop if accuracy is low:
 4. `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` - recount Claude tokens
 5. `bun scripts/update-summary.ts` - regenerate SUMMARY.md tables
 
-## Next Steps
-
-1. **Optimize tokenization** - investigate why certain patterns tokenize poorly
-
 ## Key Files
 
 - `encoding-formats/SUMMARY.md` - token comparison results
 - `encoding-formats/gen.ts` - unified generator for all formats
 - `encoding-formats/jot/jot.ts` - Jot encoder/decoder
-- `encoding-formats/*/FORMAT.md` - format specifications for LLM prompts (jot, lax, toon)
-- `encoding-formats/json/*.json` - 17 source test documents
-- `encoding-formats/json/smart-json.ts` - smart JSON formatter
+- `encoding-formats/jot/FORMAT.md` - Jot format specification
+- `encoding-formats/json/*.json` - 18 source test documents
 - `scripts/test-llm-accuracy.ts` - LLM encode/decode accuracy testing

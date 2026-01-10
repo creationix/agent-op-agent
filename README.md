@@ -1,40 +1,59 @@
 # LLM Encoding Research
 
-Testing token-efficient alternatives to standard LLM encodings and protocols.
-
-## Setup
-
-1. Install [LM Studio](https://lmstudio.ai) and load a model (e.g., `qwen/qwen3-coder-30b`)
-2. Start LM Studio's local server (default: `localhost:1234`)
-3. Pull MCP bridge: `docker pull ghcr.io/infinitimeless/lmstudio-mcp:latest`
-4. Run Claude Code in this directory (`.mcp.json` auto-configures the bridge)
+Testing token-efficient data formats for LLM contexts.
 
 ## Results
 
-### Data Encoding ([encoding-formats/SUMMARY.md](encoding-formats/SUMMARY.md))
+### Data Encoding
 
-| Format | Tokens | vs JSON |
-|--------|-------:|--------:|
-| **Jot** | 6,388 | **-18%** |
-| Jot (pretty) | 8,092 | +4% |
-| JSON | 7,748 | baseline |
-| YAML | 9,330 | +20% |
+See [encoding-formats/SUMMARY.md](encoding-formats/SUMMARY.md) for full comparison.
 
-**Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax + count guards.
+| Format       | Tokens | vs JSON  |
+|--------------|-------:|----------|
+| **Jot**      |  6,525 | **-16%** |
+| JSON (mini)  |  7,748 | baseline |
+| Jot (pretty) |  8,239 | -35%*    |
+| JSON (pretty)|  12,656| baseline |
 
-Token counts via Claude API (requires manual run with API key):
+*Pretty formats compared against pretty JSON baseline.
 
-```bash
-ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts
+**Jot**: JSON with minimal quoting. Unquoted keys and string values where safe, plus optional key folding and table syntax.
+
+```jot
+{name:Alice,age:30,items:[a,b,c],active:true}
 ```
 
-Results saved to `encoding-formats/claude-counts.txt`.
+### Tool Calling
 
-### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
+See [tool-call-formats/SUMMARY.md](tool-call-formats/SUMMARY.md).
 
-| Format | Tokens (13 tools) | Reduction |
-|--------|------------------:|----------:|
-| Positional | 188 | **89%** |
-| JSON Schema | 1696 | baseline |
+| Format      | Tokens (13 tools) | Reduction  |
+|-------------|------------------:|------------|
+| Positional  |               188 | **-89%**   |
+| JSON Schema |             1,696 | baseline   |
 
-**Positional**: `<tool>name("arg", opt=val)</tool>` with `<result>...</result>` responses
+## Setup
+
+1. Install [Bun](https://bun.sh)
+2. `bun install`
+
+For LLM accuracy testing:
+
+1. Install [LM Studio](https://lmstudio.ai) and load a model (e.g., Qwen3-Coder-30b)
+2. Start LM Studio's local server (default: `localhost:1234`)
+
+## Usage
+
+```bash
+# Regenerate all format encodings
+bun encoding-formats/gen.ts
+
+# Count tokens (requires LM Studio)
+bun scripts/count-format.ts all
+
+# Count Claude tokens (free, requires API key)
+ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts
+
+# Update summary tables
+bun scripts/update-summary.ts
+```
