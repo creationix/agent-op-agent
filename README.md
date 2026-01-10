@@ -22,6 +22,14 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 **Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax + count guards.
 
+Token counts via Claude API (requires manual run with API key):
+
+```bash
+ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts
+```
+
+Results saved to `encoding-formats/claude-counts.txt`.
+
 ### Tool Calling ([tool-call-formats/](tool-call-formats/SUMMARY.md))
 
 | Format | Tokens (13 tools) | Reduction |

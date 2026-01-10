@@ -13,13 +13,13 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 For machine-to-machine or LLM contexts where readability isn't required.
 
 <!-- COMPACT_START -->
-| Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
-|-----------------------------------------------------|-------:|---------:|-------:|---------:|
-| **[Jot](jot/)**                                     |  6,305 |     -19% | 16,228 |     -30% |
-| [JSONito](https://github.com/creationix/jsonito)    |  7,615 |      -2% | 13,733 |     -41% |
-| [Lax](lax/)                                         |  7,678 |      -1% | 20,595 |     -11% |
-| [JSON](https://www.json.org/) (mini)                |  7,748 | baseline | 23,119 | baseline |
-| [D2](https://github.com/creationix/d2)              |  8,059 |      +4% | 16,891 |     -27% |
+| Format                                              | Qwen           | Legacy         | Claude         | Bytes          |
+|-----------------------------------------------------|---------------:|---------------:|---------------:|---------------:|
+| **[Jot](jot/)**                                     |   6,305 (-19%) |   6,258 (-14%) |   6,635 (-17%) |  16,228 (-30%) |
+| [JSONito](https://github.com/creationix/jsonito)    |    7,615 (-2%) |    7,640 (+5%) |    8,153 (+1%) |  13,733 (-41%) |
+| [Lax](lax/)                                         |    7,678 (-1%) |    7,225 (-1%) |    7,739 (-4%) |  20,595 (-11%) |
+| [JSON](https://www.json.org/) (mini)                |          7,748 |          7,279 |          8,033 |         23,119 |
+| [D2](https://github.com/creationix/d2)              |    8,059 (+4%) |    7,406 (+2%) |    7,741 (-4%) |  16,891 (-27%) |
 <!-- COMPACT_END -->
 
 ### Pretty-Printed Formats
@@ -27,14 +27,14 @@ For machine-to-machine or LLM contexts where readability isn't required.
 For human-readable output or when LLMs need to read/write structured data.
 
 <!-- PRETTY_START -->
-| Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
-|-----------------------------------------------------|-------:|---------:|-------:|---------:|
-| **[Jot](jot/) (pretty)**                            |  7,670 |     -39% | 20,954 |     -47% |
-| [TOON](toon/)                                       |  8,098 |     -36% | 22,380 |     -44% |
-| [YAML](https://yaml.org/)                           |  9,330 |     -26% | 26,366 |     -34% |
-| [TOML](https://toml.io/)                            |  9,980 |     -21% | 28,549 |     -28% |
-| [JSON](json/smart-json.ts) (smart)                  | 11,553 |      -9% | 32,169 |     -19% |
-| [JSON](https://www.json.org/) (pretty)              | 12,656 | baseline | 39,884 | baseline |
+| Format                                              | Qwen           | Legacy         | Claude         | Bytes          |
+|-----------------------------------------------------|---------------:|---------------:|---------------:|---------------:|
+| **[Jot](jot/) (pretty)**                            |   7,670 (-39%) |   6,795 (-42%) |   7,876 (-45%) |  20,954 (-47%) |
+| [TOON](toon/)                                       |   8,098 (-36%) |   6,942 (-41%) |   8,220 (-42%) |  22,380 (-44%) |
+| [YAML](https://yaml.org/)                           |   9,330 (-26%) |   7,528 (-36%) |   9,276 (-35%) |  26,366 (-34%) |
+| [TOML](https://toml.io/)                            |   9,980 (-21%) |   11,068 (-6%) |  11,320 (-20%) |  28,549 (-28%) |
+| [JSON](json/smart-json.ts) (smart)                  |   11,553 (-9%) |   10,786 (-9%) |  12,455 (-12%) |  32,169 (-19%) |
+| [JSON](https://www.json.org/) (pretty)              |         12,656 |         11,798 |         14,230 |         39,884 |
 <!-- PRETTY_END -->
 
 ## Format Descriptions

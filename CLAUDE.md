@@ -49,8 +49,9 @@ LM Studio bridge on `localhost:1234`:
 ## Scripts
 
 - `bun encoding-formats/gen.ts` - regenerate all format encodings
-- `bun scripts/count-format.ts <format|all>` - count tokens for a format folder
+- `bun scripts/count-format.ts <format|all>` - count tokens for a format folder (uses LM Studio)
 - `bun scripts/update-summary.ts` - update SUMMARY.md from counts.txt files
+- `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` - count tokens using Claude API (manual, requires API key)
 
 ## Next Steps
 

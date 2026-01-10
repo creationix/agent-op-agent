@@ -4,11 +4,13 @@
 
 import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs"
 import { join, dirname } from "node:path"
+import { countTokens as countLegacyTokens } from "@anthropic-ai/tokenizer"
 
 const LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
 const SCRIPT_DIR = dirname(import.meta.path)
 const ROOT = join(SCRIPT_DIR, "..", "encoding-formats")
 const SUMMARY_PATH = join(ROOT, "SUMMARY.md")
+const CLAUDE_COUNTS_PATH = join(ROOT, "claude-counts-sonnet.txt")
 
 async function countTokens(content: string): Promise<number> {
   const response = await fetch(LM_STUDIO_URL, {
@@ -38,11 +40,26 @@ const FORMAT_INFO: Record<string, { link: string; bold?: boolean }> = {
   toml: { link: "[TOML](https://toml.io/)" },
 }
 
+// Map Claude format names to our keys
+const CLAUDE_FORMAT_MAP: Record<string, string> = {
+  "Jot": "jot",
+  "Jot (pretty)": "jot-pretty",
+  "JSON (mini)": "json-mini",
+  "JSON (pretty)": "json-pretty",
+  "JSON (smart)": "json-smart",
+  "JSONito": "jsonito",
+  "Lax": "lax",
+  "TOON": "toon",
+  "YAML": "yaml",
+  "D2": "d2",
+  "TOML": "toml",
+}
+
 // Which category each format belongs to
 const COMPACT_FORMATS = ["jot", "jsonito", "lax", "d2", "json-mini"]
 const PRETTY_FORMATS = ["jot-pretty", "json-smart", "yaml", "toml", "toon", "json-pretty"]
 
-type FormatStats = { tokens: number; bytes: number }
+type FormatStats = { tokens: number; bytes: number; claudeTokens?: number; legacyTokens?: number }
 
 function parseCountsFile(content: string): Map<string, FormatStats> {
   const results = new Map<string, FormatStats>()
@@ -67,17 +84,135 @@ function parseCountsFile(content: string): Map<string, FormatStats> {
   return results
 }
 
-function pct(val: number, baseline: number): string {
-  if (val === baseline) return "baseline"
+function parseClaudeCounts(): Map<string, number> {
+  const results = new Map<string, number>()
+
+  if (!existsSync(CLAUDE_COUNTS_PATH)) {
+    console.log("No Claude counts file found, skipping Claude column")
+    return results
+  }
+
+  const content = readFileSync(CLAUDE_COUNTS_PATH, "utf-8")
+  let currentFormat = ""
+
+  for (const line of content.split("\n")) {
+    const sectionMatch = line.match(/^=== (.+) ===$/)
+    if (sectionMatch) {
+      currentFormat = sectionMatch[1]
+      continue
+    }
+
+    const totalMatch = line.match(/^\s+Total:\s+(\d+)/)
+    if (totalMatch && currentFormat) {
+      const key = CLAUDE_FORMAT_MAP[currentFormat]
+      if (key) {
+        results.set(key, parseInt(totalMatch[1]))
+      }
+    }
+  }
+
+  return results
+}
+
+// Compute legacy tokenizer counts for all formats
+function computeLegacyCounts(): Map<string, number> {
+  const results = new Map<string, number>()
+  const jsonDir = join(ROOT, "json")
+  const sourceFiles = readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))
+
+  // Helper to count tokens for all source files
+  const countAll = (getContent: (baseName: string) => string): number => {
+    let total = 0
+    for (const file of sourceFiles) {
+      const baseName = file.replace(".json", "")
+      try {
+        total += countLegacyTokens(getContent(baseName))
+      } catch {
+        // Skip files that fail
+      }
+    }
+    return total
+  }
+
+  // JSON mini
+  results.set("json-mini", countAll((f) =>
+    JSON.stringify(JSON.parse(readFileSync(join(jsonDir, `${f}.json`), "utf-8")))
+  ))
+
+  // JSON pretty
+  results.set("json-pretty", countAll((f) =>
+    JSON.stringify(JSON.parse(readFileSync(join(jsonDir, `${f}.json`), "utf-8")), null, 2)
+  ))
+
+  // JSON smart
+  results.set("json-smart", countAll((f) =>
+    readFileSync(join(jsonDir, `${f}.smart.json`), "utf-8")
+  ))
+
+  // Jot
+  results.set("jot", countAll((f) =>
+    readFileSync(join(ROOT, "jot", `${f}.jot`), "utf-8")
+  ))
+
+  // Jot pretty
+  results.set("jot-pretty", countAll((f) =>
+    readFileSync(join(ROOT, "jot", `${f}.pretty.jot`), "utf-8")
+  ))
+
+  // Lax
+  results.set("lax", countAll((f) =>
+    readFileSync(join(ROOT, "lax", `${f}.lax`), "utf-8")
+  ))
+
+  // JSONito
+  results.set("jsonito", countAll((f) =>
+    readFileSync(join(ROOT, "jsonito", `${f}.jito`), "utf-8")
+  ))
+
+  // TOON
+  results.set("toon", countAll((f) =>
+    readFileSync(join(ROOT, "toon", `${f}.toon`), "utf-8")
+  ))
+
+  // YAML
+  results.set("yaml", countAll((f) =>
+    readFileSync(join(ROOT, "yaml", `${f}.yaml`), "utf-8")
+  ))
+
+  // D2
+  results.set("d2", countAll((f) =>
+    readFileSync(join(ROOT, "d2", `${f}.d2`), "utf-8")
+  ))
+
+  // TOML
+  results.set("toml", countAll((f) =>
+    readFileSync(join(ROOT, "toml", `${f}.toml`), "utf-8")
+  ))
+
+  return results
+}
+
+// Format a value with percentage inline, e.g. "6,305 (-19%)"
+function valWithPct(val: number, baseline: number, isBaseline: boolean): string {
+  const valStr = val.toLocaleString()
+  if (isBaseline) return valStr
   const diff = ((val - baseline) / baseline) * 100
   const sign = diff > 0 ? "+" : ""
-  return `${sign}${Math.round(diff)}%`
+  return `${valStr} (${sign}${Math.round(diff)}%)`
 }
 
 function buildTable(
-  rows: { key: string; tokens: number; bytes: number }[],
-  baselineKey: string
+  rows: { key: string; tokens: number; bytes: number; claudeTokens?: number; legacyTokens?: number }[],
+  baselineKey: string,
+  claudeCounts: Map<string, number>,
+  legacyCounts: Map<string, number>
 ): string {
+  // Add Claude and legacy tokens to rows
+  for (const row of rows) {
+    row.claudeTokens = claudeCounts.get(row.key)
+    row.legacyTokens = legacyCounts.get(row.key)
+  }
+
   rows.sort((a, b) => a.tokens - b.tokens)
 
   const baseline = rows.find((r) => r.key === baselineKey)
@@ -86,41 +221,117 @@ function buildTable(
     return ""
   }
 
+  const claudeBaseline = baseline.claudeTokens
+  const legacyBaseline = baseline.legacyTokens
+
+  // Determine if we should show Legacy/Claude columns (if any row has data)
+  const hasLegacyData = rows.some((r) => r.legacyTokens !== undefined) && legacyBaseline !== undefined
+  const hasClaudeData = rows.some((r) => r.claudeTokens !== undefined) && claudeBaseline !== undefined
+
   let table = ""
   for (const row of rows) {
     const info = FORMAT_INFO[row.key] || { link: row.key }
     const link = info.bold ? `**${info.link}**` : info.link
-    const tokenPct = row.key === baselineKey ? "baseline" : pct(row.tokens, baseline.tokens)
-    const bytePct = row.key === baselineKey ? "baseline" : pct(row.bytes, baseline.bytes)
+    const isBaseline = row.key === baselineKey
 
     const padLink = link.padEnd(51)
-    const padTokens = row.tokens.toLocaleString().padStart(6)
-    const padTokenPct = tokenPct.padStart(8)
-    const padBytes = row.bytes.toLocaleString().padStart(6)
-    const padBytePct = bytePct.padStart(8)
+    const qwenCol = valWithPct(row.tokens, baseline.tokens, isBaseline).padStart(14)
+    const bytesCol = valWithPct(row.bytes, baseline.bytes, isBaseline).padStart(14)
 
-    table += `| ${padLink} | ${padTokens} | ${padTokenPct} | ${padBytes} | ${padBytePct} |\n`
+    // Legacy column (show empty cell if column exists but row has no data)
+    let legacyCol = ""
+    if (hasLegacyData) {
+      if (row.legacyTokens !== undefined) {
+        legacyCol = ` | ${valWithPct(row.legacyTokens, legacyBaseline!, isBaseline).padStart(14)}`
+      } else {
+        legacyCol = ` | ${"".padStart(14)}`
+      }
+    }
+
+    // Claude column (show empty cell if column exists but row has no data)
+    let claudeCol = ""
+    if (hasClaudeData) {
+      if (row.claudeTokens !== undefined) {
+        claudeCol = ` | ${valWithPct(row.claudeTokens, claudeBaseline!, isBaseline).padStart(14)}`
+      } else {
+        claudeCol = ` | ${"".padStart(14)}`
+      }
+    }
+
+    // Order: Format | Qwen | Legacy | Claude | Bytes
+    table += `| ${padLink} | ${qwenCol}${legacyCol}${claudeCol} | ${bytesCol} |\n`
   }
 
   return table
 }
 
-function updateSection(content: string, startMarker: string, endMarker: string, table: string): string {
+function updateSection(
+  content: string,
+  startMarker: string,
+  endMarker: string,
+  table: string,
+  hasLegacy: boolean,
+  hasClaude: boolean
+): string {
   if (content.includes(startMarker) && content.includes(endMarker)) {
     const before = content.slice(0, content.indexOf(startMarker) + startMarker.length)
     const afterMarker = content.slice(content.indexOf(endMarker))
-    // Keep the table header that's after the start marker
-    const headerEnd = before.lastIndexOf("\n")
-    const header = `| Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
-|-----------------------------------------------------|-------:|---------:|-------:|---------:|
+
+    const legacyHeader = hasLegacy ? " Legacy         |" : ""
+    const legacySep = hasLegacy ? "---------------:|" : ""
+    const claudeHeader = hasClaude ? " Claude         |" : ""
+    const claudeSep = hasClaude ? "---------------:|" : ""
+
+    const header = `| Format                                              | Qwen           |${legacyHeader}${claudeHeader} Bytes          |
+|-----------------------------------------------------|---------------:|${legacySep}${claudeSep}---------------:|
 `
     return before + "\n" + header + table + afterMarker
   }
   return content
 }
 
+// Cache file for JSON mini/pretty counts (avoid slow LM Studio calls)
+const JSON_CACHE_PATH = join(ROOT, "json", "json-counts-cache.json")
+const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+type JsonCountsCache = {
+  timestamp: number
+  miniTokens: number
+  miniBytes: number
+  prettyTokens: number
+  prettyBytes: number
+}
+
+function loadJsonCountsCache(): JsonCountsCache | null {
+  if (!existsSync(JSON_CACHE_PATH)) return null
+  try {
+    const cache = JSON.parse(readFileSync(JSON_CACHE_PATH, "utf-8")) as JsonCountsCache
+    if (Date.now() - cache.timestamp < CACHE_MAX_AGE_MS) {
+      return cache
+    }
+  } catch {
+    // Invalid cache
+  }
+  return null
+}
+
+function saveJsonCountsCache(cache: JsonCountsCache) {
+  writeFileSync(JSON_CACHE_PATH, JSON.stringify(cache, null, 2))
+}
+
 async function main() {
   const allStats: Map<string, FormatStats> = new Map()
+  const claudeCounts = parseClaudeCounts()
+  const hasClaude = claudeCounts.size > 0
+
+  console.log("Computing legacy tokenizer counts...")
+  const legacyCounts = computeLegacyCounts()
+  const hasLegacy = legacyCounts.size > 0
+  console.log(`Computed ${legacyCounts.size} legacy token counts`)
+
+  if (hasClaude) {
+    console.log(`Loaded ${claudeCounts.size} Claude token counts`)
+  }
 
   // Process each format directory
   for (const dir of readdirSync(ROOT, { withFileTypes: true })) {
@@ -145,30 +356,48 @@ async function main() {
       const smartStats = stats.get("smart.json")
       if (smartStats) allStats.set("json-smart", smartStats)
 
-      // Count both minified and standard pretty JSON (need to compute, not in counts.txt)
-      const jsonDir = join(ROOT, "json")
-      let miniTokens = 0, miniBytes = 0
-      let prettyTokens = 0, prettyBytes = 0
+      // Try to use cached JSON mini/pretty counts
+      const cache = loadJsonCountsCache()
+      if (cache) {
+        console.log("Using cached JSON mini/pretty counts")
+        allStats.set("json-mini", { tokens: cache.miniTokens, bytes: cache.miniBytes })
+        allStats.set("json-pretty", { tokens: cache.prettyTokens, bytes: cache.prettyBytes })
+      } else {
+        // Count both minified and standard pretty JSON (slow, requires LM Studio)
+        const jsonDir = join(ROOT, "json")
+        let miniTokens = 0, miniBytes = 0
+        let prettyTokens = 0, prettyBytes = 0
 
-      console.log("Counting JSON tokens...")
-      for (const file of readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))) {
-        const raw = readFileSync(join(jsonDir, file), "utf-8")
-        const minified = JSON.stringify(JSON.parse(raw))
-        const pretty = JSON.stringify(JSON.parse(raw), null, 2)
+        console.log("Counting JSON tokens (slow, caching result)...")
+        for (const file of readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))) {
+          const raw = readFileSync(join(jsonDir, file), "utf-8")
+          const minified = JSON.stringify(JSON.parse(raw))
+          const pretty = JSON.stringify(JSON.parse(raw), null, 2)
 
-        miniBytes += new TextEncoder().encode(minified).length
-        miniTokens += await countTokens(minified)
+          miniBytes += new TextEncoder().encode(minified).length
+          miniTokens += await countTokens(minified)
 
-        prettyBytes += new TextEncoder().encode(pretty).length
-        prettyTokens += await countTokens(pretty)
+          prettyBytes += new TextEncoder().encode(pretty).length
+          prettyTokens += await countTokens(pretty)
+        }
+
+        console.log(`  minified: ${miniTokens} tokens, ${miniBytes} bytes`)
+        console.log(`  pretty:   ${prettyTokens} tokens, ${prettyBytes} bytes`)
+
+        allStats.set("json-mini", { tokens: miniTokens, bytes: miniBytes })
+        allStats.set("json-pretty", { tokens: prettyTokens, bytes: prettyBytes })
+
+        // Cache the results
+        saveJsonCountsCache({
+          timestamp: Date.now(),
+          miniTokens,
+          miniBytes,
+          prettyTokens,
+          prettyBytes,
+        })
       }
 
-      console.log(`  minified: ${miniTokens} tokens, ${miniBytes} bytes`)
-      console.log(`  pretty:   ${prettyTokens} tokens, ${prettyBytes} bytes`)
       console.log(`  smart:    ${smartStats?.tokens} tokens, ${smartStats?.bytes} bytes`)
-
-      allStats.set("json-mini", { tokens: miniTokens, bytes: miniBytes })
-      allStats.set("json-pretty", { tokens: prettyTokens, bytes: prettyBytes })
     } else {
       const ext = Array.from(stats.keys())[0]
       if (ext) {
@@ -181,18 +410,18 @@ async function main() {
   const compactRows = COMPACT_FORMATS
     .filter((k) => allStats.has(k))
     .map((k) => ({ key: k, ...allStats.get(k)! }))
-  const compactTable = buildTable(compactRows, "json-mini")
+  const compactTable = buildTable(compactRows, "json-mini", claudeCounts, legacyCounts)
 
   // Build pretty table
   const prettyRows = PRETTY_FORMATS
     .filter((k) => allStats.has(k))
     .map((k) => ({ key: k, ...allStats.get(k)! }))
-  const prettyTable = buildTable(prettyRows, "json-pretty")
+  const prettyTable = buildTable(prettyRows, "json-pretty", claudeCounts, legacyCounts)
 
   // Update SUMMARY.md
   let summary = readFileSync(SUMMARY_PATH, "utf-8")
-  summary = updateSection(summary, "<!-- COMPACT_START -->", "<!-- COMPACT_END -->", compactTable)
-  summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable)
+  summary = updateSection(summary, "<!-- COMPACT_START -->", "<!-- COMPACT_END -->", compactTable, hasLegacy, hasClaude)
+  summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)
 
   console.log("Updated SUMMARY.md")
