@@ -6,12 +6,12 @@ Research project testing data encodings for LLM token efficiency. You (Claude) d
 
 ## Current Results
 
-**Jot** is the leading format at -18% tokens vs JSON. See `encoding-formats/SUMMARY.md` for full comparison.
+**Jot** is the leading format at -19% tokens vs JSON. See `encoding-formats/SUMMARY.md` for full comparison.
 
 | Format | vs JSON |
 | ------ | ------- |
-| Jot | -18% |
-| Jot (pretty) | +4% |
+| Jot | -19% |
+| Jot (pretty) | +3% |
 | JSON | baseline |
 | YAML | +20% |
 
@@ -22,9 +22,8 @@ Encoder: `encoding-formats/jot/jot.ts`
 Features:
 
 - Minimal quoting (only quote strings with unsafe chars)
-- Key folding: `{a:{b:1}}` → `(a.b.c:1)` or `{x.a.b:1}` nested
-- Tables: `[{a:1},{a:2}]` → `2m[:a|1|2]` (only when schema reused)
-- Count guards: `Nx[...]` arrays, `Nm[...]` tables (single-item arrays omit guard)
+- Key folding: `{a:{b:1}}` → `{a.b:1}` (quote keys with literal dots: `{"a.b":1}`)
+- Tables: `[{a:1},{a:2}]` → `[:a|1|2]` (only when schema reused)
 - Pretty-print mode with `stringify(data, { pretty: true })`
 
 Pretty-print rules:
@@ -32,7 +31,7 @@ Pretty-print rules:
 - Single-key objects inline: `{ key: value }`
 - Single-item arrays compact: `[{...}]`
 - Schema rows indent 1 char less than data rows
-- Tables start on same line as key: `labels: 2m[`
+- Tables start on same line as key: `labels: [`
 
 ## MCP Tools
 

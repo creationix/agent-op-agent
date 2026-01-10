@@ -20,7 +20,7 @@
           system: true
         },
         jsp_suffix: {
-          has: 2x[
+          has: [
             {
               type: path,
               key: null,
@@ -157,7 +157,7 @@
         has: [{
           type: geo,
           key: country,
-          value.in: 3x[ XX, YY, ZZ ]
+          value.in: [ XX, YY, ZZ ]
         }],
         missing: [{
           type: header,
@@ -191,7 +191,7 @@
           system: true
         },
         suspicious_rate: {
-          has: 2m[
+          has: [
            :type, key, value
             rate, ip, { gt: 50 }
             header, user-agent, { regex: ^Mozilla }

@@ -1,6 +1,5 @@
 #!/usr/bin/env bun
 // Generate samples by reading from ../json/*.json and writing the equivalent here.
-// Uses guards for truncation detection (Nx[...] for arrays, Nm[...] for tables)
 import { stringify, parse } from "./jot.ts"
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
 
@@ -13,7 +12,7 @@ for (const file of readdirSync("../json")) {
     const sourceFilePath = `../json/${file}`
     const targetFilePath = `./${file.replace(".json", ".jot")}`
     const data = JSON.parse(readFileSync(sourceFilePath, "utf-8"))
-    const encodedString = stringify(data, { guards: true })
+    const encodedString = stringify(data)
 
     // Round-trip verification
     try {
@@ -30,7 +29,7 @@ for (const file of readdirSync("../json")) {
     }
 
     writeFileSync(targetFilePath, encodedString, "utf-8")
-    const encodedPrettyString = stringify(data, { guards: true, pretty: true })
+    const encodedPrettyString = stringify(data, { pretty: true })
     writeFileSync(targetFilePath.replace(".jot", ".pretty.jot"), encodedPrettyString, "utf-8")
     console.log(`✓ ${file}`)
     passed++

@@ -11,12 +11,12 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 <!-- TOKEN_EFFICIENCY_START -->
 | Format                                              | Tokens | vs JSON  | Bytes  | vs JSON  |
 |-----------------------------------------------------|-------:|---------:|-------:|---------:|
-| **[Jot](jot/)**                                     |  6,388 |     -18% | 16,324 |     -29% |
+| **[Jot](jot/)**                                     |  6,305 |     -19% | 16,228 |     -30% |
 | [JSONito](https://github.com/creationix/jsonito)    |  7,615 |      -2% | 13,733 |     -41% |
 | [Lax](lax/)                                         |  7,678 |      -1% | 20,595 |     -11% |
 | [JSON](https://www.json.org/) (mini)                |  7,748 | baseline | 23,119 | baseline |
+| [Jot](jot/) (pretty)                                |  7,978 |      +3% | 22,560 |      -2% |
 | [D2](https://github.com/creationix/d2)              |  8,059 |      +4% | 16,891 |     -27% |
-| [Jot](jot/) (pretty)                                |  8,092 |      +4% | 22,656 |      -2% |
 | [TOON](toon/)                                       |  8,098 |      +5% | 22,380 |      -3% |
 | [YAML](https://yaml.org/)                           |  9,330 |     +20% | 26,366 |     +14% |
 | [TOML](https://toml.io/)                            |  9,980 |     +29% | 28,549 |     +23% |
@@ -26,18 +26,17 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ### Jot
 
-Minimal quoting + key folding + table syntax + count guards.
+Minimal quoting + key folding + table syntax.
 
 ```jot
-{name:Alice,users:2m[:id,email|1,a@ex.com|2,b@ex.com],tags:3x[a,b,c]}
+{name:Alice,users:[:id,email|1,a@ex.com|2,b@ex.com],tags:[a,b,c]}
 ```
 
 Features:
 
-- **Minimal quoting**: Only quote strings containing unsafe chars (`: , { } [ ] ( ) " |`), reserved words, or whitespace
-- **Key folding**: `{a:{b:{c:1}}}` → `(a.b.c:1)` (works at root and nested levels)
-- **Tables**: `[{a:1},{a:2}]` → `2m[:a|1|2]` (only when schema is reused)
-- **Count guards**: `Nx[...]` for arrays, `Nm[...]` for tables (single-item arrays omit guard)
+- **Minimal quoting**: Only quote strings containing unsafe chars (`: , { } [ ] " |`), reserved words, or whitespace
+- **Key folding**: `{a:{b:{c:1}}}` → `{a.b.c:1}` (quote keys with literal dots: `{"a.b":1}`)
+- **Tables**: `[{a:1},{a:2}]` → `[:a|1|2]` (only when schema is reused)
 - **Pretty-print mode**: Human-readable output with proper indentation
 
 ### Lax
@@ -62,11 +61,11 @@ users[2]{id,name}:
 
 | Format      | Small | Medium | Large | Hikes | Chat | Metrics | Package | Issue | Irregular | Users-50 | Logs  | Firewall | Products | Routes |
 |-------------|------:|-------:|------:|------:|-----:|--------:|--------:|------:|----------:|---------:|------:|---------:|---------:|-------:|
-| **Jot**     |    47 |     72 |   250 |   116 |   69 |     102 |      85 |    80 |        65 |      665 | 2,046 |      673 |      717 |  1,236 |
+| **Jot**     |    44 |     70 |   244 |   111 |   67 |     100 |      85 |    78 |        63 |      662 | 2,043 |      666 |      693 |  1,220 |
 | JSONito     |    45 |    103 |   312 |   158 |   86 |      89 |     101 |    89 |        59 |    1,234 | 1,941 |      919 |      846 |  1,426 |
 | Lax         |    45 |     92 |   265 |   144 |   79 |     117 |      95 |    88 |        69 |    1,229 | 2,166 |      785 |      876 |  1,442 |
 | JSON (mini) |    48 |     97 |   266 |   158 |   76 |     117 |      97 |    88 |        68 |    1,279 | 2,108 |      827 |      866 |  1,459 |
-| TOON        |    50 |     83 |   308 |   122 |   68 |     110 |     104 |    90 |        88 |      763 | 2,492 |    1,026 |      954 |  1,558 |
+| TOON        |    50 |     83 |   313 |   122 |   68 |     110 |     104 |    90 |        88 |      763 | 2,492 |    1,073 |      954 |  1,574 |
 | D2          |    55 |    104 |   316 |   173 |   80 |     138 |      90 |    97 |        81 |    1,202 | 2,092 |      894 |      994 |  1,536 |
 | YAML        |    56 |    123 |   327 |   187 |   82 |     140 |     104 |    98 |        87 |    1,597 | 2,487 |    1,029 |    1,095 |  1,696 |
 | TOML        |    56 |    118 |   377 |   189 |   84 |     139 |     104 |    99 |        86 |    1,625 | 2,498 |    1,495 |    1,114 |  1,790 |

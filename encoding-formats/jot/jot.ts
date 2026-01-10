@@ -9,12 +9,9 @@
  *    {a:{b:{c:1}}} => {a.b.c:1}
  *    Use quoted keys for literal dots: {"a.b":1}
  *
- * 3. Array guards - prefix with element count
- *    [1,2,3] => 3x[1,2,3]
- *
- * 4. Tables - object arrays with schema rows
- *    [{a:1},{a:2}] => 2m[:a|1|2]
- *    [{a:1},{b:2}] => 2m[:a|1|:b|2]
+ * 3. Tables - object arrays with schema rows
+ *    [{a:1},{a:2}] => [:a|1|2]
+ *    [{a:1},{b:2}] => [:a|1|:b|2]
  *    Schema rows start with `:`, active until next `:` row
  *
  * Quoting rules - quote string values only if:
@@ -98,12 +95,11 @@ function stringifyValue(value: unknown): string {
 
 // Options for stringify
 export interface StringifyOptions {
-  guards?: boolean  // Include Nx/Nm count prefixes (default: false)
   pretty?: boolean  // Pretty print with newlines and indentation (default: false)
   indent?: string   // Indentation string (default: "  ")
 }
 
-let currentOptions: StringifyOptions = { guards: false, pretty: false, indent: "  " }
+let currentOptions: StringifyOptions = { pretty: false, indent: "  " }
 let depth = 0
 
 function ind(): string {
@@ -143,26 +139,23 @@ function stringifyArray(arr: unknown[]): string {
     return `[${item}]`
   }
 
-  // Regular array: Nx[items] or [items]
-  const prefix = currentOptions.guards ? `${arr.length}` : ""
-  const marker = currentOptions.guards ? "x" : ""
+  // Regular array
   if (currentOptions.pretty && arr.length > 0 && hasComplexItems(arr)) {
     // Complex arrays: split across lines
     depth++
     const items = arr.map(v => ind() + stringifyValue(v)).join("," + nl())
     depth--
-    return `${prefix}${marker}[${nl()}${items}${nl()}${ind()}]`
+    return `[${nl()}${items}${nl()}${ind()}]`
   }
   // Simple arrays: keep on one line, add spaces in pretty mode
   const sep = currentOptions.pretty ? ", " : ","
   const items = arr.map(stringifyValue).join(sep)
-  return currentOptions.pretty ? `${prefix}${marker}[ ${items} ]` : `${prefix}${marker}[${items}]`
+  return currentOptions.pretty ? `[ ${items} ]` : `[${items}]`
 }
 
 function stringifyTable(arr: Record<string, unknown>[]): string {
   const parts: string[] = []
   let currentSchema: string | null = null
-  let dataRowCount = 0
 
   for (const obj of arr) {
     const keys = getObjectKeys(obj)
@@ -180,11 +173,8 @@ function stringifyTable(arr: Record<string, unknown>[]): string {
     if (currentOptions.pretty) depth++
     parts.push(keys.map(k => stringifyValue(obj[k])).join(sep))
     if (currentOptions.pretty) depth--
-    dataRowCount++
   }
 
-  const prefix = currentOptions.guards ? `${dataRowCount}` : ""
-  const marker = currentOptions.guards ? "m" : ""
   if (currentOptions.pretty) {
     // Schema rows indent one char less than data rows
     depth++
@@ -192,9 +182,9 @@ function stringifyTable(arr: Record<string, unknown>[]): string {
     const schemaInd = dataInd.slice(1)  // One char less
     const rows = parts.map(p => (p.startsWith(":") ? schemaInd + p : dataInd + p)).join("\n")
     depth--
-    return `${prefix}${marker}[\n${rows}\n${ind()}]`
+    return `[\n${rows}\n${ind()}]`
   }
-  return `${prefix}${marker}[${parts.join("|")}]`
+  return `[${parts.join("|")}]`
 }
 
 function stringifyObject(obj: Record<string, unknown>): string {
@@ -237,7 +227,7 @@ function stringifyObject(obj: Record<string, unknown>): string {
 }
 
 export function stringify(data: unknown, options: StringifyOptions = {}): string {
-  currentOptions = { guards: false, pretty: false, indent: "  ", ...options }
+  currentOptions = { pretty: false, indent: "  ", ...options }
   depth = 0
   return stringifyValue(data)
 }
@@ -277,19 +267,6 @@ class JotParser {
     if (ch === "{") return this.parseObject()
     if (ch === "[") return this.parseArrayOrTable()
     if (ch === '"') return this.parseQuotedString()
-
-    // Check for guard prefix: Nx[...] or Nm[...]
-    const guardMatch = this.input.slice(this.pos).match(/^(\d+)([xm])\[/)
-    if (guardMatch) {
-      const count = parseInt(guardMatch[1])
-      const type = guardMatch[2]
-      this.pos += guardMatch[0].length - 1 // position at [
-      if (type === "m") {
-        return this.parseTable(count)
-      } else {
-        return this.parseArrayBody(count)
-      }
-    }
 
     // Unquoted value - read until terminator
     return this.parseAtom(terminators)
@@ -403,19 +380,6 @@ class JotParser {
     if (ch === '"') return this.parseQuotedString()
     if (ch === "{") return this.parseObject()
     if (ch === "[") return this.parseArrayOrTable()
-
-    // Check for guard prefix
-    const guardMatch = this.input.slice(this.pos).match(/^(\d+)([xm])\[/)
-    if (guardMatch) {
-      const count = parseInt(guardMatch[1])
-      const type = guardMatch[2]
-      this.pos += guardMatch[0].length - 1
-      if (type === "m") {
-        return this.parseTable(count)
-      } else {
-        return this.parseArrayBody(count)
-      }
-    }
 
     // Read until terminator
     const start = this.pos
@@ -532,59 +496,6 @@ class JotParser {
     }
 
     this.pos++ // skip ]
-    return result
-  }
-
-  private parseTable(rowCount: number): unknown[] {
-    if (this.peek() !== "[") {
-      throw new Error(`Expected '[' at position ${this.pos}`)
-    }
-    this.pos++ // skip [
-
-    const result: Record<string, unknown>[] = []
-    let currentSchema: string[] = []
-    let rowsProcessed = 0
-
-    this.skipWhitespace()
-
-    while (this.peek() !== "]" && rowsProcessed < rowCount) {
-      if (this.pos >= this.input.length) {
-        throw new Error("Unterminated table")
-      }
-
-      // Check for schema row (starts with :)
-      if (this.peek() === ":") {
-        this.pos++ // skip :
-        currentSchema = this.parseSchemaRow()
-        this.skipWhitespace()
-        // After schema, expect | or ] or data
-        if (this.peek() === "|") {
-          this.pos++
-          this.skipWhitespace()
-        }
-        continue
-      }
-
-      // Parse data row
-      const values = this.parseDataRow(currentSchema.length)
-      const obj: Record<string, unknown> = {}
-      for (let i = 0; i < currentSchema.length; i++) {
-        obj[currentSchema[i]] = values[i] ?? null
-      }
-      result.push(obj)
-      rowsProcessed++
-
-      this.skipWhitespace()
-      if (this.peek() === "|") {
-        this.pos++
-        this.skipWhitespace()
-      }
-    }
-
-    if (this.peek() === "]") {
-      this.pos++ // skip ]
-    }
-
     return result
   }
 
@@ -793,19 +704,12 @@ if ((import.meta as { main?: boolean }).main) {
     ["single obj array", [{ a: 1 }], "[{a:1}]"],
     ["no schema reuse", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
 
-    // Single-item arrays (no guard prefix)
+    // Single-item arrays
     ["single item", [42], "[42]"],
     ["single string", ["hello"], "[hello]"],
 
     // Nested
     ["nested", { users: [{ id: 1, name: "Alice" }] }, "{users:[{id:1,name:Alice}]}"],
-  ]
-
-  // Tests with guards: true
-  const guardsTests: [string, unknown, string][] = [
-    ["array with guard", [1, 2, 3], "3x[1,2,3]"],
-    ["table with guard", [{ a: 1 }, { a: 2 }], "2m[:a|1|2]"],
-    ["nested with guard", { items: [1, 2] }, "{items:2x[1,2]}"],
   ]
 
   // Tests with pretty: true
@@ -821,24 +725,9 @@ if ((import.meta as { main?: boolean }).main) {
   let passed = 0
   let failed = 0
 
-  console.log("=== Default (no guards) ===")
+  console.log("=== Stringify Tests ===")
   for (const [name, input, expected] of tests) {
     const result = stringify(input)
-    if (result === expected) {
-      console.log(`✓ ${name}`)
-      passed++
-    } else {
-      console.log(`✗ ${name}`)
-      console.log(`  input:    ${JSON.stringify(input)}`)
-      console.log(`  expected: ${expected}`)
-      console.log(`  got:      ${result}`)
-      failed++
-    }
-  }
-
-  console.log("\n=== With guards ===")
-  for (const [name, input, expected] of guardsTests) {
-    const result = stringify(input, { guards: true })
     if (result === expected) {
       console.log(`✓ ${name}`)
       passed++
@@ -887,13 +776,10 @@ if ((import.meta as { main?: boolean }).main) {
     ["parse escape newline", '"hello\\nworld"', "hello\nworld"],
     ["parse escape quote", '"say \\"hi\\""', 'say "hi"'],
 
-    // Arrays with guards
-    ["parse empty array", "0x[]", []],
-    ["parse simple array", "3x[1,2,3]", [1, 2, 3]],
-    ["parse string array", "2x[a,b]", ["a", "b"]],
-
-    // Arrays without guards
-    ["parse array no guard", "[1,2,3]", [1, 2, 3]],
+    // Arrays
+    ["parse empty array", "[]", []],
+    ["parse simple array", "[1,2,3]", [1, 2, 3]],
+    ["parse string array", "[a,b]", ["a", "b"]],
     ["parse single item", "[42]", [42]],
     ["parse single string", "[hello]", ["hello"]],
 
@@ -910,16 +796,13 @@ if ((import.meta as { main?: boolean }).main) {
     ["parse quoted key literal", '{"a.b":1}', { "a.b": 1 }],
 
     // Tables
-    ["parse uniform table", "2m[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
-    ["parse 3-row table", "3m[:x|1|2|3]", [{ x: 1 }, { x: 2 }, { x: 3 }]],
-    ["parse schema change", "4m[:a|1|2|:b|3|4]", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }]],
-
-    // Tables without guards
-    ["parse table no guard", "[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+    ["parse uniform table", "[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+    ["parse 3-row table", "[:x|1|2|3]", [{ x: 1 }, { x: 2 }, { x: 3 }]],
+    ["parse schema change", "[:a|1|2|:b|3|4]", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }]],
 
     // Complex nested
     ["parse nested array obj", "{users:[{id:1,name:Alice}]}", { users: [{ id: 1, name: "Alice" }] }],
-    ["parse obj array guarded", "2x[{a:1},{b:2}]", [{ a: 1 }, { b: 2 }]],
+    ["parse obj array mixed", "[{a:1},{b:2}]", [{ a: 1 }, { b: 2 }]],
   ]
 
   for (const [name, input, expected] of parseTests) {

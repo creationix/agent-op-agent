@@ -1,5 +1,5 @@
 {
-  users: 3m[
+  users: [
    :id, name, email, role, active
     1, Alice Johnson, alice@example.com, admin, true
     2, Bob Smith, bob@example.com, user, true

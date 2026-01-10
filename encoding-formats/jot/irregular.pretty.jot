@@ -1,4 +1,4 @@
-{ events: 4x[
+{ events: [
   {
     type: click,
     x: 100,

@@ -63,8 +63,8 @@ Schema changes mid-table with new `:` row:
 
 ## Decoding
 
-1. `[...]` - array; optional `Nx` prefix ignored (for backwards compat)
-2. `[:col,col|val,val|...]` - table; `:col,col` defines schema, `|` separates rows; optional `Nm` prefix ignored
+1. `[...]` - array
+2. `[:col,col|val,val|...]` - table; `:col,col` defines schema, `|` separates rows
 3. `{key.path:value}` - unfold unquoted dotted keys into nested objects
 4. `{"key.path":value}` - quoted keys are literal (dots preserved)
 5. Unquoted tokens: parse as number/bool/null, else string

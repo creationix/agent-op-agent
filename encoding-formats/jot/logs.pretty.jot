@@ -1,4 +1,4 @@
-{ logs: 49m[
+{ logs: [
  :ts, level, service, msg
   "2024-01-15T10:00:01Z", info, api, Server started on port 3000
   "2024-01-15T10:00:02Z", info, db, Connected to database

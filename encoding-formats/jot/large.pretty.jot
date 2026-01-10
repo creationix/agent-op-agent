@@ -22,11 +22,11 @@
         tier: frontend,
         version: 1.2.3
       },
-      spec.containers: 2x[
+      spec.containers: [
         {
           name: nginx,
           image: "nginx:1.21",
-          ports: 2m[
+          ports: [
            :containerPort, protocol
             80, TCP
             443, TCP
@@ -41,7 +41,7 @@
               memory: 512Mi
             }
           },
-          env: 3m[
+          env: [
            :name, value
             NODE_ENV, production
             LOG_LEVEL, info

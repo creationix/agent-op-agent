@@ -1,6 +1,6 @@
 {
   series: cpu_usage,
-  points: 5m[
+  points: [
    :t, v
     1704067200, 45.2
     1704067260, 52.1
