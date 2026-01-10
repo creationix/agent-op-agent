@@ -1,6 +1,6 @@
 Claude sonnet Token Counts
 Model: claude-sonnet-4-20250514
-Generated: 2026-01-10T03:56:42.643Z
+Generated: 2026-01-10T22:17:09.404Z
 
 === JSON (mini) ===
   chat: 81
@@ -13,7 +13,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 86
   users-50: 1369
   medium: 107
-  json-counts-cache: 44
+  json-counts-cache: 143
   hikes: 163
   package: 105
   key-folding-basic: 70
@@ -21,7 +21,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 70
   products: 839
   routes: 1707
-  Total: 8033
+  Total: 8132
 
 === JSON (pretty) ===
   chat: 124
@@ -34,7 +34,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 145
   users-50: 2526
   medium: 199
-  json-counts-cache: 65
+  json-counts-cache: 238
   hikes: 282
   package: 162
   key-folding-basic: 137
@@ -42,7 +42,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 147
   products: 1599
   routes: 2747
-  Total: 14230
+  Total: 14403
 
 === JSON (smart) ===
   chat: 107
@@ -55,7 +55,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 129
   users-50: 2321
   medium: 179
-  json-counts-cache: error
+  json-counts-cache: 232
   hikes: 253
   package: 147
   key-folding-basic: 99
@@ -63,49 +63,49 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 99
   products: 1421
   routes: 2396
-  Total: 12455
+  Total: 12687
 
 === Jot ===
-  chat: 69
-  metrics: 66
-  large: 237
+  chat: 71
+  metrics: 68
+  large: 241
   key-folding-mixed: 76
-  logs: 1809
-  firewall: 869
+  logs: 1762
+  firewall: 867
   small: 44
-  github-issue: 76
-  users-50: 828
-  medium: 81
-  json-counts-cache: error
-  hikes: 113
+  github-issue: 78
+  users-50: 830
+  medium: 83
+  json-counts-cache: 142
+  hikes: 115
   package: 99
   key-folding-basic: 53
   irregular: 59
   key-folding-with-array: 53
-  products: 626
-  routes: 1477
-  Total: 6635
+  products: 634
+  routes: 1472
+  Total: 6747
 
 === Jot (pretty) ===
   chat: 78
-  metrics: 84
-  large: 345
-  key-folding-mixed: 98
+  metrics: 87
+  large: 409
+  key-folding-mixed: 112
   logs: 1938
-  firewall: 1204
-  small: 60
-  github-issue: 101
+  firewall: 1398
+  small: 63
+  github-issue: 108
   users-50: 883
-  medium: 101
-  json-counts-cache: error
-  hikes: 139
-  package: 124
-  key-folding-basic: 64
-  irregular: 94
-  key-folding-with-array: 64
-  products: 782
-  routes: 1717
-  Total: 7876
+  medium: 108
+  json-counts-cache: 215
+  hikes: 145
+  package: 137
+  key-folding-basic: 66
+  irregular: 95
+  key-folding-with-array: 67
+  products: 813
+  routes: 1778
+  Total: 8500
 
 === Lax ===
   chat: 80
@@ -118,7 +118,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 83
   users-50: 1368
   medium: 104
-  json-counts-cache: error
+  json-counts-cache: 142
   hikes: 162
   package: 102
   key-folding-basic: 58
@@ -126,7 +126,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 62
   products: 836
   routes: 1637
-  Total: 7739
+  Total: 7881
 
 === JSONito ===
   chat: 89
@@ -139,7 +139,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 94
   users-50: 1404
   medium: 119
-  json-counts-cache: error
+  json-counts-cache: 174
   hikes: 173
   package: 105
   key-folding-basic: 65
@@ -147,7 +147,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 67
   products: 927
   routes: 1651
-  Total: 8153
+  Total: 8327
 
 === TOON ===
   chat: 73
@@ -160,7 +160,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 87
   users-50: 879
   medium: 92
-  json-counts-cache: error
+  json-counts-cache: 185
   hikes: 123
   package: 110
   key-folding-basic: 71
@@ -168,7 +168,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 74
   products: 907
   routes: 1822
-  Total: 8220
+  Total: 8405
 
 === YAML ===
   chat: 86
@@ -181,7 +181,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 93
   users-50: 1666
   medium: 127
-  json-counts-cache: error
+  json-counts-cache: 180
   hikes: 194
   package: 109
   key-folding-basic: 71
@@ -189,7 +189,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 80
   products: 1063
   routes: 1857
-  Total: 9276
+  Total: 9456
 
 === D2 ===
   chat: 87
@@ -202,7 +202,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 95
   users-50: 1240
   medium: 118
-  json-counts-cache: error
+  json-counts-cache: 187
   hikes: 172
   package: 103
   key-folding-basic: 73
@@ -210,7 +210,7 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 82
   products: 869
   routes: 1609
-  Total: 7741
+  Total: 7928
 
 === TOML ===
   chat: 93
@@ -223,7 +223,7 @@ Generated: 2026-01-10T03:56:42.643Z
   github-issue: 102
   users-50: 1863
   medium: 134
-  json-counts-cache: error
+  json-counts-cache: 165
   hikes: 199
   package: 123
   key-folding-basic: 70
@@ -231,21 +231,21 @@ Generated: 2026-01-10T03:56:42.643Z
   key-folding-with-array: 73
   products: 1146
   routes: 2171
-  Total: 11320
+  Total: 11485
 
 
 === SUMMARY (Claude sonnet) ===
 
 Format        | Tokens | vs Mini | vs Pretty
 --------------|--------|---------|----------
-Jot           |   6635 |    -17% |     -53%
-Lax           |   7739 |     -4% |     -46%
-D2            |   7741 |     -4% |     -46%
-Jot (pretty)  |   7876 |     -2% |     -45%
-JSON (mini)   |   8033 | baseline |     -44%
-JSONito       |   8153 |      1% |     -43%
-TOON          |   8220 |      2% |     -42%
-YAML          |   9276 |     15% |     -35%
-TOML          |  11320 |     41% |     -20%
-JSON (smart)  |  12455 |     55% |     -12%
-JSON (pretty) |  14230 |     77% | baseline
+Jot           |   6747 |    -17% |     -53%
+Lax           |   7881 |     -3% |     -45%
+D2            |   7928 |     -3% |     -45%
+JSON (mini)   |   8132 | baseline |     -44%
+JSONito       |   8327 |      2% |     -42%
+TOON          |   8405 |      3% |     -42%
+Jot (pretty)  |   8500 |      5% |     -41%
+YAML          |   9456 |     16% |     -34%
+TOML          |  11485 |     41% |     -20%
+JSON (smart)  |  12687 |     56% |     -12%
+JSON (pretty) |  14403 |     77% | baseline

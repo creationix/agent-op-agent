@@ -1,49 +1,49 @@
 
 === .jot files ===
 
-chat.jot                       71 tokens     236 bytes
-firewall.jot                  795 tokens    2309 bytes
-github-issue.jot               83 tokens     242 bytes
-hikes.jot                     115 tokens     271 bytes
-irregular.jot                  67 tokens     134 bytes
-json-counts-cache.jot         180 tokens     337 bytes
+chat.jot                       67 tokens     237 bytes
+firewall.jot                  669 tokens    2310 bytes
+github-issue.jot               79 tokens     243 bytes
+hikes.jot                     112 tokens     272 bytes
+irregular.jot                  63 tokens     134 bytes
+json-counts-cache.jot         174 tokens     337 bytes
 key-folding-basic.jot          47 tokens     132 bytes
-key-folding-mixed.jot          75 tokens     191 bytes
-key-folding-with-array.jot     48 tokens     149 bytes
-large.jot                     267 tokens     722 bytes
-logs.jot                     2124 tokens    4351 bytes
-medium.jot                     98 tokens     256 bytes
-metrics.jot                   114 tokens     137 bytes
-package.jot                    98 tokens     191 bytes
-products.jot                  850 tokens    2069 bytes
-routes.jot                   1498 tokens    3907 bytes
-small.jot                      46 tokens      92 bytes
-users-50.jot                 1222 tokens    3552 bytes
+key-folding-mixed.jot          69 tokens     191 bytes
+key-folding-with-array.jot     43 tokens     149 bytes
+large.jot                     246 tokens     667 bytes
+logs.jot                     2044 tokens    4216 bytes
+medium.jot                     71 tokens     201 bytes
+metrics.jot                   101 tokens     114 bytes
+package.jot                    85 tokens     191 bytes
+products.jot                  702 tokens    1560 bytes
+routes.jot                   1246 tokens    3394 bytes
+small.jot                      44 tokens      92 bytes
+users-50.jot                  663 tokens    2181 bytes
                             -----        ------
-Total                        7798 tokens   19278 bytes
+Total                        6525 tokens   16621 bytes
 
 === .pretty.jot files ===
 
-chat.pretty.jot                       96 tokens     300 bytes
-firewall.pretty.jot                 1232 tokens    4171 bytes
-github-issue.pretty.jot              116 tokens     316 bytes
-hikes.pretty.jot                     206 tokens     524 bytes
-irregular.pretty.jot                 102 tokens     190 bytes
-json-counts-cache.pretty.jot         244 tokens     459 bytes
-key-folding-basic.pretty.jot          80 tokens     196 bytes
-key-folding-mixed.pretty.jot         109 tokens     261 bytes
-key-folding-with-array.pretty.jot     77 tokens     211 bytes
-large.pretty.jot                     394 tokens    1180 bytes
-logs.pretty.jot                     2762 tokens    5445 bytes
-medium.pretty.jot                    150 tokens     375 bytes
-metrics.pretty.jot                   157 tokens     215 bytes
-package.pretty.jot                   119 tokens     249 bytes
-products.pretty.jot                 1221 tokens    3071 bytes
-routes.pretty.jot                   2008 tokens    5231 bytes
-small.pretty.jot                      63 tokens     119 bytes
-users-50.pretty.jot                 1899 tokens    4656 bytes
+chat.pretty.jot                       73 tokens     260 bytes
+firewall.pretty.jot                 1119 tokens    4962 bytes
+github-issue.pretty.jot              105 tokens     306 bytes
+hikes.pretty.jot                     142 tokens     356 bytes
+irregular.pretty.jot                  91 tokens     204 bytes
+json-counts-cache.pretty.jot         224 tokens     467 bytes
+key-folding-basic.pretty.jot          54 tokens     153 bytes
+key-folding-mixed.pretty.jot          96 tokens     265 bytes
+key-folding-with-array.pretty.jot     52 tokens     173 bytes
+large.pretty.jot                     365 tokens    1407 bytes
+logs.pretty.jot                     2304 tokens    4893 bytes
+medium.pretty.jot                    100 tokens     273 bytes
+metrics.pretty.jot                   123 tokens     167 bytes
+package.pretty.jot                   120 tokens     269 bytes
+products.pretty.jot                  828 tokens    2232 bytes
+routes.pretty.jot                   1521 tokens    4576 bytes
+small.pretty.jot                      59 tokens     121 bytes
+users-50.pretty.jot                  863 tokens    2592 bytes
                                    -----        ------
-Total                              11035 tokens   27169 bytes
+Total                               8239 tokens   23676 bytes
 
 === Grand Total ===
-18833 tokens, 46447 bytes
+14764 tokens, 40297 bytes

@@ -6,6 +6,7 @@ firewall.json                 1301 tokens    4460 bytes
 github-issue.json              116 tokens     327 bytes
 hikes.json                     251 tokens     680 bytes
 irregular.json                  98 tokens     215 bytes
+json-counts-cache.json         250 tokens     513 bytes
 key-folding-basic.json         116 tokens     305 bytes
 key-folding-mixed.json         134 tokens     356 bytes
 key-folding-with-array.json    109 tokens     308 bytes
@@ -19,29 +20,30 @@ routes.json                   2007 tokens    5898 bytes
 small.json                      68 tokens     142 bytes
 users-50.json                 1784 tokens    5063 bytes
                              -----        ------
-Total                        10922 tokens   30028 bytes
+Total                        11172 tokens   30541 bytes
 
 === .smart.json files ===
 
-chat.smart.json                      100 tokens     331 bytes
-firewall.smart.json                 1364 tokens    4768 bytes
-github-issue.smart.json              126 tokens     357 bytes
-hikes.smart.json                     234 tokens     627 bytes
-irregular.smart.json                 107 tokens     239 bytes
-key-folding-basic.smart.json          96 tokens     233 bytes
-key-folding-mixed.smart.json         118 tokens     300 bytes
-key-folding-with-array.smart.json     95 tokens     246 bytes
-large.smart.json                     440 tokens    1409 bytes
-logs.smart.json                     2931 tokens    6686 bytes
-medium.smart.json                    156 tokens     458 bytes
-metrics.smart.json                   158 tokens     252 bytes
-package.smart.json                   131 tokens     296 bytes
-products.smart.json                 1355 tokens    3842 bytes
-routes.smart.json                   2041 tokens    6124 bytes
-small.smart.json                      69 tokens     142 bytes
-users-50.smart.json                 2032 tokens    5859 bytes
+chat.smart.json                      100 tokens     330 bytes
+firewall.smart.json                 1364 tokens    4767 bytes
+github-issue.smart.json              126 tokens     356 bytes
+hikes.smart.json                     234 tokens     626 bytes
+irregular.smart.json                 107 tokens     238 bytes
+json-counts-cache.smart.json         246 tokens     505 bytes
+key-folding-basic.smart.json          96 tokens     232 bytes
+key-folding-mixed.smart.json         118 tokens     299 bytes
+key-folding-with-array.smart.json     95 tokens     245 bytes
+large.smart.json                     440 tokens    1408 bytes
+logs.smart.json                     2931 tokens    6685 bytes
+medium.smart.json                    156 tokens     457 bytes
+metrics.smart.json                   158 tokens     251 bytes
+package.smart.json                   131 tokens     295 bytes
+products.smart.json                 1355 tokens    3841 bytes
+routes.smart.json                   2041 tokens    6123 bytes
+small.smart.json                      69 tokens     141 bytes
+users-50.smart.json                 2032 tokens    5858 bytes
                                    -----        ------
-Total                              11553 tokens   32169 bytes
+Total                              11799 tokens   32657 bytes
 
 === Grand Total ===
-22475 tokens, 62197 bytes
+22971 tokens, 63198 bytes

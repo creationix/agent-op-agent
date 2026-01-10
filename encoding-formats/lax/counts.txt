@@ -6,6 +6,7 @@ firewall.lax                  785 tokens    2540 bytes
 github-issue.lax               88 tokens     267 bytes
 hikes.lax                     144 tokens     403 bytes
 irregular.lax                  69 tokens     144 bytes
+json-counts-cache.lax         154 tokens     337 bytes
 key-folding-basic.lax          55 tokens     158 bytes
 key-folding-mixed.lax          73 tokens     207 bytes
 key-folding-with-array.lax     58 tokens     175 bytes
@@ -19,4 +20,4 @@ routes.lax                   1442 tokens    4093 bytes
 small.lax                      45 tokens     102 bytes
 users-50.lax                 1229 tokens    3852 bytes
                             -----        ------
-Total                        7678 tokens   20595 bytes
+Total                        7832 tokens   20932 bytes

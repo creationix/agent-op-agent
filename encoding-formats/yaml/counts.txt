@@ -6,6 +6,7 @@ firewall.yaml                 1029 tokens    4390 bytes
 github-issue.yaml               98 tokens     278 bytes
 hikes.yaml                     187 tokens     480 bytes
 irregular.yaml                  87 tokens     179 bytes
+json-counts-cache.yaml         213 tokens     391 bytes
 key-folding-basic.yaml          64 tokens     171 bytes
 key-folding-mixed.yaml          89 tokens     227 bytes
 key-folding-with-array.yaml     69 tokens     218 bytes
@@ -19,4 +20,4 @@ routes.yaml                   1696 tokens    4968 bytes
 small.yaml                      56 tokens     107 bytes
 users-50.yaml                 1597 tokens    4700 bytes
                              -----        ------
-Total                         9330 tokens   26366 bytes
+Total                         9543 tokens   26757 bytes

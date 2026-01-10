@@ -24,11 +24,11 @@ Simpler formats are easier for LLMs to learn. The only failure (routes.json) was
 ```mermaid
 xychart-beta
     title "Token Counts by Format"
-    x-axis ["Jot", "JSONito", "Jot-P", "Lax", "JSON-m", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
+    x-axis ["Jot", "JSON-m", "JSONito", "Lax", "Jot-P", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
     y-axis "Tokens" 0 --> 16000
-    line "Qwen" [6305, 7615, 7670, 7678, 7748, 8059, 8098, 9330, 9980, 11553, 12656]
-    line "Legacy" [6258, 7640, 6795, 7225, 7377, 7406, 6942, 7528, 11068, 10786, 11937]
-    line "Claude" [6635, 8153, 7876, 7739, 8033, 7741, 8220, 9276, 11320, 12455, 14230]
+    line "Qwen" [6525, 7748, 7757, 7832, 8239, 8292, 8315, 9543, 10180, 11799, 12656]
+    line "Legacy" [6420, 7377, 7794, 7335, 7204, 7582, 7079, 7661, 11204, 10966, 11937]
+    line "Claude" [6747, 8132, 8327, 7881, 8500, 7928, 8405, 9456, 11485, 12687, 14403]
 ```
 <!-- CHART_END -->
 
@@ -39,11 +39,11 @@ For machine-to-machine or LLM contexts where readability isn't required.
 <!-- COMPACT_START -->
 | Format                                              | Qwen           | Legacy         | Claude         | Bytes          |
 |-----------------------------------------------------|---------------:|---------------:|---------------:|---------------:|
-| **[Jot](jot/)**                                     |   6,305 (-19%) |   6,258 (-15%) |   6,635 (-17%) |  16,228 (-30%) |
-| [JSONito](https://github.com/creationix/jsonito)    |    7,615 (-2%) |    7,640 (+4%) |    8,153 (+1%) |  13,733 (-41%) |
-| [Lax](lax/)                                         |    7,678 (-1%) |    7,225 (-2%) |    7,739 (-4%) |  20,595 (-11%) |
-| [JSON](https://www.json.org/) (mini)                |          7,748 |          7,377 |          8,033 |         23,119 |
-| [D2](https://github.com/creationix/d2)              |    8,059 (+4%) |    7,406 (+0%) |    7,741 (-4%) |  16,891 (-27%) |
+| **[Jot](jot/)**                                     |   6,525 (-16%) |   6,420 (-13%) |   6,747 (-17%) |  16,621 (-28%) |
+| [JSON](https://www.json.org/) (mini)                |          7,748 |          7,377 |          8,132 |         23,119 |
+| [JSONito](https://github.com/creationix/jsonito)    |    7,757 (+0%) |    7,794 (+6%) |    8,327 (+2%) |  14,059 (-39%) |
+| [Lax](lax/)                                         |    7,832 (+1%) |    7,335 (-1%) |    7,881 (-3%) |   20,932 (-9%) |
+| [D2](https://github.com/creationix/d2)              |    8,292 (+7%) |    7,582 (+3%) |    7,928 (-3%) |  17,328 (-25%) |
 <!-- COMPACT_END -->
 
 ### Pretty-Printed Formats
@@ -53,12 +53,12 @@ For human-readable output or when LLMs need to read/write structured data.
 <!-- PRETTY_START -->
 | Format                                              | Qwen           | Legacy         | Claude         | Bytes          |
 |-----------------------------------------------------|---------------:|---------------:|---------------:|---------------:|
-| **[Jot](jot/) (pretty)**                            |   7,670 (-39%) |   6,795 (-43%) |   7,876 (-45%) |  20,954 (-47%) |
-| [TOON](toon/)                                       |   8,098 (-36%) |   6,942 (-42%) |   8,220 (-42%) |  22,380 (-44%) |
-| [YAML](https://yaml.org/)                           |   9,330 (-26%) |   7,528 (-37%) |   9,276 (-35%) |  26,366 (-34%) |
-| [TOML](https://toml.io/)                            |   9,980 (-21%) |   11,068 (-7%) |  11,320 (-20%) |  28,549 (-28%) |
-| [JSON](json/smart-json.ts) (smart)                  |   11,553 (-9%) |  10,786 (-10%) |  12,455 (-12%) |  32,169 (-19%) |
-| [JSON](https://www.json.org/) (pretty)              |         12,656 |         11,937 |         14,230 |         39,884 |
+| **[Jot](jot/) (pretty)**                            |   8,239 (-35%) |   7,204 (-40%) |   8,500 (-41%) |  23,676 (-41%) |
+| [TOON](toon/)                                       |   8,315 (-34%) |   7,079 (-41%) |   8,405 (-42%) |  22,780 (-43%) |
+| [YAML](https://yaml.org/)                           |   9,543 (-25%) |   7,661 (-36%) |   9,456 (-34%) |  26,757 (-33%) |
+| [TOML](https://toml.io/)                            |  10,180 (-20%) |   11,204 (-6%) |  11,485 (-20%) |  28,930 (-27%) |
+| [JSON](json/smart-json.ts) (smart)                  |   11,799 (-7%) |   10,966 (-8%) |  12,687 (-12%) |  32,657 (-18%) |
+| [JSON](https://www.json.org/) (pretty)              |         12,656 |         11,937 |         14,403 |         39,884 |
 <!-- PRETTY_END -->
 
 ## Format Descriptions
