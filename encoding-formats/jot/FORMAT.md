@@ -1,121 +1,127 @@
 # Jot Format
 
-## RULE #1: ALWAYS USE COLON BETWEEN KEY AND VALUE
+Jot is JSON with three modifications:
 
-Every key:value pair needs a colon. The value can be anything - string, number, array, table.
+1. **Minimal quoting** — Strings don't need quotes unless ambiguous
+2. **Key folding** — Single-key object chains collapse: `{"a":{"b":1}}` → `{a.b:1}`
+3. **Tables** — Arrays of uniform objects use `[:schema|row|row]` syntax
 
-CORRECT: `{points:[:t,v|1,2]}`  (colon between "points" and "[")
-WRONG:   `{points[:t,v|1,2]}`   (NO! Missing colon!)
+Everything else is exactly like JSON: `{key:value}` objects, `[item,item]` arrays, same data types.
 
-## Syntax
+## Complete Example
 
-**Objects:** `{key:value,key:value}` - ALWAYS colon between key and value
-**Arrays:** `[item,item]`
-**Tables:** `[:schema|data|data]` for object arrays
+**JSON:**
+```json
+{
+  "config": {
+    "name": "my-app",
+    "version": "1.0.0"
+  },
+  "users": [
+    {"id": 1, "name": "Alice", "role": "admin"},
+    {"id": 2, "name": "Bob", "role": "user"}
+  ],
+  "events": [
+    {"type": "click", "x": 100, "y": 200},
+    {"type": "click", "x": 150, "y": 250},
+    {"type": "scroll", "offset": 500},
+    {"type": "resize", "width": 1920, "height": 1080}
+  ],
+  "tags": ["production", "api"],
+  "metadata": {
+    "nested": {
+      "value": 42
+    }
+  }
+}
+```
 
-When a key's value is a table, you MUST have colon before the table:
+**Jot:**
+```jot
+{
+  config: {name: my-app, version: 1.0.0},
+  users: [:id,name,role|1,Alice,admin|2,Bob,user],
+  events: [:type,x,y|click,100,200|click,150,250|:type,offset|scroll,500|:type,width,height|resize,1920,1080],
+  tags: [production,api],
+  metadata.nested.value: 42
+}
+```
 
-- `{data:[:a,b|1,2]}` is correct
-- `{data[:a,b|1,2]}` is WRONG
+Note how `events` has 3 different schemas:
+- `:type,x,y` for click events
+- `:type,offset` for scroll event
+- `:type,width,height` for resize event
 
-## Quoting Rules
+**Compact Jot (same thing, no whitespace):**
+```jot
+{config:{name:my-app,version:1.0.0},users:[:id,name,role|1,Alice,admin|2,Bob,user],events:[:type,x,y|click,100,200|click,150,250|:type,offset|scroll,500|:type,width,height|resize,1920,1080],tags:[production,api],metadata.nested.value:42}
+```
 
-Strings are unquoted unless they:
+## Arrays
 
-- Parse as number (`"123"`, `"1.0"`)
-- Are keywords (`"true"`, `"false"`, `"null"`)
-- Contain unsafe chars: `: , { } [ ] " |`
-- Have leading/trailing whitespace or are empty
-- Contain control characters
+**Simple arrays** (strings, numbers) — just comma-separated values:
+```jot
+["a","b","c"]  →  [a,b,c]
+[1,2,3]        →  [1,2,3]
+```
 
-Keys follow the same rules, plus: quote keys containing `.` to prevent unfolding (`{"a.b":1}`).
+**Arrays of objects** — use table syntax with schema row:
+
+## Table Syntax
+
+Arrays of objects with the same keys become tables:
+
+```
+Standard array:  [{id:1,name:Alice},{id:2,name:Bob}]
+Table form:      [:id,name|1,Alice|2,Bob]
+```
+
+- Schema row starts with `:` and lists field names
+- Data rows follow, separated by `|`
+- **Schema rows declare field names for data rows.** The field names in JSON become column names in the schema:
+
+```jot
+[{"name":"A","specs":{"x":1}},{"name":"B","variants":[1,2]}]
+
+Schema for items with "specs":    :name,specs
+Schema for items with "variants": :name,variants
+
+→ [:name,specs|A,{x:1}|:name,variants|B,[1,2]]
+```
+
+WRONG (using "specs" when JSON says "variants"):
+```jot
+[:name,specs|A,{x:1}|B,[1,2]]  ✗ item B has "variants" not "specs"!
+```
+
+Tables can contain nested values:
+```jot
+[:id,meta,tags|1,{x:10},[a,b]|2,{y:20},[c]]
+```
 
 ## Key Folding
 
-Key folding ONLY applies to chains of single-key objects ending in a primitive value:
+Only fold single-key chains with primitive (non-array, non-object) values:
 
-```jot
-{a:{b:{c:1}}}  =>  {a.b.c:1}
-{x:{a:1},y:{b:2}}  =>  {x.a:1,y.b:2}
+```
+{a:{b:1}}           → {a.b:1}           ✓ fold (single key, primitive)
+{a:{b:1,c:2}}       → {a:{b:1,c:2}}     ✗ don't fold (multiple keys)
+{a:{b:[1,2]}}       → {a:{b:[1,2]}}     ✗ don't fold (array value)
+{a:{b:{c:1}}}       → {a.b.c:1}         ✓ fold chain (still single keys)
 ```
 
-**DO NOT fold** when:
+## Quoting Rules
 
-- Value is an array: `{users:[...]}` stays as `{users:[...]}`
-- Value is a table: `{users:[:id|1|2]}` stays as `{users:[:id|1|2]}`
-- Object has multiple keys: `{a:{x:1,y:2}}` stays as `{a:{x:1,y:2}}`
+Quote strings ONLY when they:
+- Parse as a number: `"123"` → `"123"` (stays quoted to preserve string type)
+- Are boolean/null keywords: `"true"`, `"false"`, `"null"` → `"true"`, `"false"`, `"null"`
+- Contain special characters: `: , { } [ ] " |` or leading/trailing whitespace
 
-```jot
-{data:[1,2,3]}        =>  {data:[1,2,3]}       (array - NO fold)
-{users:[:id|1|2]}     =>  {users:[:id|1|2]}    (table - NO fold)
-{obj:{a:1,b:2}}       =>  {obj:{a:1,b:2}}      (multi-key - NO fold)
-{deep:{x:{y:1}}}      =>  {deep.x.y:1}         (single-key chain - fold OK)
+Otherwise, remove quotes:
 ```
-
-**Key rule:** Only use `.` when ALL intermediate objects have exactly ONE key AND the final value is a primitive (not array/table).
-
-For literal dots in keys, use quotes:
-
-```jot
-{"a.b":1}  =>  {"a.b":1}  (not unfolded)
+"hello"        → hello
+"my-app"       → my-app
+"user@email"   → user@email
+"has space"    → "has space"
+"123"          → "123"
 ```
-
-## Tables
-
-Object arrays with schema reuse become tables. Schema rows start with `:`, data rows follow:
-
-```jot
-[{a:1,b:2},{a:3,b:4}]  =>  [:a,b|1,2|3,4]
-```
-
-**Schema changes:** When objects have different fields, output a new `:schema` row:
-
-```jot
-[{a:1},{a:2},{b:3},{b:4}]  =>  [:a|1|2|:b|3|4]
-```
-
-**Irregular arrays** (each object has different fields): Use a new schema for each change:
-
-```jot
-[{"type":"click","x":100},{"type":"scroll","offset":50}]
-=>
-[:type,x|click,100|:type,offset|scroll,50]
-```
-
-Each time the set of fields changes, output `:field1,field2,...` before the data row.
-
-## Examples
-
-| JSON                        | Jot                   |
-|-----------------------------|---------------------- |
-| `{"name":"Alice","age":30}` | `{name:Alice,age:30}` |
-| `[1,2,3]`                   | `[1,2,3]`             |
-| `[{"id":1}]`                | `[{id:1}]`            |
-| `{"a":{"b":{"c":1}}}`       | `{a.b.c:1}`           |
-| `[{"x":1},{"x":2}]`         | `[:x\|1\|2]`          |
-| `"hello world"`             | `hello world`         |
-| `"123"`                     | `"123"`               |
-
-### Complete Example
-
-JSON input:
-
-```json
-{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"meta":{"count":2}}
-```
-
-Jot output:
-
-```jot
-{users:[:id,name|1,Alice|2,Bob],meta:{count:2}}
-```
-
-Note: The outer `{...}` wraps the whole object. `users:` has a table value, `meta:` has an object value.
-
-## Decoding
-
-1. `[...]` - array
-2. `[:col,col|val,val|...]` - table; `:col,col` defines schema, `|` separates rows
-3. `{key.path:value}` - unfold unquoted dotted keys into nested objects
-4. `{"key.path":value}` - quoted keys are literal (dots preserved)
-5. Unquoted tokens: parse as number/bool/null, else string
