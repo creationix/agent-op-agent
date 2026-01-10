@@ -91,16 +91,41 @@ Caches slow LM Studio JSON mini/pretty counts for 24 hours.
 
 ### Testing LLM Accuracy
 
+**Quick test (3 docs):**
+
 ```bash
 bun scripts/test-llm-accuracy.ts [format|all] [--encode|--decode|--both]
 ```
 
-Tests Qwen's ability to encode/decode formats using FORMAT.md as reference. Requires LM Studio.
+**Comprehensive test (all docs, multiple runs):**
+
+```bash
+bun scripts/test-llm-comprehensive.ts [format|all] [runs=3]
+```
+
+Both scripts test Qwen's ability to encode/decode formats using FORMAT.md as reference. Requires LM Studio running on localhost:1234.
 
 - **Exact match**: Output matches reference encoder exactly
 - **Semantic**: Output parses back to correct JSON (allows formatting differences)
 
-Results saved to `encoding-formats/llm-accuracy-<date>.json`.
+The comprehensive test logs all conversations to `encoding-formats/llm-conversations.log` for debugging:
+
+```bash
+tail -f encoding-formats/llm-conversations.log
+```
+
+Results saved to `encoding-formats/llm-accuracy-<date>.json` or `encoding-formats/llm-comprehensive-<timestamp>.json`.
+
+### Iterating on FORMAT.md
+
+When running comprehensive tests, monitor results and stop if accuracy is low:
+
+1. Run test in background: `bun scripts/test-llm-comprehensive.ts all 3 &`
+2. Watch progress: `tail -f encoding-formats/llm-conversations.log`
+3. If seeing failures, kill the test: `pkill -f test-llm-comprehensive`
+4. Check failure patterns in the log (look for ❌ FAILED entries)
+5. Update the relevant `FORMAT.md` to clarify the confusing syntax
+6. Re-run and iterate until accuracy improves
 
 ### Full Workflow
 

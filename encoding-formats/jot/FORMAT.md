@@ -1,12 +1,22 @@
 # Jot Format
 
-Jot is JSON optimized for tokens. It's valid JSON with these compressions:
+## RULE #1: ALWAYS USE COLON BETWEEN KEY AND VALUE
+
+Every key:value pair needs a colon. The value can be anything - string, number, array, table.
+
+CORRECT: `{points:[:t,v|1,2]}`  (colon between "points" and "[")
+WRONG:   `{points[:t,v|1,2]}`   (NO! Missing colon!)
 
 ## Syntax
 
-**Objects:** `{key:value,key:value}`
+**Objects:** `{key:value,key:value}` - ALWAYS colon between key and value
 **Arrays:** `[item,item]`
-**Tables:** `[:schema|data|data]` for object arrays with repeated schemas
+**Tables:** `[:schema|data|data]` for object arrays
+
+When a key's value is a table, you MUST have colon before the table:
+
+- `{data:[:a,b|1,2]}` is correct
+- `{data[:a,b|1,2]}` is WRONG
 
 ## Quoting Rules
 
@@ -58,11 +68,21 @@ Object arrays with schema reuse become tables. Schema rows start with `:`, data 
 [{a:1,b:2},{a:3,b:4}]  =>  [:a,b|1,2|3,4]
 ```
 
-Schema changes mid-table with new `:` row:
+**Schema changes:** When objects have different fields, output a new `:schema` row:
 
 ```jot
 [{a:1},{a:2},{b:3},{b:4}]  =>  [:a|1|2|:b|3|4]
 ```
+
+**Irregular arrays** (each object has different fields): Use a new schema for each change:
+
+```jot
+[{"type":"click","x":100},{"type":"scroll","offset":50}]
+=>
+[:type,x|click,100|:type,offset|scroll,50]
+```
+
+Each time the set of fields changes, output `:field1,field2,...` before the data row.
 
 ## Examples
 
