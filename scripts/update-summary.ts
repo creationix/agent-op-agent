@@ -472,6 +472,19 @@ const FILE_LABELS: Record<string, string> = {
   routes: "Routes",
 }
 
+// Format directory and extension info for building file links
+const FORMAT_FILE_INFO: Record<string, { dir: string; ext: string }> = {
+  jot: { dir: "jot", ext: "jot" },
+  "jot-pretty": { dir: "jot", ext: "pretty.jot" },
+  jsonito: { dir: "jsonito", ext: "jito" },
+  lax: { dir: "lax", ext: "lax" },
+  "json-mini": { dir: "json", ext: "json" },
+  d2: { dir: "d2", ext: "d2" },
+  yaml: { dir: "yaml", ext: "yaml" },
+  toon: { dir: "toon", ext: "toon" },
+  toml: { dir: "toml", ext: "toml" },
+}
+
 // Build chart showing % savings vs JSON (mini) for each file
 function buildPerFileChart(perFileData: Map<string, PerFileStats>, jsonMiniPerFile: PerFileStats): string {
   // Get all file names from the baseline
@@ -543,6 +556,44 @@ function updateChart(content: string, chart: string, markerName = "CHART"): stri
     return before + "\n" + chart + "\n" + afterMarker
   }
   return content
+}
+
+// Build a markdown table showing per-file token counts for multiple formats
+function buildPerFileTable(perFileData: Map<string, PerFileStats>, formats: string[]): string {
+  // Get file names from first format
+  const firstFormat = perFileData.values().next().value
+  if (!firstFormat) return ""
+
+  const fileNames = Array.from(firstFormat.keys()).filter((f) => FILE_LABELS[f])
+
+  // Build header row with plain labels
+  const headers = ["Format", ...fileNames.map((f) => FILE_LABELS[f] || f), "Total"]
+  const headerRow = `| ${headers.join(" | ")} |`
+  const separatorRow = `|--------|${fileNames.map(() => "------:").join("|")}|------:|`
+
+  // Build data rows with links to format-specific files
+  const dataRows: string[] = []
+  for (const formatKey of formats) {
+    const stats = perFileData.get(formatKey)
+    if (!stats) continue
+
+    const label = CHART_LABELS[formatKey] || formatKey
+    const formatInfo = FORMAT_FILE_INFO[formatKey]
+
+    const values = fileNames.map((f) => {
+      const tokens = stats.get(f) ?? 0
+      if (formatInfo) {
+        // Link to the specific format file
+        return `[${tokens}](${formatInfo.dir}/${f}.${formatInfo.ext})`
+      }
+      return String(tokens)
+    })
+
+    const total = fileNames.map((f) => stats.get(f) ?? 0).reduce((a, b) => a + b, 0)
+    dataRows.push(`| ${label} | ${values.join(" | ")} | ${total.toLocaleString()} |`)
+  }
+
+  return [headerRow, separatorRow, ...dataRows].join("\n")
 }
 
 // Cache file for JSON mini/pretty counts (avoid slow LM Studio calls)
@@ -728,6 +779,10 @@ async function main() {
     const legacyChart = buildPerFileChart(legacyPerFile, legacyJsonMini)
     tokenCounts = updateChart(tokenCounts, legacyChart, "LEGACY_CHART")
 
+    // Legacy table
+    const legacyTable = buildPerFileTable(legacyPerFile, ["jot", "lax", "json-mini", "yaml", "toon"])
+    tokenCounts = updateChart(tokenCounts, legacyTable, "LEGACY_TABLE")
+
     // Claude chart (from claude-counts-sonnet.txt)
     const claudePerFile = new Map<string, PerFileStats>()
     claudePerFile.set("json-mini", parseClaudePerFileCounts("JSON (mini)"))
@@ -740,8 +795,12 @@ async function main() {
     if (claudeJsonMini && claudeJsonMini.size > 0) {
       const claudeChart = buildPerFileChart(claudePerFile, claudeJsonMini)
       tokenCounts = updateChart(tokenCounts, claudeChart, "CLAUDE_CHART")
+
+      // Claude table
+      const claudeTable = buildPerFileTable(claudePerFile, ["jot", "lax", "json-mini", "yaml", "toon"])
+      tokenCounts = updateChart(tokenCounts, claudeTable, "CLAUDE_TABLE")
     } else {
-      console.log("Skipping Claude chart - no Claude per-file data")
+      console.log("Skipping Claude chart and table - no Claude per-file data")
     }
 
     writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
