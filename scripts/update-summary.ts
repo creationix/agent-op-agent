@@ -290,6 +290,57 @@ function updateSection(
   return content
 }
 
+// Chart labels for each format
+const CHART_LABELS: Record<string, string> = {
+  jot: "Jot",
+  "jot-pretty": "Jot-P",
+  jsonito: "JSONito",
+  lax: "Lax",
+  "json-mini": "JSON-m",
+  "json-pretty": "JSON-p",
+  "json-smart": "JSON-s",
+  d2: "D2",
+  toon: "TOON",
+  yaml: "YAML",
+  toml: "TOML",
+}
+
+function buildChart(allStats: Map<string, FormatStats>): string {
+  // Build array of {key, label, tokens} and sort by tokens
+  const items = Array.from(allStats.entries())
+    .filter(([key]) => CHART_LABELS[key])
+    .map(([key, stats]) => ({
+      label: CHART_LABELS[key],
+      tokens: stats.tokens,
+    }))
+    .sort((a, b) => a.tokens - b.tokens)
+
+  const labels = items.map((i) => i.label)
+  const values = items.map((i) => i.tokens)
+
+  const maxVal = Math.max(...values)
+  const yMax = Math.ceil(maxVal / 1000) * 1000 + 1000
+
+  return `\`\`\`mermaid
+xychart-beta
+    title "Token Counts by Format (Qwen3)"
+    x-axis [${labels.map((l) => `"${l}"`).join(", ")}]
+    y-axis "Tokens" 0 --> ${yMax}
+    bar [${values.join(", ")}]
+\`\`\``
+}
+
+function updateChart(content: string, chart: string): string {
+  const startMarker = "<!-- CHART_START -->"
+  const endMarker = "<!-- CHART_END -->"
+  if (content.includes(startMarker) && content.includes(endMarker)) {
+    const before = content.slice(0, content.indexOf(startMarker) + startMarker.length)
+    const afterMarker = content.slice(content.indexOf(endMarker))
+    return before + "\n" + chart + "\n" + afterMarker
+  }
+  return content
+}
+
 // Cache file for JSON mini/pretty counts (avoid slow LM Studio calls)
 const JSON_CACHE_PATH = join(ROOT, "json", "json-counts-cache.json")
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
@@ -418,8 +469,12 @@ async function main() {
     .map((k) => ({ key: k, ...allStats.get(k)! }))
   const prettyTable = buildTable(prettyRows, "json-pretty", claudeCounts, legacyCounts)
 
+  // Build chart
+  const chart = buildChart(allStats)
+
   // Update SUMMARY.md
   let summary = readFileSync(SUMMARY_PATH, "utf-8")
+  summary = updateChart(summary, chart)
   summary = updateSection(summary, "<!-- COMPACT_START -->", "<!-- COMPACT_END -->", compactTable, hasLegacy, hasClaude)
   summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)

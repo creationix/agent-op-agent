@@ -8,6 +8,16 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Token Efficiency
 
+<!-- CHART_START -->
+```mermaid
+xychart-beta
+    title "Token Counts by Format (Qwen3)"
+    x-axis ["Jot", "JSONito", "Jot-P", "Lax", "JSON-m", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
+    y-axis "Tokens" 0 --> 14000
+    bar [6305, 7615, 7670, 7678, 7748, 8059, 8098, 9330, 9980, 11553, 12656]
+```
+<!-- CHART_END -->
+
 ### Compact Formats
 
 For machine-to-machine or LLM contexts where readability isn't required.
