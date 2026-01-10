@@ -109,9 +109,13 @@ function parsePerFileCountsFile(content: string, targetExt?: string): PerFileSta
     if (!foundTarget) continue
 
     // Match lines like: "chat.jot                       67 tokens     235 bytes"
-    const fileMatch = line.match(/^(\S+)\.\S+\s+(\d+)\s+tokens/)
+    // or "chat.pretty.jot                  72 tokens     251 bytes"
+    const fileMatch = line.match(/^(\S+)\s+(\d+)\s+tokens/)
     if (fileMatch && currentExt) {
-      const fileName = fileMatch[1]
+      // Strip the extension from the filename (e.g., "chat.jot" -> "chat", "chat.pretty.jot" -> "chat")
+      const fullName = fileMatch[1]
+      const extSuffix = "." + currentExt
+      const fileName = fullName.endsWith(extSuffix) ? fullName.slice(0, -extSuffix.length) : fullName
       const tokens = parseInt(fileMatch[2])
       results.set(fileName, tokens)
     }
@@ -659,8 +663,9 @@ async function main() {
       const prettyStats = stats.get("pretty.jot")
       if (jotStats) allStats.set("jot", jotStats)
       if (prettyStats) allStats.set("jot-pretty", prettyStats)
-      // Collect per-file data for jot (compact format only)
+      // Collect per-file data for both jot and jot-pretty
       perFileData.set("jot", parsePerFileCountsFile(content, "jot"))
+      perFileData.set("jot-pretty", parsePerFileCountsFile(content, "pretty.jot"))
     } else if (dir.name === "json") {
       // Get smart JSON stats from counts.txt
       const smartStats = stats.get("smart.json")
@@ -763,8 +768,14 @@ async function main() {
     if (jsonMiniPerFile && jsonMiniPerFile.size > 0) {
       const qwenChart = buildPerFileChart(perFileData, jsonMiniPerFile)
       tokenCounts = updateChart(tokenCounts, qwenChart, "QWEN_CHART")
+
+      // Qwen table - includes all formats with Qwen per-file data
+      const qwenFormats = ["jot", "jsonito", "lax", "json-mini", "jot-pretty", "d2", "toon", "yaml", "toml"]
+        .filter((f) => perFileData.has(f))
+      const qwenTable = buildPerFileTable(perFileData, qwenFormats)
+      tokenCounts = updateChart(tokenCounts, qwenTable, "QWEN_TABLE")
     } else {
-      console.log("Skipping Qwen chart - no JSON per-file data (delete cache to regenerate)")
+      console.log("Skipping Qwen chart and table - no JSON per-file data (delete cache to regenerate)")
     }
 
     // Legacy chart (computed fresh using legacy tokenizer)
