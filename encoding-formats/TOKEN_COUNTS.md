@@ -14,10 +14,11 @@ xychart-beta
 ```
 <!-- CHART_END -->
 
-- Jot (blue) — best compact, consistently lowest
-- Lax (green) — alternative compact, middle ground
-- YAML (red) — pretty baseline, consistently highest
-- TOON (yellow) — interesting variation, good on tabular data
+- JSON (blue) - baseline for comparison
+- Jot (green) — best compact, consistently lowest
+- Lax (white) — alternative compact, middle ground
+- YAML (yellow) — pretty baseline, consistently highest
+- TOON (red) — interesting variation, good on tabular data
 
 ## Per-File Breakdown
 
