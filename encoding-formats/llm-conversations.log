@@ -1,9 +1,9 @@
 === LLM Conversation Log ===
-Started: 2026-01-10T18:58:09.808Z
+Started: 2026-01-10T19:54:08.380Z
 
 
 ================================================================================
-[2026-01-10T18:58:14.747Z] jot/chat run 1
+[2026-01-10T19:54:10.431Z] jot/chat run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -13,13 +13,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -28,18 +26,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"messages":[{"role":"user","content":"How do I configure TypeScript for a monorepo?"},{"role":"assistant","content":"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package."},{"role":"user","content":"What about path aliases?"}]}
 
 🤖 QWEN RESPONSE:
-{
-  messages: {{
-    role,content;
-    "user","How do I configure TypeScript for a monorepo?";
-    "assistant","For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";
-    "user","What about path aliases?"
-  }}
-}
+{messages:{{role,content;user,"How do I configure TypeScript for a monorepo?";assistant,"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";user,"What about path aliases?"}}}
 
 
 ================================================================================
-[2026-01-10T18:58:17.475Z] jot/chat run 2
+[2026-01-10T19:54:11.699Z] jot/chat run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -49,13 +40,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -64,18 +53,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"messages":[{"role":"user","content":"How do I configure TypeScript for a monorepo?"},{"role":"assistant","content":"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package."},{"role":"user","content":"What about path aliases?"}]}
 
 🤖 QWEN RESPONSE:
-{
-  messages: {{
-    role,content;
-    "user","How do I configure TypeScript for a monorepo?";
-    "assistant","For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";
-    "user","What about path aliases?"
-  }}
-}
+{messages:{{role,content;user,"How do I configure TypeScript for a monorepo?";assistant,"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";user,"What about path aliases?"}}}
 
 
 ================================================================================
-[2026-01-10T18:58:20.182Z] jot/chat run 3
+[2026-01-10T19:54:12.971Z] jot/chat run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -85,13 +67,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -100,18 +80,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"messages":[{"role":"user","content":"How do I configure TypeScript for a monorepo?"},{"role":"assistant","content":"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package."},{"role":"user","content":"What about path aliases?"}]}
 
 🤖 QWEN RESPONSE:
-{
-  messages: {{
-    role,content;
-    "user","How do I configure TypeScript for a monorepo?";
-    "assistant","For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";
-    "user","What about path aliases?"
-  }}
-}
+{messages:{{role,content;user,"How do I configure TypeScript for a monorepo?";assistant,"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.";user,"What about path aliases?"}}}
 
 
 ================================================================================
-[2026-01-10T18:58:22.903Z] jot/metrics run 1
+[2026-01-10T19:54:15.113Z] jot/metrics run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -121,13 +94,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -136,14 +107,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"series":"cpu_usage","points":[{"t":1704067200,"v":45.2},{"t":1704067260,"v":52.1},{"t":1704067320,"v":48.7},{"t":1704067380,"v":61.3},{"t":1704067440,"v":55.9}]}
 
 🤖 QWEN RESPONSE:
-{
-  series:"cpu_usage",
-  points:{{t,v;1704067200,45.2;1704067260,52.1;1704067320,48.7;1704067380,61.3;1704067440,55.9}}
-}
+{series:"cpu_usage",points:{{t,v;1704067200,45.2;1704067260,52.1;1704067320,48.7;1704067380,61.3;1704067440,55.9}}}
 
 
 ================================================================================
-[2026-01-10T18:58:26.065Z] jot/metrics run 2
+[2026-01-10T19:54:17.000Z] jot/metrics run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -153,13 +121,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -168,23 +134,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"series":"cpu_usage","points":[{"t":1704067200,"v":45.2},{"t":1704067260,"v":52.1},{"t":1704067320,"v":48.7},{"t":1704067380,"v":61.3},{"t":1704067440,"v":55.9}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  series: "cpu_usage",
-  points: {{
-    t,v;
-    1704067200,45.2;
-    1704067260,52.1;
-    1704067320,48.7;
-    1704067380,61.3;
-    1704067440,55.9
-  }}
-}
-```
+{series:"cpu_usage",points:{{t,v;1704067200,45.2;1704067260,52.1;1704067320,48.7;1704067380,61.3;1704067440,55.9}}}
 
 
 ================================================================================
-[2026-01-10T18:58:29.219Z] jot/metrics run 3
+[2026-01-10T19:54:18.890Z] jot/metrics run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -194,13 +148,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -209,210 +161,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"series":"cpu_usage","points":[{"t":1704067200,"v":45.2},{"t":1704067260,"v":52.1},{"t":1704067320,"v":48.7},{"t":1704067380,"v":61.3},{"t":1704067440,"v":55.9}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  series: "cpu_usage",
-  points: {{
-    t,v;
-    1704067200,45.2;
-    1704067260,52.1;
-    1704067320,48.7;
-    1704067380,61.3;
-    1704067440,55.9
-  }}
-}
-```
+{series:"cpu_usage",points:{{t,v;1704067200,45.2;1704067260,52.1;1704067320,48.7;1704067380,61.3;1704067440,55.9}}}
 
 
 ================================================================================
-[2026-01-10T18:58:44.851Z] jot/large run 1
-❌ FAILED
-================================================================================
-
-🧪 SYSTEM PROMPT (test harness):
-You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
-
-FORMAT SPECIFICATION:
-# Jot Format
-
-Jot is JSON with three modifications:
-
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
-
-Everything else is exa
-... (truncated)
-
-📝 USER PROMPT (test harness):
-Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
-
-{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
-
-🤖 QWEN RESPONSE:
-{
-  apiVersion: "2.0",
-  kind: "Deployment",
-  metadata.name: "web-server",
-  metadata.namespace: "production",
-  metadata.labels.app: "web",
-  metadata.labels.tier: "frontend",
-  metadata.labels.environment: "production",
-  spec.replicas: 3,
-  spec.selector.matchLabels.app: "web",
-  spec.selector.matchLabels.tier: "frontend",
-  spec.template.metadata.labels.app: "web",
-  spec.template.metadata.labels.tier: "frontend",
-  spec.template.metadata.labels.version: "1.2.3",
-  spec.template.spec.containers.name: "nginx",
-  spec.template.spec.containers.image: "nginx:1.21",
-  spec.template.spec.containers.ports.containerPort: [80,443],
-  spec.template.spec.containers.ports.protocol: ["TCP","TCP"],
-  spec.template.spec.containers.resources.requests.cpu: "100m",
-  spec.template.spec.containers.resources.requests.memory: "128Mi",
-  spec.template.spec.containers.resources.limits.cpu: "500m",
-  spec.template.spec.containers.resources.limits.memory: "512Mi",
-  spec.template.spec.containers.env.name: ["NODE_ENV","LOG_LEVEL","MAX_CONNECTIONS"],
-  spec.template.spec.containers.env.value: ["production","info","1000"],
-  spec.template.spec.containers.name: "sidecar",
-  spec.template.spec.containers.image: "envoy:1.20",
-  spec.template.spec.containers.ports.containerPort: [8080],
-  spec.template.spec.containers.ports.protocol: ["TCP"],
-  spec.template.spec.containers.resources.requests.cpu: "50m",
-  spec.template.spec.containers.resources.requests.memory: "64Mi",
-  spec.template.spec.containers.resources.limits.cpu: "200m",
-  spec.template.spec.containers.resources.limits.memory: "256Mi"
-}
-
-
-================================================================================
-[2026-01-10T18:58:59.811Z] jot/large run 2
-❌ FAILED
-================================================================================
-
-🧪 SYSTEM PROMPT (test harness):
-You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
-
-FORMAT SPECIFICATION:
-# Jot Format
-
-Jot is JSON with three modifications:
-
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
-
-Everything else is exa
-... (truncated)
-
-📝 USER PROMPT (test harness):
-Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
-
-{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
-
-🤖 QWEN RESPONSE:
-{
-  apiVersion: "2.0",
-  kind: "Deployment",
-  metadata.name: "web-server",
-  metadata.namespace: "production",
-  metadata.labels.app: "web",
-  metadata.labels.tier: "frontend",
-  metadata.labels.environment: "production",
-  spec.replicas: 3,
-  spec.selector.matchLabels.app: "web",
-  spec.selector.matchLabels.tier: "frontend",
-  spec.template.metadata.labels.app: "web",
-  spec.template.metadata.labels.tier: "frontend",
-  spec.template.metadata.labels.version: "1.2.3",
-  spec.template.spec.containers.name: "nginx",
-  spec.template.spec.containers.image: "nginx:1.21",
-  spec.template.spec.containers.ports.containerPort: [80,443],
-  spec.template.spec.containers.ports.protocol: ["TCP","TCP"],
-  spec.template.spec.containers.resources.requests.cpu: "100m",
-  spec.template.spec.containers.resources.requests.memory: "128Mi",
-  spec.template.spec.containers.resources.limits.cpu: "500m",
-  spec.template.spec.containers.resources.limits.memory: "512Mi",
-  spec.template.spec.containers.env.name: ["NODE_ENV","LOG_LEVEL","MAX_CONNECTIONS"],
-  spec.template.spec.containers.env.value: ["production","info","1000"],
-  spec.template.spec.containers.name: "sidecar",
-  spec.template.spec.containers.image: "envoy:1.20",
-  spec.template.spec.containers.ports.containerPort: [8080],
-  spec.template.spec.containers.ports.protocol: ["TCP"],
-  spec.template.spec.containers.resources.requests.cpu: "50m",
-  spec.template.spec.containers.resources.requests.memory: "64Mi",
-  spec.template.spec.containers.resources.limits.cpu: "200m",
-  spec.template.spec.containers.resources.limits.memory: "256Mi"
-}
-
-
-================================================================================
-[2026-01-10T18:59:11.674Z] jot/large run 3
-❌ FAILED
-================================================================================
-
-🧪 SYSTEM PROMPT (test harness):
-You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
-
-FORMAT SPECIFICATION:
-# Jot Format
-
-Jot is JSON with three modifications:
-
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
-
-Everything else is exa
-... (truncated)
-
-📝 USER PROMPT (test harness):
-Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
-
-{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
-
-🤖 QWEN RESPONSE:
-{
-  apiVersion: "2.0",
-  kind: "Deployment",
-  metadata.name: "web-server",
-  metadata.namespace: "production",
-  metadata.labels.app: "web",
-  metadata.labels.tier: "frontend",
-  metadata.labels.environment: "production",
-  spec.replicas: 3,
-  spec.selector.matchLabels.app: "web",
-  spec.selector.matchLabels.tier: "frontend",
-  spec.template.metadata.labels.app: "web",
-  spec.template.metadata.labels.tier: "frontend",
-  spec.template.metadata.labels.version: "1.2.3",
-  spec.template.spec.containers.name: [
-    {nginx: {
-      image: "nginx:1.21",
-      ports.containerPort: [80,443],
-      ports.protocol: ["TCP","TCP"],
-      resources.requests.cpu: "100m",
-      resources.requests.memory: "128Mi",
-      resources.limits.cpu: "500m",
-      resources.limits.memory: "512Mi",
-      env.name: ["NODE_ENV","LOG_LEVEL","MAX_CONNECTIONS"],
-      env.value: ["production","info","1000"]
-    }},
-    {sidecar: {
-      image: "envoy:1.20",
-      ports.containerPort: [8080],
-      ports.protocol: ["TCP"],
-      resources.requests.cpu: "50m",
-      resources.requests.memory: "64Mi",
-      resources.limits.cpu: "200m",
-      resources.limits.memory: "256Mi"
-    }}
-  ]
-}
-
-
-================================================================================
-[2026-01-10T18:59:14.706Z] jot/key-folding-mixed run 1
+[2026-01-10T19:54:24.401Z] jot/large run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -422,35 +175,24 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
-{"app":{"name":"MyApp","version":"2.1.0"},"server":{"host":"localhost","port":8080,"ssl":{"enabled":true,"cert":"/path/to/cert.pem"}},"database":{"connection":{"url":"postgresql://localhost:5432/mydb"}},"feature":{"flags":{"beta":true}}}
+{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
 
 🤖 QWEN RESPONSE:
-{
-  app.name:"MyApp",
-  app.version:"2.1.0",
-  server.host:"localhost",
-  server.port:8080,
-  server.ssl.enabled:true,
-  server.ssl.cert:"/path/to/cert.pem",
-  database.connection.url:"postgresql://localhost:5432/mydb",
-  feature.flags.beta:true
-}
+{apiVersion:"2.0",kind:"Deployment",metadata:{name:"web-server",namespace:"production",labels:{app:"web",tier:"frontend",environment:"production"}},spec:{replicas:3,selector:{matchLabels:{app:"web",tier:"frontend"}},template:{metadata:{labels:{app:"web",tier:"frontend",version:"1.2.3"}},spec:{containers:[{name:"nginx",image:"nginx:1.21",ports:[{containerPort:80,protocol:"TCP"},{containerPort:443,protocol:"TCP"}],resources:{requests:{cpu:"100m",memory:"128Mi"},limits:{cpu:"500m",memory:"512Mi"}},env:[{name:"NODE_ENV",value:"production"},{name:"LOG_LEVEL",value:"info"},{name:"MAX_CONNECTIONS",value:"1000"}]},{name:"sidecar",image:"envoy:1.20",ports:[{containerPort:8080,protocol:"TCP"}],resources:{requests:{cpu:"50m",memory:"64Mi"},limits:{cpu:"200m",memory:"256Mi"}}}]}}}}
 
 
 ================================================================================
-[2026-01-10T18:59:17.525Z] jot/key-folding-mixed run 2
+[2026-01-10T19:54:29.495Z] jot/large run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -460,35 +202,24 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
-{"app":{"name":"MyApp","version":"2.1.0"},"server":{"host":"localhost","port":8080,"ssl":{"enabled":true,"cert":"/path/to/cert.pem"}},"database":{"connection":{"url":"postgresql://localhost:5432/mydb"}},"feature":{"flags":{"beta":true}}}
+{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
 
 🤖 QWEN RESPONSE:
-{
-  app.name:"MyApp",
-  app.version:"2.1.0",
-  server.host:"localhost",
-  server.port:8080,
-  server.ssl.enabled:true,
-  server.ssl.cert:"/path/to/cert.pem",
-  database.connection.url:"postgresql://localhost:5432/mydb",
-  feature.flags.beta:true
-}
+{apiVersion:"2.0",kind:"Deployment",metadata:{name:"web-server",namespace:"production",labels:{app:"web",tier:"frontend",environment:"production"}},spec:{replicas:3,selector:{matchLabels:{app:"web",tier:"frontend"}},template:{metadata:{labels:{app:"web",tier:"frontend",version:"1.2.3"}},spec:{containers:[{name:"nginx",image:"nginx:1.21",ports:[{containerPort:80,protocol:"TCP"},{containerPort:443,protocol:"TCP"}],resources:{requests:{cpu:"100m",memory:"128Mi"},limits:{cpu:"500m",memory:"512Mi"}},env:[{name:"NODE_ENV",value:"production"},{name:"LOG_LEVEL",value:"info"},{name:"MAX_CONNECTIONS",value:"1000"}]},{name:"sidecar",image:"envoy:1.20",ports:[{containerPort:8080,protocol:"TCP"}],resources:{requests:{cpu:"50m",memory:"64Mi"},limits:{cpu:"200m",memory:"256Mi"}}}]}}}}
 
 
 ================================================================================
-[2026-01-10T18:59:20.342Z] jot/key-folding-mixed run 3
+[2026-01-10T19:54:34.597Z] jot/large run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -498,13 +229,38 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
+... (truncated)
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"apiVersion":"2.0","kind":"Deployment","metadata":{"name":"web-server","namespace":"production","labels":{"app":"web","tier":"frontend","environment":"production"}},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"web","tier":"frontend"}},"template":{"metadata":{"labels":{"app":"web","tier":"frontend","version":"1.2.3"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.21","ports":[{"containerPort":80,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{"requests":{"cpu":"100m","memory":"128Mi"},"limits":{"cpu":"500m","memory":"512Mi"}},"env":[{"name":"NODE_ENV","value":"production"},{"name":"LOG_LEVEL","value":"info"},{"name":"MAX_CONNECTIONS","value":"1000"}]},{"name":"sidecar","image":"envoy:1.20","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{"requests":{"cpu":"50m","memory":"64Mi"},"limits":{"cpu":"200m","memory":"256Mi"}}}]}}}}
+
+🤖 QWEN RESPONSE:
+{apiVersion:"2.0",kind:"Deployment",metadata:{name:"web-server",namespace:"production",labels:{app:"web",tier:"frontend",environment:"production"}},spec:{replicas:3,selector:{matchLabels:{app:"web",tier:"frontend"}},template:{metadata:{labels:{app:"web",tier:"frontend",version:"1.2.3"}},spec:{containers:[{name:"nginx",image:"nginx:1.21",ports:[{containerPort:80,protocol:"TCP"},{containerPort:443,protocol:"TCP"}],resources:{requests:{cpu:"100m",memory:"128Mi"},limits:{cpu:"500m",memory:"512Mi"}},env:[{name:"NODE_ENV",value:"production"},{name:"LOG_LEVEL",value:"info"},{name:"MAX_CONNECTIONS",value:"1000"}]},{name:"sidecar",image:"envoy:1.20",ports:[{containerPort:8080,protocol:"TCP"}],resources:{requests:{cpu:"50m",memory:"64Mi"},limits:{cpu:"200m",memory:"256Mi"}}}]}}}}
+
+
+================================================================================
+[2026-01-10T19:54:36.282Z] jot/key-folding-mixed run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with some optimizations:
+
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
+
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -513,20 +269,65 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"app":{"name":"MyApp","version":"2.1.0"},"server":{"host":"localhost","port":8080,"ssl":{"enabled":true,"cert":"/path/to/cert.pem"}},"database":{"connection":{"url":"postgresql://localhost:5432/mydb"}},"feature":{"flags":{"beta":true}}}
 
 🤖 QWEN RESPONSE:
-{
-  app.name:"MyApp",
-  app.version:"2.1.0",
-  server.host:"localhost",
-  server.port:8080,
-  server.ssl.enabled:true,
-  server.ssl.cert:"/path/to/cert.pem",
-  database.connection.url:"postgresql://localhost:5432/mydb",
-  feature.flags.beta:true
-}
+{app:{name:"MyApp",version:"2.1.0"},server:{host:"localhost",port:8080,ssl:{enabled:true,cert:"/path/to/cert.pem"}},database:{connection:{url:"postgresql://localhost:5432/mydb"}},feature:{flags:{beta:true}}}
 
 
 ================================================================================
-[2026-01-10T19:00:21.677Z] jot/logs run 1
+[2026-01-10T19:54:37.752Z] jot/key-folding-mixed run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with some optimizations:
+
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
+
+... (truncated)
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"app":{"name":"MyApp","version":"2.1.0"},"server":{"host":"localhost","port":8080,"ssl":{"enabled":true,"cert":"/path/to/cert.pem"}},"database":{"connection":{"url":"postgresql://localhost:5432/mydb"}},"feature":{"flags":{"beta":true}}}
+
+🤖 QWEN RESPONSE:
+{app:{name:"MyApp",version:"2.1.0"},server:{host:"localhost",port:8080,ssl:{enabled:true,cert:"/path/to/cert.pem"}},database:{connection:{url:"postgresql://localhost:5432/mydb"}},feature:{flags:{beta:true}}}
+
+
+================================================================================
+[2026-01-10T19:54:39.229Z] jot/key-folding-mixed run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with some optimizations:
+
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
+
+... (truncated)
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"app":{"name":"MyApp","version":"2.1.0"},"server":{"host":"localhost","port":8080,"ssl":{"enabled":true,"cert":"/path/to/cert.pem"}},"database":{"connection":{"url":"postgresql://localhost:5432/mydb"}},"feature":{"flags":{"beta":true}}}
+
+🤖 QWEN RESPONSE:
+{app:{name:"MyApp",version:"2.1.0"},server:{host:"localhost",port:8080,ssl:{enabled:true,cert:"/path/to/cert.pem"}},database:{connection:{url:"postgresql://localhost:5432/mydb"}},feature:{flags:{beta:true}}}
+
+
+================================================================================
+[2026-01-10T19:55:18.310Z] jot/logs run 1
 ❌ FAILED
 ================================================================================
 
@@ -536,13 +337,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -552,41 +351,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  logs: {{
-    ts,level,service,msg;
-    "2024-01-15T10:00:01Z","info","api","Server started on port 3000";
-    "2024-01-15T10:00:02Z","info","db","Connected to database";
-    "2024-01-15T10:00:05Z","debug","auth","Loading JWT keys";
-    "2024-01-15T10:00:10Z","info","api","Health check endpoint ready";
-    "2024-01-15T10:01:23Z","info","api","Request received","method":"GET","path":"/users";
-    "2024-01-15T10:01:24Z","debug","db","Query executed","duration_ms":45;
-    "2024-01-15T10:01:24Z","info","api","Response sent","status":200;
-    "2024-01-15T10:02:15Z","warn","auth","Invalid token attempt","ip":"192.168.1.100";
-    "2024-01-15T10:02:45Z","info","api","Request received","method":"POST","path":"/login";
-    "2024-01-15T10:02:46Z","info","auth","User authenticated","user_id":42;
-    "2024-01-15T10:02:46Z","info","api","Response sent","status":200;
-    "2024-01-15T10:03:00Z","info","cache","Cache hit","key":"user:42";
-    "2024-01-15T10:03:30Z","error","db","Connection timeout","retry":1;
-    "2024-01-15T10:03:31Z","info","db","Reconnected to database";
-    "2024-01-15T10:04:00Z","info","api","Request received","method":"PUT","path":"/users/42";
-    "2024-01-15T10:04:01Z","debug","db","Query executed","duration_ms":12;
-    "2024-01-15T10:04:01Z","info","api","Response sent","status":200;
-    "2024-01-15T10:05:00Z","info","scheduler","Running cleanup job";
-    "2024-01-15T10:05:02Z","info","cache","Expired keys removed","count":156;
-    "2024-01-15T10:05:10Z","info","api","Request received","method":"DELETE","path":"/sessions/old";
-    "2024-01-15T10:05:11Z","info","db","Rows deleted","count":23;
-    "2024-01-15T10:05:11Z","info","api","Response sent","status":204;
-    "2024-01-15T10:06:00Z","warn","api","Rate limit approaching","client":"app-xyz";
-    "2024-01-15T10:06:30Z","info","api","Request received","method":"GET","path":"/products";
-    "2024-01-15T10:06:31Z","info","cache","Cache miss","key":"products:all";
-    "2024-01-15T10:06:32Z","debug","d
+{logs:{{ts,level,service,msg,method,path,duration_ms,status,user_id,ip,retry,error,count,endpoint,ttl,used_mb,max_mb,client,query,event,delivered_status;2024-01-15T10:00:01Z,info,api,"Server started on port 3000",,,,"2024-01-15T10:00:02Z",info,db,"Connected to database",,,,"2024-01-15T10:00:05Z",debug,auth,"Loading JWT keys",,,,"2024-01-15T10:00:10Z",info,api,"Health check endpoint ready",,,,"2024-01-15T10:01:23Z",info,api,"Request received","GET","/users",,,,"2024-01-15T10:01:24Z",debug,db,"Query executed",,,45,"2024-01-15T10:01:24Z",info,api,"Response sent",,,200,"2024-01-15T10:02:15Z",warn,auth,"Invalid token attempt",,,,"192.168.1.100","2024-01-15T10:02:45Z",info,api,"Request received","POST","/login",,,,"2024-01-15T10:02:46Z",info,auth,"User authenticated",,,,"2024-01-15T10:02:46Z",info,api,"Response sent",,,200,"2024-01-15T10:03:00Z",info,cache,"Cache hit","user:42",,,,"2024-01-15T10:03:30Z",error,db,"Connection timeout",,,,"2024-01-15T10:03:31Z",info,db,"Reconnected to database",,,,"2024-01-15T10:04:00Z",info,api,"Request received","PUT","/users/42",,,,"2024-01-15T10:04:01Z",debug,db,"Query executed",,,12,"2024-01-15T10:04:01Z",info,api,"Response sent",,,200,"2024-01-15T10:05:00Z",info,scheduler,"Running cleanup job",,,,"2024-01-15T10:05:02Z",info,cache,"Expired keys removed",,,156,"2024-01-15T10:05:10Z",info,api,"Request received","DELETE","/sessions/old",,,,"2024-01-15T10:05:11Z",info,db,"Rows deleted",,,23,"2024-01-15T10:05:11Z",info,api,"Response sent",,,204,"2024-01-15T10:06:00Z",warn,api,"Rate limit approaching",,,,"app-xyz","2024-01-15T10:06:30Z",info,api,"Request received","GET","/products",,,,"2024-01-15T10:06:31Z",debug,cache,"Cache miss","products:all",,,,"2024-01-15T10:06:32Z",debug,db,"Query executed",,,89,"2024-01-15T10:06:32Z",info,cache,"Cache set","products:all",,,300,"2024-01-15T10:06:32Z",info,api,"Response sent",,,200,"2024-01-15T10:07:00Z",info,metrics,"Metrics exported","/metrics",,,,"2024-01-15T10:07:45Z",error,api,"Unhandled exception"
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:01:18.881Z] jot/logs run 2
+[2026-01-10T19:55:54.182Z] jot/logs run 2
 ❌ FAILED
 ================================================================================
 
@@ -596,13 +366,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -612,40 +380,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  logs: {{
-    ts,level,service,msg;
-    "2024-01-15T10:00:01Z","info","api","Server started on port 3000";
-    "2024-01-15T10:00:02Z","info","db","Connected to database";
-    "2024-01-15T10:00:05Z","debug","auth","Loading JWT keys";
-    "2024-01-15T10:00:10Z","info","api","Health check endpoint ready";
-    "2024-01-15T10:01:23Z","info","api","Request received","method":"GET","path":"/users";
-    "2024-01-15T10:01:24Z","debug","db","Query executed","duration_ms":45;
-    "2024-01-15T10:01:24Z","info","api","Response sent","status":200;
-    "2024-01-15T10:02:15Z","warn","auth","Invalid token attempt","ip":"192.168.1.100";
-    "2024-01-15T10:02:45Z","info","api","Request received","method":"POST","path":"/login";
-    "2024-01-15T10:02:46Z","info","auth","User authenticated","user_id":42;
-    "2024-01-15T10:02:46Z","info","api","Response sent","status":200;
-    "2024-01-15T10:03:00Z","info","cache","Cache hit","key":"user:42";
-    "2024-01-15T10:03:30Z","error","db","Connection timeout","retry":1;
-    "2024-01-15T10:03:31Z","info","db","Reconnected to database";
-    "2024-01-15T10:04:00Z","info","api","Request received","method":"PUT","path":"/users/42";
-    "2024-01-15T10:04:01Z","debug","db","Query executed","duration_ms":12;
-    "2024-01-15T10:04:01Z","info","api","Response sent","status":200;
-    "2024-01-15T10:05:00Z","info","scheduler","Running cleanup job";
-    "2024-01-15T10:05:02Z","info","cache","Expired keys removed","count":156;
-    "2024-01-15T10:05:10Z","info","api","Request received","method":"DELETE","path":"/sessions/old";
-    "2024-01-15T10:05:11Z","info","db","Rows deleted","count":23;
-    "2024-01-15T10:05:11Z","info","api","Response sent","status":204;
-    "2024-01-15T10:06:00Z","warn","api","Rate limit approaching","client":"app-xyz";
-    "2024-01-15T10:06:30Z","info","api","Request received","method":"GET","path":"/products";
-    "2024-01-15T10:06:31Z","debug","cache","Cache miss","key":"products:all";
-    "2024-01-15T10:06:32Z","debug","db","Qu
+{logs:{{ts,level,service,msg,method,path,duration_ms,status,user_id,ip,retry,error,count,endpoint,ttl,used_mb,max_mb,client,query,event,delivered_status;2024-01-15T10:00:01Z,info,api,"Server started on port 3000",,,,"2024-01-15T10:00:02Z",info,db,"Connected to database",,,,"2024-01-15T10:00:05Z",debug,auth,"Loading JWT keys",,,,"2024-01-15T10:00:10Z",info,api,"Health check endpoint ready",,,,"2024-01-15T10:01:23Z",info,api,"Request received","GET","/users",,,,"2024-01-15T10:01:24Z",debug,db,"Query executed",,,45,"2024-01-15T10:01:24Z",info,api,"Response sent",,,200,"2024-01-15T10:02:15Z",warn,auth,"Invalid token attempt",,,,"192.168.1.100","2024-01-15T10:02:45Z",info,api,"Request received","POST","/login",,,,"2024-01-15T10:02:46Z",info,auth,"User authenticated",,,,"2024-01-15T10:02:46Z",info,api,"Response sent",,,200,"2024-01-15T10:03:00Z",info,cache,"Cache hit","user:42",,,,"2024-01-15T10:03:30Z",error,db,"Connection timeout",,,,"2024-01-15T10:03:31Z",info,db,"Reconnected to database",,,,"2024-01-15T10:04:00Z",info,api,"Request received","PUT","/users/42",,,,"2024-01-15T10:04:01Z",debug,db,"Query executed",,,12,"2024-01-15T10:04:01Z",info,api,"Response sent",,,200,"2024-01-15T10:05:00Z",info,scheduler,"Running cleanup job",,,,"2024-01-15T10:05:02Z",info,cache,"Expired keys removed",,,156,"2024-01-15T10:05:10Z",info,api,"Request received","DELETE","/sessions/old",,,,"2024-01-15T10:05:11Z",info,db,"Rows deleted",,,23,"2024-01-15T10:05:11Z",info,api,"Response sent",,,204,"2024-01-15T10:06:00Z",warn,api,"Rate limit approaching",,,,"app-xyz","2024-01-15T10:06:30Z",info,api,"Request received","GET","/products",,,,"2024-01-15T10:06:31Z",debug,cache,"Cache miss","products:all",,,,"2024-01-15T10:06:32Z",debug,db,"Query executed",,,89,"2024-01-15T10:06:32Z",info,cache,"Cache set","products:all",,,300,"2024-01-15T10:06:32Z",info,api,"Response sent",,,200,"2024-01-15T10:07:00Z",info,metrics,"Metrics exported","/metrics",,,,"2024-01-15T10:07:45Z",error,api,"Unhandled exception"
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:02:14.285Z] jot/logs run 3
+[2026-01-10T19:56:30.073Z] jot/logs run 3
 ❌ FAILED
 ================================================================================
 
@@ -655,13 +395,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -671,40 +409,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  logs: {{
-    ts,level,service,msg;
-    "2024-01-15T10:00:01Z","info","api","Server started on port 3000";
-    "2024-01-15T10:00:02Z","info","db","Connected to database";
-    "2024-01-15T10:00:05Z","debug","auth","Loading JWT keys";
-    "2024-01-15T10:00:10Z","info","api","Health check endpoint ready";
-    "2024-01-15T10:01:23Z","info","api","Request received","method":"GET","path":"/users";
-    "2024-01-15T10:01:24Z","debug","db","Query executed","duration_ms":45;
-    "2024-01-15T10:01:24Z","info","api","Response sent","status":200;
-    "2024-01-15T10:02:15Z","warn","auth","Invalid token attempt","ip":"192.168.1.100";
-    "2024-01-15T10:02:45Z","info","api","Request received","method":"POST","path":"/login";
-    "2024-01-15T10:02:46Z","info","auth","User authenticated","user_id":42;
-    "2024-01-15T10:02:46Z","info","api","Response sent","status":200;
-    "2024-01-15T10:03:00Z","info","cache","Cache hit","key":"user:42";
-    "2024-01-15T10:03:30Z","error","db","Connection timeout","retry":1;
-    "2024-01-15T10:03:31Z","info","db","Reconnected to database";
-    "2024-01-15T10:04:00Z","info","api","Request received","method":"PUT","path":"/users/42";
-    "2024-01-15T10:04:01Z","debug","db","Query executed","duration_ms":12;
-    "2024-01-15T10:04:01Z","info","api","Response sent","status":200;
-    "2024-01-15T10:05:00Z","info","scheduler","Running cleanup job";
-    "2024-01-15T10:05:02Z","info","cache","Expired keys removed","count":156;
-    "2024-01-15T10:05:10Z","info","api","Request received","method":"DELETE","path":"/sessions/old";
-    "2024-01-15T10:05:11Z","info","db","Rows deleted","count":23;
-    "2024-01-15T10:05:11Z","info","api","Response sent","status":204;
-    "2024-01-15T10:06:00Z","warn","api","Rate limit approaching","client":"app-xyz";
-    "2024-01-15T10:06:30Z","info","api","Request received","method":"GET","path":"/products";
-    "2024-01-15T10:06:31Z","debug","cache","Cache miss","key":"products:all";
-    "2024-01-15T10:06:32Z","debug","db","Qu
+{logs:{{ts,level,service,msg,method,path,duration_ms,status,user_id,ip,retry,error,count,endpoint,ttl,used_mb,max_mb,client,query,event,delivered_status;2024-01-15T10:00:01Z,info,api,"Server started on port 3000",,,,"2024-01-15T10:00:02Z",info,db,"Connected to database",,,,"2024-01-15T10:00:05Z",debug,auth,"Loading JWT keys",,,,"2024-01-15T10:00:10Z",info,api,"Health check endpoint ready",,,,"2024-01-15T10:01:23Z",info,api,"Request received","GET","/users",,,,"2024-01-15T10:01:24Z",debug,db,"Query executed",,,45,"2024-01-15T10:01:24Z",info,api,"Response sent",,,200,"2024-01-15T10:02:15Z",warn,auth,"Invalid token attempt",,,,"192.168.1.100","2024-01-15T10:02:45Z",info,api,"Request received","POST","/login",,,,"2024-01-15T10:02:46Z",info,auth,"User authenticated",,,,"2024-01-15T10:02:46Z",info,api,"Response sent",,,200,"2024-01-15T10:03:00Z",info,cache,"Cache hit","user:42",,,,"2024-01-15T10:03:30Z",error,db,"Connection timeout",,,,"2024-01-15T10:03:31Z",info,db,"Reconnected to database",,,,"2024-01-15T10:04:00Z",info,api,"Request received","PUT","/users/42",,,,"2024-01-15T10:04:01Z",debug,db,"Query executed",,,12,"2024-01-15T10:04:01Z",info,api,"Response sent",,,200,"2024-01-15T10:05:00Z",info,scheduler,"Running cleanup job",,,,"2024-01-15T10:05:02Z",info,cache,"Expired keys removed",,,156,"2024-01-15T10:05:10Z",info,api,"Request received","DELETE","/sessions/old",,,,"2024-01-15T10:05:11Z",info,db,"Rows deleted",,,23,"2024-01-15T10:05:11Z",info,api,"Response sent",,,204,"2024-01-15T10:06:00Z",warn,api,"Rate limit approaching",,,,"app-xyz","2024-01-15T10:06:30Z",info,api,"Request received","GET","/products",,,,"2024-01-15T10:06:31Z",debug,cache,"Cache miss","products:all",,,,"2024-01-15T10:06:32Z",debug,db,"Query executed",,,89,"2024-01-15T10:06:32Z",info,cache,"Cache set","products:all",,,300,"2024-01-15T10:06:32Z",info,api,"Response sent",,,200,"2024-01-15T10:07:00Z",info,metrics,"Metrics exported","/metrics",,,,"2024-01-15T10:07:45Z",error,api,"Unhandled exception"
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:03:00.820Z] jot/firewall run 1
+[2026-01-10T19:56:46.631Z] jot/firewall run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -714,13 +424,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -730,98 +438,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  active: true,
-  ruleGroups.php_attacks: {
-    active: true,
-    action: "deny",
-    rules.php_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".php" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.jsp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".jsp" },
-        { type: "status", value.eq: 404 }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.asp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".asp" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.cgi_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".cgi" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    }
-  },
-  ruleGroups.sql_injection: {
-    active: true,
-    action: "deny",
-    rules.union_select: {
-      has: [
-        { type: "query", key: null, value.contains: "UNION SELECT" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.drop_table: {
-      has: [
-        { type: "query", key: null, value.contains: "DROP TABLE" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.or_1_equals_1: {
-      has: [
-        { type: "query", key: null, value.regex: "OR\\s+1\\s*=\\s*1" }
-      ],
-      phase: "init",
-      system: true
-    }
-  },
-  ruleGroups.rate_limiting: {
-    active: true,
-    action: "ratelimit",
-    rules.api_endpoints: {
-      has: [
-        { type: "path", key: null, value.pre: "/api/" }
-      ],
-      rateLimit.requests: 100,
-      rateLimit.window: 60,
-      rateLimit.key: "ip",
-      phase: "init",
-      system: false
-    },
-    rules.auth_endpoints: {
-  
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:03:45.700Z] jot/firewall run 2
+[2026-01-10T19:57:01.981Z] jot/firewall run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -831,13 +453,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -847,98 +467,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  active: true,
-  ruleGroups.php_attacks: {
-    active: true,
-    action: "deny",
-    rules.php_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".php" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.jsp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".jsp" },
-        { type: "status", value.eq: 404 }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.asp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".asp" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.cgi_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".cgi" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    }
-  },
-  ruleGroups.sql_injection: {
-    active: true,
-    action: "deny",
-    rules.union_select: {
-      has: [
-        { type: "query", key: null, value.contains: "UNION SELECT" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.drop_table: {
-      has: [
-        { type: "query", key: null, value.contains: "DROP TABLE" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.or_1_equals_1: {
-      has: [
-        { type: "query", key: null, value.regex: "OR\\s+1\\s*=\\s*1" }
-      ],
-      phase: "init",
-      system: true
-    }
-  },
-  ruleGroups.rate_limiting: {
-    active: true,
-    action: "ratelimit",
-    rules.api_endpoints: {
-      has: [
-        { type: "path", key: null, value.pre: "/api/" }
-      ],
-      rateLimit.requests: 100,
-      rateLimit.window: 60,
-      rateLimit.key: "ip",
-      phase: "init",
-      system: false
-    },
-    rules.auth_endpoints: {
-  
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:04:30.619Z] jot/firewall run 3
+[2026-01-10T19:57:17.342Z] jot/firewall run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -948,13 +482,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -964,98 +496,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  active: true,
-  ruleGroups.php_attacks: {
-    active: true,
-    action: "deny",
-    rules.php_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".php" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.jsp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".jsp" },
-        { type: "status", value.eq: 404 }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.asp_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".asp" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    },
-    rules.cgi_suffix: {
-      has: [
-        { type: "path", key: null, value.suf: ".cgi" }
-      ],
-      missing: [
-        { type: "header", key: "x-secret", value.eq: "bypass" }
-      ],
-      phase: "finalize",
-      system: true
-    }
-  },
-  ruleGroups.sql_injection: {
-    active: true,
-    action: "deny",
-    rules.union_select: {
-      has: [
-        { type: "query", key: null, value.contains: "UNION SELECT" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.drop_table: {
-      has: [
-        { type: "query", key: null, value.contains: "DROP TABLE" }
-      ],
-      phase: "init",
-      system: true
-    },
-    rules.or_1_equals_1: {
-      has: [
-        { type: "query", key: null, value.regex: "OR\\s+1\\s*=\\s*1" }
-      ],
-      phase: "init",
-      system: true
-    }
-  },
-  ruleGroups.rate_limiting: {
-    active: true,
-    action: "ratelimit",
-    rules.api_endpoints: {
-      has: [
-        { type: "path", key: null, value.pre: "/api/" }
-      ],
-      rateLimit.requests: 100,
-      rateLimit.window: 60,
-      rateLimit.key: "ip",
-      phase: "init",
-      system: false
-    },
-    rules.auth_endpoints: {
-  
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:04:32.541Z] jot/small run 1
+[2026-01-10T19:57:18.434Z] jot/small run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1065,13 +511,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1080,18 +524,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
 
 🤖 QWEN RESPONSE:
-{
-  name:"config",
-  version:"1.0.0",
-  enabled:true,
-  maxRetries:3,
-  timeout:30000,
-  tags:["production","api","v1"]
-}
+{name:"config",version:"1.0.0",enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
 
 
 ================================================================================
-[2026-01-10T19:04:34.329Z] jot/small run 2
+[2026-01-10T19:57:19.326Z] jot/small run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1101,13 +538,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1116,18 +551,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
 
 🤖 QWEN RESPONSE:
-{
-  name:"config",
-  version:"1.0.0",
-  enabled:true,
-  maxRetries:3,
-  timeout:30000,
-  tags:["production","api","v1"]
-}
+{name:"config",version:"1.0.0",enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
 
 
 ================================================================================
-[2026-01-10T19:04:36.110Z] jot/small run 3
+[2026-01-10T19:57:20.217Z] jot/small run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1137,13 +565,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1152,18 +578,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
 
 🤖 QWEN RESPONSE:
-{
-  name:"config",
-  version:"1.0.0",
-  enabled:true,
-  maxRetries:3,
-  timeout:30000,
-  tags:["production","api","v1"]
-}
+{name:"config",version:"1.0.0",enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
 
 
 ================================================================================
-[2026-01-10T19:04:39.548Z] jot/github-issue run 1
+[2026-01-10T19:57:22.135Z] jot/github-issue run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1173,13 +592,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1188,19 +605,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
 
 🤖 QWEN RESPONSE:
-{
-  id:12345,
-  title:"Bug: Memory leak in worker threads",
-  state:"open",
-  user.login:"devuser",
-  user.id:789,
-  labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],
-  body:"When running multiple workers, memory increases continuously without garbage collection."
-}
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
 
 
 ================================================================================
-[2026-01-10T19:04:42.773Z] jot/github-issue run 2
+[2026-01-10T19:57:23.809Z] jot/github-issue run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1210,13 +619,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1225,19 +632,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
 
 🤖 QWEN RESPONSE:
-{
-  id:12345,
-  title:"Bug: Memory leak in worker threads",
-  state:"open",
-  user.login:"devuser",
-  user.id:789,
-  labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],
-  body:"When running multiple workers, memory increases continuously without garbage collection."
-}
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
 
 
 ================================================================================
-[2026-01-10T19:04:45.999Z] jot/github-issue run 3
+[2026-01-10T19:57:25.479Z] jot/github-issue run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1247,13 +646,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1262,19 +659,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
 
 🤖 QWEN RESPONSE:
-{
-  id:12345,
-  title:"Bug: Memory leak in worker threads",
-  state:"open",
-  user.login:"devuser",
-  user.id:789,
-  labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],
-  body:"When running multiple workers, memory increases continuously without garbage collection."
-}
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
 
 
 ================================================================================
-[2026-01-10T19:05:22.058Z] jot/users-50 run 1
+[2026-01-10T19:57:42.746Z] jot/users-50 run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1284,13 +673,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1300,52 +687,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Chen","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false;
-    4,"Dan Wilson","dan@example.com","moderator",true;
-    5,"Eve Brown","eve@example.com","user",true;
-    6,"Frank Lee","frank@example.com","user",true;
-    7,"Grace Kim","grace@example.com","admin",true;
-    8,"Henry Park","henry@example.com","user",false;
-    9,"Ivy Zhang","ivy@example.com","user",true;
-    10,"Jack Miller","jack@example.com","moderator",true;
-    11,"Kate Johnson","kate@example.com","user",true;
-    12,"Leo Garcia","leo@example.com","user",true;
-    13,"Mia Taylor","mia@example.com","user",false;
-    14,"Noah White","noah@example.com","user",true;
-    15,"Olivia Moore","olivia@example.com","admin",true;
-    16,"Peter Hall","peter@example.com","user",true;
-    17,"Quinn Adams","quinn@example.com","user",true;
-    18,"Ruby Scott","ruby@example.com","moderator",false;
-    19,"Sam Turner","sam@example.com","user",true;
-    20,"Tina Clark","tina@example.com","user",true;
-    21,"Uma Patel","uma@example.com","user",true;
-    22,"Victor Young","victor@example.com","user",false;
-    23,"Wendy King","wendy@example.com","admin",true;
-    24,"Xander Cruz","xander@example.com","user",true;
-    25,"Yuki Tanaka","yuki@example.com","user",true;
-    26,"Zoe Martin","zoe@example.com","moderator",true;
-    27,"Aaron Ross","aaron@example.com","user",true;
-    28,"Beth Cooper","beth@example.com","user",false;
-    29,"Chris Evans","chris@example.com","user",true;
-    30,"Diana Reed","diana@example.com","user",true;
-    31,"Eric Foster","eric@example.com","admin",true;
-    32,"Fiona Grant","fiona@example.com","user",true;
-    33,"George Hill","george@example.com","user",true;
-    34,"Hannah Irwin","hannah@example.com","moderator",false;
-    35,"Ian James","ian@example.com","user",true;
-    36,"Julia Kent","julia@example.com","user",true;
-    37,"Kevin Long","kev
+{users:{{id,name,email,role,active;1,"Alice Chen","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false;4,"Dan Wilson","dan@example.com","moderator",true;5,"Eve Brown","eve@example.com","user",true;6,"Frank Lee","frank@example.com","user",true;7,"Grace Kim","grace@example.com","admin",true;8,"Henry Park","henry@example.com","user",false;9,"Ivy Zhang","ivy@example.com","user",true;10,"Jack Miller","jack@example.com","moderator",true;11,"Kate Johnson","kate@example.com","user",true;12,"Leo Garcia","leo@example.com","user",true;13,"Mia Taylor","mia@example.com","user",false;14,"Noah White","noah@example.com","user",true;15,"Olivia Moore","olivia@example.com","admin",true;16,"Peter Hall","peter@example.com","user",true;17,"Quinn Adams","quinn@example.com","user",true;18,"Ruby Scott","ruby@example.com","moderator",false;19,"Sam Turner","sam@example.com","user",true;20,"Tina Clark","tina@example.com","user",true;21,"Uma Patel","uma@example.com","user",true;22,"Victor Young","victor@example.com","user",false;23,"Wendy King","wendy@example.com","admin",true;24,"Xander Cruz","xander@example.com","user",true;25,"Yuki Tanaka","yuki@example.com","user",true;26,"Zoe Martin","zoe@example.com","moderator",true;27,"Aaron Ross","aaron@example.com","user",true;28,"Beth Cooper","beth@example.com","user",false;29,"Chris Evans","chris@example.com","user",true;30,"Diana Reed","diana@example.com","user",true;31,"Eric Foster","eric@example.com","admin",true;32,"Fiona Grant","fiona@example.com","user",true;33,"George Hill","george@example.com","user",true;34,"Hannah Irwin","hannah@example.com","moderator",false;35,"Ian James","ian@example.com","user",true;36,"Julia Kent","julia@example.com","user",true;37,"Kevin Long","kevin@example.com","user",true;38,"Laura Mason","laura@example.com","user",false;39,"Mike Nelson","mike@example.com","admin",true;40,"Nina Owen","nina@example.com","user",true;41,"Oscar Price","oscar@exam
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:05:54.937Z] jot/users-50 run 2
+[2026-01-10T19:57:58.237Z] jot/users-50 run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1355,13 +702,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1371,52 +716,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Chen","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false;
-    4,"Dan Wilson","dan@example.com","moderator",true;
-    5,"Eve Brown","eve@example.com","user",true;
-    6,"Frank Lee","frank@example.com","user",true;
-    7,"Grace Kim","grace@example.com","admin",true;
-    8,"Henry Park","henry@example.com","user",false;
-    9,"Ivy Zhang","ivy@example.com","user",true;
-    10,"Jack Miller","jack@example.com","moderator",true;
-    11,"Kate Johnson","kate@example.com","user",true;
-    12,"Leo Garcia","leo@example.com","user",true;
-    13,"Mia Taylor","mia@example.com","user",false;
-    14,"Noah White","noah@example.com","user",true;
-    15,"Olivia Moore","olivia@example.com","admin",true;
-    16,"Peter Hall","peter@example.com","user",true;
-    17,"Quinn Adams","quinn@example.com","user",true;
-    18,"Ruby Scott","ruby@example.com","moderator",false;
-    19,"Sam Turner","sam@example.com","user",true;
-    20,"Tina Clark","tina@example.com","user",true;
-    21,"Uma Patel","uma@example.com","user",true;
-    22,"Victor Young","victor@example.com","user",false;
-    23,"Wendy King","wendy@example.com","admin",true;
-    24,"Xander Cruz","xander@example.com","user",true;
-    25,"Yuki Tanaka","yuki@example.com","user",true;
-    26,"Zoe Martin","zoe@example.com","moderator",true;
-    27,"Aaron Ross","aaron@example.com","user",true;
-    28,"Beth Cooper","beth@example.com","user",false;
-    29,"Chris Evans","chris@example.com","user",true;
-    30,"Diana Reed","diana@example.com","user",true;
-    31,"Eric Foster","eric@example.com","admin",true;
-    32,"Fiona Grant","fiona@example.com","user",true;
-    33,"George Hill","george@example.com","user",true;
-    34,"Hannah Irwin","hannah@example.com","moderator",false;
-    35,"Ian James","ian@example.com","user",true;
-    36,"Julia Kent","julia@example.com","user",true;
-    37,"Kevin Long","kev
+{users:{{id,name,email,role,active;1,"Alice Chen","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false;4,"Dan Wilson","dan@example.com","moderator",true;5,"Eve Brown","eve@example.com","user",true;6,"Frank Lee","frank@example.com","user",true;7,"Grace Kim","grace@example.com","admin",true;8,"Henry Park","henry@example.com","user",false;9,"Ivy Zhang","ivy@example.com","user",true;10,"Jack Miller","jack@example.com","moderator",true;11,"Kate Johnson","kate@example.com","user",true;12,"Leo Garcia","leo@example.com","user",true;13,"Mia Taylor","mia@example.com","user",false;14,"Noah White","noah@example.com","user",true;15,"Olivia Moore","olivia@example.com","admin",true;16,"Peter Hall","peter@example.com","user",true;17,"Quinn Adams","quinn@example.com","user",true;18,"Ruby Scott","ruby@example.com","moderator",false;19,"Sam Turner","sam@example.com","user",true;20,"Tina Clark","tina@example.com","user",true;21,"Uma Patel","uma@example.com","user",true;22,"Victor Young","victor@example.com","user",false;23,"Wendy King","wendy@example.com","admin",true;24,"Xander Cruz","xander@example.com","user",true;25,"Yuki Tanaka","yuki@example.com","user",true;26,"Zoe Martin","zoe@example.com","moderator",true;27,"Aaron Ross","aaron@example.com","user",true;28,"Beth Cooper","beth@example.com","user",false;29,"Chris Evans","chris@example.com","user",true;30,"Diana Reed","diana@example.com","user",true;31,"Eric Foster","eric@example.com","admin",true;32,"Fiona Grant","fiona@example.com","user",true;33,"George Hill","george@example.com","user",true;34,"Hannah Irwin","hannah@example.com","moderator",false;35,"Ian James","ian@example.com","user",true;36,"Julia Kent","julia@example.com","user",true;37,"Kevin Long","kevin@example.com","user",true;38,"Laura Mason","laura@example.com","user",false;39,"Mike Nelson","mike@example.com","admin",true;40,"Nina Owen","nina@example.com","user",true;41,"Oscar Price","oscar@exam
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:06:27.844Z] jot/users-50 run 3
+[2026-01-10T19:58:13.731Z] jot/users-50 run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1426,13 +731,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1442,53 +745,13 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Chen","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false;
-    4,"Dan Wilson","dan@example.com","moderator",true;
-    5,"Eve Brown","eve@example.com","user",true;
-    6,"Frank Lee","frank@example.com","user",true;
-    7,"Grace Kim","grace@example.com","admin",true;
-    8,"Henry Park","henry@example.com","user",false;
-    9,"Ivy Zhang","ivy@example.com","user",true;
-    10,"Jack Miller","jack@example.com","moderator",true;
-    11,"Kate Johnson","kate@example.com","user",true;
-    12,"Leo Garcia","leo@example.com","user",true;
-    13,"Mia Taylor","mia@example.com","user",false;
-    14,"Noah White","noah@example.com","user",true;
-    15,"Olivia Moore","olivia@example.com","admin",true;
-    16,"Peter Hall","peter@example.com","user",true;
-    17,"Quinn Adams","quinn@example.com","user",true;
-    18,"Ruby Scott","ruby@example.com","moderator",false;
-    19,"Sam Turner","sam@example.com","user",true;
-    20,"Tina Clark","tina@example.com","user",true;
-    21,"Uma Patel","uma@example.com","user",true;
-    22,"Victor Young","victor@example.com","user",false;
-    23,"Wendy King","wendy@example.com","admin",true;
-    24,"Xander Cruz","xander@example.com","user",true;
-    25,"Yuki Tanaka","yuki@example.com","user",true;
-    26,"Zoe Martin","zoe@example.com","moderator",true;
-    27,"Aaron Ross","aaron@example.com","user",true;
-    28,"Beth Cooper","beth@example.com","user",false;
-    29,"Chris Evans","chris@example.com","user",true;
-    30,"Diana Reed","diana@example.com","user",true;
-    31,"Eric Foster","eric@example.com","admin",true;
-    32,"Fiona Grant","fiona@example.com","user",true;
-    33,"George Hill","george@example.com","user",true;
-    34,"Hannah Irwin","hannah@example.com","moderator",false;
-    35,"Ian James","ian@example.com","user",true;
-    36,"Julia Kent","julia@example.com","user",true;
-    37,"Kevin Long","kev
+{users:{{id,name,email,role,active;1,"Alice Chen","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false;4,"Dan Wilson","dan@example.com","moderator",true;5,"Eve Brown","eve@example.com","user",true;6,"Frank Lee","frank@example.com","user",true;7,"Grace Kim","grace@example.com","admin",true;8,"Henry Park","henry@example.com","user",false;9,"Ivy Zhang","ivy@example.com","user",true;10,"Jack Miller","jack@example.com","moderator",true;11,"Kate Johnson","kate@example.com","user",true;12,"Leo Garcia","leo@example.com","user",true;13,"Mia Taylor","mia@example.com","user",false;14,"Noah White","noah@example.com","user",true;15,"Olivia Moore","olivia@example.com","admin",true;16,"Peter Hall","peter@example.com","user",true;17,"Quinn Adams","quinn@example.com","user",true;18,"Ruby Scott","ruby@example.com","moderator",false;19,"Sam Turner","sam@example.com","user",true;20,"Tina Clark","tina@example.com","user",true;21,"Uma Patel","uma@example.com","user",true;22,"Victor Young","victor@example.com","user",false;23,"Wendy King","wendy@example.com","admin",true;24,"Xander Cruz","xander@example.com","user",true;25,"Yuki Tanaka","yuki@example.com","user",true;26,"Zoe Martin","zoe@example.com","moderator",true;27,"Aaron Ross","aaron@example.com","user",true;28,"Beth Cooper","beth@example.com","user",false;29,"Chris Evans","chris@example.com","user",true;30,"Diana Reed","diana@example.com","user",true;31,"Eric Foster","eric@example.com","admin",true;32,"Fiona Grant","fiona@example.com","user",true;33,"George Hill","george@example.com","user",true;34,"Hannah Irwin","hannah@example.com","moderator",false;35,"Ian James","ian@example.com","user",true;36,"Julia Kent","julia@example.com","user",true;37,"Kevin Long","kevin@example.com","user",true;38,"Laura Mason","laura@example.com","user",false;39,"Mike Nelson","mike@example.com","admin",true;40,"Nina Owen","nina@example.com","user",true;41,"Oscar Price","oscar@exam
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:06:31.149Z] jot/medium run 1
-❌ FAILED
+[2026-01-10T19:58:15.407Z] jot/medium run 1
+✅ SEMANTIC MATCH
 ================================================================================
 
 🧪 SYSTEM PROMPT (test harness):
@@ -1497,13 +760,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1512,20 +773,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
 
 🤖 QWEN RESPONSE:
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Johnson","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false
-  }},
-  metadata.total.page.perPage: "3,1,10"
-}
+{users:{{id,name,email,role,active;1,"Alice Johnson","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false}},metadata:{total:3,page:1,perPage:10}}
 
 
 ================================================================================
-[2026-01-10T19:06:34.228Z] jot/medium run 2
-❌ FAILED
+[2026-01-10T19:58:16.843Z] jot/medium run 2
+✅ SEMANTIC MATCH
 ================================================================================
 
 🧪 SYSTEM PROMPT (test harness):
@@ -1534,13 +787,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1549,20 +800,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
 
 🤖 QWEN RESPONSE:
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Johnson","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false
-  }},
-  metadata.total.page.perPage: "3,1,10"
-}
+{users:{{id,name,email,role,active;1,"Alice Johnson","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false}},metadata:{total:3,page:1,perPage:10}}
 
 
 ================================================================================
-[2026-01-10T19:06:37.305Z] jot/medium run 3
-❌ FAILED
+[2026-01-10T19:58:18.281Z] jot/medium run 3
+✅ SEMANTIC MATCH
 ================================================================================
 
 🧪 SYSTEM PROMPT (test harness):
@@ -1571,13 +814,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1586,19 +827,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
 
 🤖 QWEN RESPONSE:
-{
-  users: {{
-    id,name,email,role,active;
-    1,"Alice Johnson","alice@example.com","admin",true;
-    2,"Bob Smith","bob@example.com","user",true;
-    3,"Carol Davis","carol@example.com","user",false
-  }},
-  metadata.total.page.perPage: "3,1,10"
-}
+{users:{{id,name,email,role,active;1,"Alice Johnson","alice@example.com","admin",true;2,"Bob Smith","bob@example.com","user",true;3,"Carol Davis","carol@example.com","user",false}},metadata:{total:3,page:1,perPage:10}}
 
 
 ================================================================================
-[2026-01-10T19:06:42.593Z] jot/hikes run 1
+[2026-01-10T19:58:20.814Z] jot/hikes run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1608,13 +841,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1623,24 +854,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
 
 🤖 QWEN RESPONSE:
-{
-  context: {
-    task: "Our favorite hikes together",
-    location: "Boulder",
-    season: "spring_2025"
-  },
-  friends: ["ana", "luis", "sam"],
-  hikes: {{
-    id,name,distanceKm,elevationGain,companion,wasSunny;
-    1,"Blue Lake Trail",7.5,320,"ana",true;
-    2,"Ridge Overlook",9.2,540,"luis",false;
-    3,"Wildflower Loop",5.1,180,"sam",true
-  }}
-}
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:{{id,name,distanceKm,elevationGain,companion,wasSunny;1,"Blue Lake Trail",7.5,320,"ana",true;2,"Ridge Overlook",9.2,540,"luis",false;3,"Wildflower Loop",5.1,180,"sam",true}}}
 
 
 ================================================================================
-[2026-01-10T19:06:47.530Z] jot/hikes run 2
+[2026-01-10T19:58:23.051Z] jot/hikes run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1650,13 +868,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1665,24 +881,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
 
 🤖 QWEN RESPONSE:
-{
-  context: {
-    task: "Our favorite hikes together",
-    location: "Boulder",
-    season: "spring_2025"
-  },
-  friends: ["ana", "luis", "sam"],
-  hikes: {{
-    id,name,distanceKm,elevationGain,companion,wasSunny;
-    1,"Blue Lake Trail",7.5,320,"ana",true;
-    2,"Ridge Overlook",9.2,540,"luis",false;
-    3,"Wildflower Loop",5.1,180,"sam",true
-  }}
-}
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:{{id,name,distanceKm,elevationGain,companion,wasSunny;1,"Blue Lake Trail",7.5,320,"ana",true;2,"Ridge Overlook",9.2,540,"luis",false;3,"Wildflower Loop",5.1,180,"sam",true}}}
 
 
 ================================================================================
-[2026-01-10T19:06:52.653Z] jot/hikes run 3
+[2026-01-10T19:58:25.277Z] jot/hikes run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1692,13 +895,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1707,26 +908,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  context: {
-    task: "Our favorite hikes together",
-    location: "Boulder",
-    season: "spring_2025"
-  },
-  friends: ["ana", "luis", "sam"],
-  hikes: {{
-    id,name,distanceKm,elevationGain,companion,wasSunny;
-    1,"Blue Lake Trail",7.5,320,"ana",true;
-    2,"Ridge Overlook",9.2,540,"luis",false;
-    3,"Wildflower Loop",5.1,180,"sam",true
-  }}
-}
-```
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:{{id,name,distanceKm,elevationGain,companion,wasSunny;1,"Blue Lake Trail",7.5,320,"ana",true;2,"Ridge Overlook",9.2,540,"luis",false;3,"Wildflower Loop",5.1,180,"sam",true}}}
 
 
 ================================================================================
-[2026-01-10T19:06:57.410Z] jot/package run 1
+[2026-01-10T19:58:27.331Z] jot/package run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1736,13 +922,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1751,28 +935,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
 
 🤖 QWEN RESPONSE:
-{
-  name: "my-app",
-  version: "1.0.0",
-  scripts: {
-    dev: "vite",
-    build: "tsc && vite build",
-    test: "vitest"
-  },
-  dependencies: {
-    react: "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  devDependencies: {
-    typescript: "^5.0.0",
-    vite: "^5.0.0",
-    vitest: "^1.0.0"
-  }
-}
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
 
 
 ================================================================================
-[2026-01-10T19:07:01.955Z] jot/package run 2
+[2026-01-10T19:58:29.154Z] jot/package run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1782,13 +949,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1797,28 +962,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
 
 🤖 QWEN RESPONSE:
-{
-  name: "my-app",
-  version: "1.0.0",
-  scripts: {
-    dev: "vite",
-    build: "tsc && vite build",
-    test: "vitest"
-  },
-  dependencies: {
-    react: "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  devDependencies: {
-    typescript: "^5.0.0",
-    vite: "^5.0.0",
-    vitest: "^1.0.0"
-  }
-}
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
 
 
 ================================================================================
-[2026-01-10T19:07:06.503Z] jot/package run 3
+[2026-01-10T19:58:30.978Z] jot/package run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1828,13 +976,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1843,28 +989,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
 
 🤖 QWEN RESPONSE:
-{
-  name: "my-app",
-  version: "1.0.0",
-  scripts: {
-    dev: "vite",
-    build: "tsc && vite build",
-    test: "vitest"
-  },
-  dependencies: {
-    react: "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  devDependencies: {
-    typescript: "^5.0.0",
-    vite: "^5.0.0",
-    vitest: "^1.0.0"
-  }
-}
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
 
 
 ================================================================================
-[2026-01-10T19:07:08.813Z] jot/key-folding-basic run 1
+[2026-01-10T19:58:32.335Z] jot/key-folding-basic run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1874,13 +1003,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1889,19 +1016,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  server.host: "localhost",
-  database.connection.username: "admin",
-  app.info.name: "MyApp",
-  release.meta.version: "1.0.0",
-  cache.layer.ttlSeconds: 300
-}
-```
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
 
 
 ================================================================================
-[2026-01-10T19:07:10.974Z] jot/key-folding-basic run 2
+[2026-01-10T19:58:33.462Z] jot/key-folding-basic run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1911,13 +1030,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1926,19 +1043,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  server.host: "localhost",
-  database.connection.username: "admin",
-  app.info.name: "MyApp",
-  release.meta.version: "1.0.0",
-  cache.layer.ttlSeconds: 300
-}
-```
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
 
 
 ================================================================================
-[2026-01-10T19:07:13.137Z] jot/key-folding-basic run 3
+[2026-01-10T19:58:34.586Z] jot/key-folding-basic run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -1948,13 +1057,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -1963,19 +1070,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  server.host: "localhost",
-  database.connection.username: "admin",
-  app.info.name: "MyApp",
-  release.meta.version: "1.0.0",
-  cache.layer.ttlSeconds: 300
-}
-```
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
 
 
 ================================================================================
-[2026-01-10T19:07:15.359Z] jot/irregular run 1
+[2026-01-10T19:58:35.815Z] jot/irregular run 1
 ❌ FAILED
 ================================================================================
 
@@ -1985,13 +1084,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2000,21 +1097,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  events: {{
-    type,x,y;
-    "click",100,200;
-    "scroll",,450;
-    "keypress","Enter",true;
-    "resize",1920,1080
-  }}
-}
-```
+{events:{{type,x,y;click,100,200;scroll,450,null;keypress,null,null;resize,1920,1080}}}
 
 
 ================================================================================
-[2026-01-10T19:07:17.448Z] jot/irregular run 2
+[2026-01-10T19:58:37.145Z] jot/irregular run 2
 ❌ FAILED
 ================================================================================
 
@@ -2024,13 +1111,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2039,21 +1124,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  events: {{
-    type,x,y;
-    "click",100,200;
-    "scroll",,450;
-    "keypress","Enter",true;
-    "resize",1920,1080
-  }}
-}
-```
+{events:{{type,x,y,offset,key,shift,width,height;click,100,200,,,"Enter",true,,;scroll,,,,450,,,,,;keypress,,,,,,,"Enter",true,,;resize,,,,,,,1920,1080}}}
 
 
 ================================================================================
-[2026-01-10T19:07:19.545Z] jot/irregular run 3
+[2026-01-10T19:58:38.473Z] jot/irregular run 3
 ❌ FAILED
 ================================================================================
 
@@ -2063,13 +1138,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2078,21 +1151,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
 
 🤖 QWEN RESPONSE:
-```jot
-{
-  events: {{
-    type,x,y;
-    "click",100,200;
-    "scroll",,450;
-    "keypress","Enter",true;
-    "resize",1920,1080
-  }}
-}
-```
+{events:{{type,x,y,offset,key,shift,width,height;click,100,200,,,"Enter",true,,;scroll,,,,450,,,,,;keypress,,,,,,,"Enter",true,,;resize,,,,,,,1920,1080}}}
 
 
 ================================================================================
-[2026-01-10T19:07:21.700Z] jot/key-folding-with-array run 1
+[2026-01-10T19:58:39.802Z] jot/key-folding-with-array run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -2102,13 +1165,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2117,16 +1178,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
 
 🤖 QWEN RESPONSE:
-{
-  api.endpoint.url: "https://api.example.com",
-  data.meta.items: ["widget", "gadget", "tool"],
-  stats.meta.count: 3,
-  user.preferences.tags: ["productivity", "development"]
-}
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
 
 
 ================================================================================
-[2026-01-10T19:07:23.714Z] jot/key-folding-with-array run 2
+[2026-01-10T19:58:40.896Z] jot/key-folding-with-array run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -2136,13 +1192,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2151,16 +1205,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
 
 🤖 QWEN RESPONSE:
-{
-  api.endpoint.url: "https://api.example.com",
-  data.meta.items: ["widget", "gadget", "tool"],
-  stats.meta.count: 3,
-  user.preferences.tags: ["productivity", "development"]
-}
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
 
 
 ================================================================================
-[2026-01-10T19:07:25.723Z] jot/key-folding-with-array run 3
+[2026-01-10T19:58:41.988Z] jot/key-folding-with-array run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -2170,13 +1219,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2185,16 +1232,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 {"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
 
 🤖 QWEN RESPONSE:
-{
-  api.endpoint.url: "https://api.example.com",
-  data.meta.items: ["widget", "gadget", "tool"],
-  stats.meta.count: 3,
-  user.preferences.tags: ["productivity", "development"]
-}
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
 
 
 ================================================================================
-[2026-01-10T19:08:04.103Z] jot/products run 1
+[2026-01-10T19:58:54.508Z] jot/products run 1
 ❌ FAILED
 ================================================================================
 
@@ -2204,13 +1246,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2220,91 +1260,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  catalog: {
-    version: "2.1",
-    updated: "2024-01-15",
-    currency: "USD"
-  },
-  categories: {{
-    id,parent,name;
-    electronics,null,"Electronics";
-    computers,electronics,"Computers";
-    phones,electronics,"Phones";
-    clothing,null,"Clothing";
-    mens,clothing,"Men's";
-    womens,clothing,"Women's"
-  }},
-  products: [
-    {
-      sku: "LAPTOP-001",
-      name: "ProBook 15",
-      category: "computers",
-      price: 1299.99,
-      stock: 45,
-      specs: {cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},
-      tags: ["laptop","business","portable"],
-      rating: 4.5,
-      reviews: 234
-    },
-    {
-      sku: "LAPTOP-002",
-      name: "GameMaster X",
-      category: "computers",
-      price: 1899.99,
-      stock: 23,
-      specs: {cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},
-      tags: ["laptop","gaming","high-performance"],
-      rating: 4.8,
-      reviews: 567
-    },
-    {
-      sku: "PHONE-001",
-      name: "SmartPhone Pro",
-      category: "phones",
-      price: 999,
-      stock: 150,
-      specs: {screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},
-      tags: ["smartphone","flagship","5G"],
-      rating: 4.6,
-      reviews: 1023
-    },
-    {
-      sku: "PHONE-002",
-      name: "BudgetPhone SE",
-      category: "phones",
-      price: 299,
-      stock: 500,
-      specs: {screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},
-      tags: ["smartphone","budget","value"],
-      rating: 4.2,
-      reviews: 445
-    },
-    {
-      sku: "SHIRT-001",
-      name: "Classic Oxford Shirt",
-      category: "mens",
-      price: 59.99,
-      stock: 200,
-      variants: [
-        {size:"S",color:"white",stock:40},
-        {size:"M",color:"white",stock:60},
-        {size:"L",color:"white",stock:50},
-        {size:"M",color:"blue",stock:30},
-        {size:"L",color:"blue",stock:20}
-      ],
-      tags: ["shirt","formal","cotton"],
-      rating: 4.4,
-      reviews: 89
-    },
-    {
-      sku: "DRESS-001",
-      name: 
-... (truncated)
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:{{id,name,parent;electronics,"Electronics",null;computers,"Computers","electronics";phones,"Phones","electronics";clothing,"Clothing",null;mens,"Men's","clothing";womens,"Women's","clothing"}},products:{{sku,name,category,price,stock,specs,tags,rating,reviews;LAPTOP-001,"ProBook 15","computers",1299.99,45,{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},["laptop","business","portable"],4.5,234;LAPTOP-002,"GameMaster X","computers",1899.99,23,{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},["laptop","gaming","high-performance"],4.8,567;PHONE-001,"SmartPhone Pro","phones",999,150,{"screen":"6.7 inch OLED","camera":"108MP","battery":"5000mAh"},["smartphone","flagship","5G"],4.6,1023;PHONE-002,"BudgetPhone SE","phones",299,500,{"screen":"6.1 inch LCD","camera":"48MP","battery":"4000mAh"},["smartphone","budget","value"],4.2,445;SHIRT-001,"Classic Oxford Shirt","mens",59.99,200,null,["shirt","formal","cotton"],4.4,89;DRESS-001,"Summer Floral Dress","womens",79.99,75,null,["dress","casual","summer"],4.7,156;MONITOR-001,"UltraWide 34","electronics",549.99,67,{"size":"34 inch","resolution":"3440x1440","refresh":"144Hz","panel":"IPS"},["monitor","ultrawide","gaming"],4.6,312;KEYBOARD-001,"Mechanical Pro","electronics",149.99,120,{"switches":"Cherry MX Brown","layout":"full","backlight":"RGB"},["keyboard","mechanical","gaming"],4.5,678}}}
 
 
 ================================================================================
-[2026-01-10T19:08:40.348Z] jot/products run 2
+[2026-01-10T19:59:05.808Z] jot/products run 2
 ❌ FAILED
 ================================================================================
 
@@ -2314,13 +1274,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2330,91 +1288,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  catalog: {
-    version: "2.1",
-    updated: "2024-01-15",
-    currency: "USD"
-  },
-  categories: {{
-    id,parent,name;
-    electronics,null,"Electronics";
-    computers,electronics,"Computers";
-    phones,electronics,"Phones";
-    clothing,null,"Clothing";
-    mens,clothing,"Men's";
-    womens,clothing,"Women's"
-  }},
-  products: [
-    {
-      sku: "LAPTOP-001",
-      name: "ProBook 15",
-      category: "computers",
-      price: 1299.99,
-      stock: 45,
-      specs: {cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},
-      tags: ["laptop","business","portable"],
-      rating: 4.5,
-      reviews: 234
-    },
-    {
-      sku: "LAPTOP-002",
-      name: "GameMaster X",
-      category: "computers",
-      price: 1899.99,
-      stock: 23,
-      specs: {cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},
-      tags: ["laptop","gaming","high-performance"],
-      rating: 4.8,
-      reviews: 567
-    },
-    {
-      sku: "PHONE-001",
-      name: "SmartPhone Pro",
-      category: "phones",
-      price: 999,
-      stock: 150,
-      specs: {screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},
-      tags: ["smartphone","flagship","5G"],
-      rating: 4.6,
-      reviews: 1023
-    },
-    {
-      sku: "PHONE-002",
-      name: "BudgetPhone SE",
-      category: "phones",
-      price: 299,
-      stock: 500,
-      specs: {screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},
-      tags: ["smartphone","budget","value"],
-      rating: 4.2,
-      reviews: 445
-    },
-    {
-      sku: "SHIRT-001",
-      name: "Classic Oxford Shirt",
-      category: "mens",
-      price: 59.99,
-      stock: 200,
-      variants: [
-        {size:"S",color:"white",stock:40},
-        {size:"M",color:"white",stock:60},
-        {size:"L",color:"white",stock:50},
-        {size:"M",color:"blue",stock:30},
-        {size:"L",color:"blue",stock:20}
-      ],
-      tags: ["shirt","formal","cotton"],
-      rating: 4.4,
-      reviews: 89
-    },
-    {
-      sku: "DRESS-001",
-      name: 
-... (truncated)
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:{{id,name,parent;electronics,"Electronics",null;computers,"Computers","electronics";phones,"Phones","electronics";clothing,"Clothing",null;mens,"Men's","clothing";womens,"Women's","clothing"}},products:{{sku,name,category,price,stock,specs,tags,rating,reviews;LAPTOP-001,"ProBook 15","computers",1299.99,45,{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},["laptop","business","portable"],4.5,234;LAPTOP-002,"GameMaster X","computers",1899.99,23,{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},["laptop","gaming","high-performance"],4.8,567;PHONE-001,"SmartPhone Pro","phones",999,150,{"screen":"6.7 inch OLED","camera":"108MP","battery":"5000mAh"},["smartphone","flagship","5G"],4.6,1023;PHONE-002,"BudgetPhone SE","phones",299,500,{"screen":"6.1 inch LCD","camera":"48MP","battery":"4000mAh"},["smartphone","budget","value"],4.2,445;SHIRT-001,"Classic Oxford Shirt","mens",59.99,200,null,["shirt","formal","cotton"],4.4,89;DRESS-001,"Summer Floral Dress","womens",79.99,75,null,["dress","casual","summer"],4.7,156;MONITOR-001,"UltraWide 34","electronics",549.99,67,{"size":"34 inch","resolution":"3440x1440","refresh":"144Hz","panel":"IPS"},["monitor","ultrawide","gaming"],4.6,312;KEYBOARD-001,"Mechanical Pro","electronics",149.99,120,{"switches":"Cherry MX Brown","layout":"full","backlight":"RGB"},["keyboard","mechanical","gaming"],4.5,678}}}
 
 
 ================================================================================
-[2026-01-10T19:09:16.382Z] jot/products run 3
+[2026-01-10T19:59:17.100Z] jot/products run 3
 ❌ FAILED
 ================================================================================
 
@@ -2424,13 +1302,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2440,91 +1316,11 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  catalog: {
-    version: "2.1",
-    updated: "2024-01-15",
-    currency: "USD"
-  },
-  categories: {{
-    id,parent,name;
-    electronics,null,"Electronics";
-    computers,electronics,"Computers";
-    phones,electronics,"Phones";
-    clothing,null,"Clothing";
-    mens,clothing,"Men's";
-    womens,clothing,"Women's"
-  }},
-  products: [
-    {
-      sku: "LAPTOP-001",
-      name: "ProBook 15",
-      category: "computers",
-      price: 1299.99,
-      stock: 45,
-      specs: {cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},
-      tags: ["laptop","business","portable"],
-      rating: 4.5,
-      reviews: 234
-    },
-    {
-      sku: "LAPTOP-002",
-      name: "GameMaster X",
-      category: "computers",
-      price: 1899.99,
-      stock: 23,
-      specs: {cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},
-      tags: ["laptop","gaming","high-performance"],
-      rating: 4.8,
-      reviews: 567
-    },
-    {
-      sku: "PHONE-001",
-      name: "SmartPhone Pro",
-      category: "phones",
-      price: 999,
-      stock: 150,
-      specs: {screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},
-      tags: ["smartphone","flagship","5G"],
-      rating: 4.6,
-      reviews: 1023
-    },
-    {
-      sku: "PHONE-002",
-      name: "BudgetPhone SE",
-      category: "phones",
-      price: 299,
-      stock: 500,
-      specs: {screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},
-      tags: ["smartphone","budget","value"],
-      rating: 4.2,
-      reviews: 445
-    },
-    {
-      sku: "SHIRT-001",
-      name: "Classic Oxford Shirt",
-      category: "mens",
-      price: 59.99,
-      stock: 200,
-      variants: [
-        {size:"S",color:"white",stock:40},
-        {size:"M",color:"white",stock:60},
-        {size:"L",color:"white",stock:50},
-        {size:"M",color:"blue",stock:30},
-        {size:"L",color:"blue",stock:20}
-      ],
-      tags: ["shirt","formal","cotton"],
-      rating: 4.4,
-      reviews: 89
-    },
-    {
-      sku: "DRESS-001",
-      name: 
-... (truncated)
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:{{id,name,parent;electronics,"Electronics",null;computers,"Computers","electronics";phones,"Phones","electronics";clothing,"Clothing",null;mens,"Men's","clothing";womens,"Women's","clothing"}},products:{{sku,name,category,price,stock,specs,tags,rating,reviews;LAPTOP-001,"ProBook 15","computers",1299.99,45,{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},["laptop","business","portable"],4.5,234;LAPTOP-002,"GameMaster X","computers",1899.99,23,{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},["laptop","gaming","high-performance"],4.8,567;PHONE-001,"SmartPhone Pro","phones",999,150,{"screen":"6.7 inch OLED","camera":"108MP","battery":"5000mAh"},["smartphone","flagship","5G"],4.6,1023;PHONE-002,"BudgetPhone SE","phones",299,500,{"screen":"6.1 inch LCD","camera":"48MP","battery":"4000mAh"},["smartphone","budget","value"],4.2,445;SHIRT-001,"Classic Oxford Shirt","mens",59.99,200,null,["shirt","formal","cotton"],4.4,89;DRESS-001,"Summer Floral Dress","womens",79.99,75,null,["dress","casual","summer"],4.7,156;MONITOR-001,"UltraWide 34","electronics",549.99,67,{"size":"34 inch","resolution":"3440x1440","refresh":"144Hz","panel":"IPS"},["monitor","ultrawide","gaming"],4.6,312;KEYBOARD-001,"Mechanical Pro","electronics",149.99,120,{"switches":"Cherry MX Brown","layout":"full","backlight":"RGB"},["keyboard","mechanical","gaming"],4.5,678}}}
 
 
 ================================================================================
-[2026-01-10T19:10:13.007Z] jot/routes run 1
+[2026-01-10T19:59:47.562Z] jot/routes run 1
 ❌ FAILED
 ================================================================================
 
@@ -2534,13 +1330,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2550,29 +1344,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  before_filesystem: {{
-    src,dest;
-    "^/_analytics/script\\.js$",https://cdn.analytics.io/v1/script.js;
-    "^/_analytics/events$",https://events.analytics.io/v1/collect?key=abc123&env=prod;
-    "^/(?:_metrics|perf)/(script\\.js)$",https://cdn.metrics.io/v1/$1;
-    "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",{Location:"/$1"},status:308,continue:true;
-    "^/_internal/trace$",/404,status:404,continue:true;
-    "^/404/?$",status:404,continue:true,missing:[{type:"header",key:"x-prerender"}];
-    "^/500$",status:500,continue:true;
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"a1b2c3d4e5f6"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/submit.ts#submitForm"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"f6e5d4c3b2a1"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#loginUser"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"1a2b3c4d5e6f"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#logoutUser"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"6f5e4d3c2b1a"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#fetchItems"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"abcdef123456"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#updateItem"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"654321fedcba"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#deleteItem"}];
-    "^(?<path>.+?)(?:/)?$","/$path.segments/$segmentPath.segment.rsc",{has:[{type:"header",key:"rsc",value:"1"},{type:"header",key:"prefetch",value:"1"},{type:"header",key:"segment-prefetch",value:"/(?<segmentPath>.+)"}]},continue:true,override:true;
-    "^/?$","/index.segments/$segmentPath.segment.rsc",{has:[{type:"header",key:"rsc",
+{before_filesystem:{{src,dest;'^/_analytics/script\\\\.js$','https://cdn.analytics.io/v1/script.js';'^/_analytics/events$','https://events.analytics.io/v1/collect?key=abc123&env=prod';'^/(?:_metrics|perf)/(script\\\\.js)$','https://cdn.metrics.io/v1/$1';'^/(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$',{"headers":{"Location":"/$1"},"status":308,"continue":true};'^/_internal/trace$',{"dest":"/404","status":404,"continue":true};'^/404/?$',{"status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]};'^/500$',{"status":500,"continue":true};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#loginUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"1a2b3c4d5e6f"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#logoutUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"6f5e4d3c2b1a"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#fetchItems"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"abcdef123456"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#updateItem"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"654321fedcba"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#deleteItem"}]};'^/(?<path>.+?)(?:/)?$',{dest:"/$path.segments/$segmentPath.segment.rsc","has":[{"type":"header","key":"rsc","value":"1"},{"type":"header","key":"prefetch","value":"1"},{"type":"header","key":"segment-prefetch","value":"/(?<segme
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:11:06.778Z] jot/routes run 2
+[2026-01-10T20:00:15.683Z] jot/routes run 2
 ❌ FAILED
 ================================================================================
 
@@ -2582,13 +1359,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2598,29 +1373,12 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  before_filesystem: {{
-    src,dest;
-    "^/_analytics/script\\.js$",https://cdn.analytics.io/v1/script.js;
-    "^/_analytics/events$",https://events.analytics.io/v1/collect?key=abc123&env=prod;
-    "^/(?:_metrics|perf)/(script\\.js)$",https://cdn.metrics.io/v1/$1;
-    "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",{Location:"/$1"},status:308,continue:true;
-    "^/_internal/trace$",/404,status:404,continue:true;
-    "^/404/?$",status:404,continue:true,missing:[{type:"header",key:"x-prerender"}];
-    "^/500$",status:500,continue:true;
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"a1b2c3d4e5f6"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/submit.ts#submitForm"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"f6e5d4c3b2a1"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#loginUser"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"1a2b3c4d5e6f"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#logoutUser"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"6f5e4d3c2b1a"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#fetchItems"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"abcdef123456"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#updateItem"}];
-    "^/(.*)$",{has:[{type:"header",key:"x-action",value:"654321fedcba"}]},transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#deleteItem"}];
-    "^(?<path>.+?)(?:/)?$","/$path.segments/$segmentPath.segment.rsc",{has:[{type:"header",key:"rsc",value:"1"},{type:"header",key:"prefetch",value:"1"},{type:"header",key:"segment-prefetch",value:"/(?<segmentPath>.+)"}]},continue:true,override:true;
-    "^/?$","/index.segments/$segmentPath.segment.rsc",{has:[{type:"header",key:"rsc",
+{before_filesystem:{{src,dest;'^/_analytics/script\\\\.js$','https://cdn.analytics.io/v1/script.js';'^/_analytics/events$','https://events.analytics.io/v1/collect?key=abc123&env=prod';'^/(?:_metrics|perf)/(script\\\\.js)$','https://cdn.metrics.io/v1/$1';'^/(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$',{"headers":{"Location":"/$1"},"status":308,"continue":true};'^/_internal/trace$',{"dest":"/404","status":404,"continue":true};'^/404/?$',{"status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]};'^/500$',{"status":500,"continue":true};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#loginUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"1a2b3c4d5e6f"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#logoutUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"6f5e4d3c2b1a"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#fetchItems"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"abcdef123456"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#updateItem"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"654321fedcba"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#deleteItem"}]};'^/(?<path>.+?)(?:/)?$',{dest:"/$path.segments/$segmentPath.segment.rsc","has":[{"type":"header","key":"rsc","value":"1"},{"type":"header","key":"prefetch","value":"1"},{"type":"header","key":"segment-prefetch","value":"/(?<segme
 ... (truncated)
 
 
 ================================================================================
-[2026-01-10T19:11:57.142Z] jot/routes run 3
+[2026-01-10T20:00:43.816Z] jot/routes run 3
 ❌ FAILED
 ================================================================================
 
@@ -2630,13 +1388,11 @@ You are a data format encoder. Given a FORMAT specification and JSON input, outp
 FORMAT SPECIFICATION:
 # Jot Format
 
-Jot is JSON with three modifications:
+Jot is JSON with some optimizations:
 
-1. **Unquoted keys** — Object keys don't need quotes
-2. **Key folding** — Single-key object chains collapse: `{a:{b:1}}` → `{a.b:1}`
-3. **Tables (optional)** — Arrays where ALL objects have identical keys CAN use `{{cols;row;row}}` syntax
+1. **Unquoted keys** — Object and table keys don't need quotes unless they contain special characters or dots.
+2. **Tables** — When an array contains all arrays with identical keys, it can be written as a table similar to CSV `{{col1,col2;val1,val2;val3,val4}}`.
 
-Everything else is exa
 ... (truncated)
 
 📝 USER PROMPT (test harness):
@@ -2646,23 +1402,6 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 ... (truncated)
 
 🤖 QWEN RESPONSE:
-{
-  before_filesystem: {{
-    src,dest;
-    "^/_analytics/script\\.js$",https://cdn.analytics.io/v1/script.js;
-    "^/_analytics/events$",https://events.analytics.io/v1/collect?key=abc123&env=prod;
-    "^/(?:_metrics|perf)/(script\\.js)$",https://cdn.metrics.io/v1/$1;
-    "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",{Location:"/$1"},status:308,continue:true;
-    "^/_internal/trace$",/404,status:404,continue:true;
-    "^/404/?$",status:404,continue:true,missing:[{type:header,key:x-prerender}];
-    "^/500$",status:500,continue:true;
-    "^/(.*)$",{has:[{type:header,key:x-action,value:a1b2c3d4e5f6}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/submit.ts#submitForm}];
-    "^/(.*)$",{has:[{type:header,key:x-action,value:f6e5d4c3b2a1}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/auth.ts#loginUser}];
-    "^/(.*)$",{has:[{type:header,key:x-action,value:1a2b3c4d5e6f}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/auth.ts#logoutUser}];
-    "^/(.*)$",{has:[{type:header,key:x-action,value:6f5e4d3c2b1a}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/data.ts#fetchItems}];
-    "^/(.*)$",{has:[{type:header,key:x-action,value:abcdef123456}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/data.ts#updateItem}];
-    "^/(.*)$",{has:[{type:header,key:x-action,value:654321fedcba}]},transforms:[{type:request.headers,op:append,target:{key:x-action-name},args:app/api/data.ts#deleteItem}];
-    "^(?<path>.+?)(?:/)?$",{dest:"/$path.segments/$segmentPath.segment.rsc",has:[{type:header,key:rsc,value:1},{type:header,key:prefetch,value:1},{type:header,key:segment-prefetch,value:/(?<segmentPath>.+)}]},continue:true,override:true;
-    "^/?$",{dest:"/index.segments/$segmentPath.segment.rsc",has:[{type:header,key:rsc,value:1},{type:header,key:prefetch,value:1},{type:header,key:segment-prefetch,value:/(?<segmentPath>
+{before_filesystem:{{src,dest;'^/_analytics/script\\\\.js$','https://cdn.analytics.io/v1/script.js';'^/_analytics/events$','https://events.analytics.io/v1/collect?key=abc123&env=prod';'^/(?:_metrics|perf)/(script\\\\.js)$','https://cdn.metrics.io/v1/$1';'^/(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$',{"headers":{"Location":"/$1"},"status":308,"continue":true};'^/_internal/trace$',{"dest":"/404","status":404,"continue":true};'^/404/?$',{"status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]};'^/500$',{"status":500,"continue":true};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#loginUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"1a2b3c4d5e6f"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/auth.ts#logoutUser"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"6f5e4d3c2b1a"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#fetchItems"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"abcdef123456"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#updateItem"}]};'^/(.*)$',{"has":[{"type":"header","key":"x-action","value":"654321fedcba"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/data.ts#deleteItem"}]};'^/(?<path>.+?)(?:/)?$',{dest:"/$path.segments/$segmentPath.segment.rsc","has":[{"type":"header","key":"rsc","value":"1"},{"type":"header","key":"prefetch","value":"1"},{"type":"header","key":"segment-prefetch","value":"/(?<segme
 ... (truncated)
 
