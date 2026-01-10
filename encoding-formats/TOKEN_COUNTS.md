@@ -13,6 +13,11 @@ xychart-beta
 ```
 <!-- CHART_END -->
 
+- Jot (blue) — best compact, consistently lowest
+- Lax (red) — alternative compact, middle ground
+- YAML (yellow) — pretty baseline, consistently highest
+- TOON (white) — interesting variation, good on tabular data
+
 ## Per-File Breakdown
 
 | Format | Chat | Metrics | Large | Key-folding-mixed | Logs | Firewall | Small | Github-issue | Users-50 | Medium | Hikes | Package | Key-folding-basic | Irregular | Key-folding-with-array | Products | Routes | Total | Bytes |
