@@ -522,6 +522,7 @@ type JsonCountsCache = {
   miniBytes: number
   prettyTokens: number
   prettyBytes: number
+  miniPerFile?: Record<string, number> // per-file Qwen token counts
 }
 
 function loadJsonCountsCache(): JsonCountsCache | null {
@@ -587,20 +588,29 @@ async function main() {
         console.log("Using cached JSON mini/pretty counts")
         allStats.set("json-mini", { tokens: cache.miniTokens, bytes: cache.miniBytes })
         allStats.set("json-pretty", { tokens: cache.prettyTokens, bytes: cache.prettyBytes })
+        // Load per-file data from cache if available
+        if (cache.miniPerFile) {
+          perFileData.set("json-mini", new Map(Object.entries(cache.miniPerFile)))
+        }
       } else {
         // Count both minified and standard pretty JSON (slow, requires LM Studio)
         const jsonDir = join(ROOT, "json")
         let miniTokens = 0, miniBytes = 0
         let prettyTokens = 0, prettyBytes = 0
 
+        const miniPerFile: Record<string, number> = {}
+
         console.log("Counting JSON tokens (slow, caching result)...")
         for (const file of readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))) {
+          const baseName = file.replace(".json", "")
           const raw = readFileSync(join(jsonDir, file), "utf-8")
           const minified = JSON.stringify(JSON.parse(raw))
           const pretty = JSON.stringify(JSON.parse(raw), null, 2)
 
+          const fileTokens = await countTokens(minified)
+          miniPerFile[baseName] = fileTokens
           miniBytes += new TextEncoder().encode(minified).length
-          miniTokens += await countTokens(minified)
+          miniTokens += fileTokens
 
           prettyBytes += new TextEncoder().encode(pretty).length
           prettyTokens += await countTokens(pretty)
@@ -612,13 +622,18 @@ async function main() {
         allStats.set("json-mini", { tokens: miniTokens, bytes: miniBytes })
         allStats.set("json-pretty", { tokens: prettyTokens, bytes: prettyBytes })
 
-        // Cache the results
+        // Store per-file data for chart
+        const jsonMiniPerFileMap = new Map(Object.entries(miniPerFile))
+        perFileData.set("json-mini", jsonMiniPerFileMap)
+
+        // Cache the results (including per-file)
         saveJsonCountsCache({
           timestamp: Date.now(),
           miniTokens,
           miniBytes,
           prettyTokens,
           prettyBytes,
+          miniPerFile,
         })
       }
 
@@ -656,22 +671,19 @@ async function main() {
   writeFileSync(SUMMARY_PATH, summary)
 
   // Update TOKEN_COUNTS.md with per-file chart (% savings vs JSON)
-  // Use legacy tokenizer for ALL formats to ensure fair comparison
+  // Use Qwen counts from perFileData to match the table
   if (existsSync(TOKEN_COUNTS_PATH)) {
     let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
 
-    const legacyPerFile = new Map<string, PerFileStats>()
-    legacyPerFile.set("json-mini", computePerFileLegacyCounts("json", "json", (c) => JSON.stringify(JSON.parse(c))))
-    legacyPerFile.set("jot", computePerFileLegacyCounts("jot", "jot"))
-    legacyPerFile.set("lax", computePerFileLegacyCounts("lax", "lax"))
-    legacyPerFile.set("yaml", computePerFileLegacyCounts("yaml", "yaml"))
-    legacyPerFile.set("toon", computePerFileLegacyCounts("toon", "toon"))
-
-    const jsonMiniPerFile = legacyPerFile.get("json-mini")!
-    const perFileChart = buildPerFileChart(legacyPerFile, jsonMiniPerFile)
-    tokenCounts = updateChart(tokenCounts, perFileChart)
-    writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
-    console.log("Updated TOKEN_COUNTS.md")
+    const jsonMiniPerFile = perFileData.get("json-mini")
+    if (jsonMiniPerFile && jsonMiniPerFile.size > 0) {
+      const perFileChart = buildPerFileChart(perFileData, jsonMiniPerFile)
+      tokenCounts = updateChart(tokenCounts, perFileChart)
+      writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
+      console.log("Updated TOKEN_COUNTS.md")
+    } else {
+      console.log("Skipping TOKEN_COUNTS.md chart - no JSON per-file data (delete cache to regenerate)")
+    }
   }
 
   console.log("Updated SUMMARY.md")

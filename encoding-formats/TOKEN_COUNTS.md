@@ -4,13 +4,13 @@
 ```mermaid
 xychart-beta
     title "Token Savings vs JSON (negative = better)"
-    x-axis ["Users50", "Hikes", "Products", "Metrics", "Medium", "Routes", "Chat", "KF-arr", "Large", "KF-basic", "Issue", "KF-mix", "Firewall", "Package", "Logs", "Small", "Irregular"]
-    y-axis "% vs JSON" -50 --> 30
+    x-axis ["Users50", "Hikes", "Medium", "KF-arr", "Products", "Firewall", "KF-basic", "Routes", "Metrics", "Package", "Chat", "KF-mix", "Issue", "Small", "Large", "Irregular", "Logs"]
+    y-axis "% vs JSON" -60 --> 40
     line "JSON" [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    line "Jot" [-37, -27, -22, -21, -21, -12, -11, -10, -8, -8, -7, -6, -2, -2, 0, 0, 2]
-    line "Lax" [0, -5, 1, 0, -3, -1, 4, 4, -3, -8, -1, -7, -1, -2, 1, 0, 4]
-    line "YAML" [3, 3, 4, 5, 4, 4, 4, 15, 9, 8, 7, 4, 8, 0, 2, 11, 8]
-    line "TOON" [-37, -24, -7, -21, -20, 3, -11, 12, 4, 6, 0, 6, 13, 0, 8, 3, 10]
+    line "Jot" [-48, -30, -28, -26, -20, -19, -19, -16, -15, -12, -12, -12, -11, -8, -8, -7, -3]
+    line "Lax" [-4, -9, -5, 0, 1, -5, -5, -1, 0, -2, 4, -6, 0, -6, 0, 1, 3]
+    line "YAML" [25, 18, 27, 19, 26, 24, 10, 16, 20, 7, 8, 14, 11, 17, 23, 28, 18]
+    line "TOON" [-40, -23, -14, 9, 10, 30, 9, 8, -6, 7, -11, 13, 2, 4, 18, 29, 18]
 ```
 <!-- CHART_END -->
 
