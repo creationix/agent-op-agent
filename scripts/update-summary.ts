@@ -315,7 +315,6 @@ function buildChart(
   const items = Array.from(allStats.entries())
     .filter(([key]) => CHART_LABELS[key])
     .map(([key, stats]) => ({
-      key,
       label: CHART_LABELS[key],
       qwen: stats.tokens,
       legacy: legacyCounts.get(key) ?? 0,
@@ -336,12 +335,12 @@ function buildChart(
   const hasLegacy = legacyValues.some((v) => v > 0)
   const hasClaude = claudeValues.some((v) => v > 0)
 
-  let bars = `    bar "Qwen" [${qwenValues.join(", ")}]`
+  let lines = `    line "Qwen" [${qwenValues.join(", ")}]`
   if (hasLegacy) {
-    bars += `\n    bar "Legacy" [${legacyValues.join(", ")}]`
+    lines += `\n    line "Legacy" [${legacyValues.join(", ")}]`
   }
   if (hasClaude) {
-    bars += `\n    bar "Claude" [${claudeValues.join(", ")}]`
+    lines += `\n    line "Claude" [${claudeValues.join(", ")}]`
   }
 
   return `\`\`\`mermaid
@@ -349,7 +348,7 @@ xychart-beta
     title "Token Counts by Format"
     x-axis [${labels.map((l) => `"${l}"`).join(", ")}]
     y-axis "Tokens" 0 --> ${yMax}
-${bars}
+${lines}
 \`\`\``
 }
 
