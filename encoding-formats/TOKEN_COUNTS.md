@@ -53,3 +53,25 @@ xychart-beta
 <!-- LEGACY_CHART_END -->
 
 Note: The legacy tokenizer may produce different results than modern Claude models, but is useful for comparison and runs locally without API calls.
+
+---
+
+## Modern Claude Tokenizer
+
+Tokens measured using **Claude API** token counting endpoint (claude-sonnet-4). This represents the actual token usage for modern Claude models. Token counting is free via the API.
+
+<!-- CLAUDE_CHART_START -->
+```mermaid
+xychart-beta
+    title "Token Savings vs JSON (negative = better)"
+    x-axis ["Users50", "Hikes", "Products", "Metrics", "Medium", "KF-basic", "KF-arr", "Large", "Firewall", "Chat", "KF-mix", "Routes", "Issue", "Irregular", "Package", "Small", "Logs"]
+    y-axis "% vs JSON" -50 --> 40
+    line "JSON" [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    line "Jot" [-40, -31, -25, -25, -24, -24, -24, -17, -15, -15, -15, -13, -12, -6, -6, -4, 1]
+    line "Lax" [0, -1, 0, -1, -3, -17, -11, -8, -13, -1, -11, -4, -3, -2, -3, 2, 1]
+    line "YAML" [22, 19, 27, 19, 19, 1, 14, 16, 13, 6, 6, 9, 8, 21, 4, 13, 18]
+    line "TOON" [-36, -25, 8, -18, -14, 1, 6, 12, 17, -10, 8, 7, 1, 24, 5, 2, 21]
+```
+<!-- CLAUDE_CHART_END -->
+
+Note: Run `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` to regenerate Claude counts.

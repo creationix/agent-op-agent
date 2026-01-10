@@ -155,6 +155,39 @@ function parseClaudeCounts(): Map<string, number> {
   return results
 }
 
+// Parse per-file Claude counts for a specific format
+function parseClaudePerFileCounts(formatName: string): PerFileStats {
+  const results = new Map<string, number>()
+
+  if (!existsSync(CLAUDE_COUNTS_PATH)) {
+    return results
+  }
+
+  const content = readFileSync(CLAUDE_COUNTS_PATH, "utf-8")
+  let inSection = false
+
+  for (const line of content.split("\n")) {
+    const sectionMatch = line.match(/^=== (.+) ===$/)
+    if (sectionMatch) {
+      inSection = sectionMatch[1] === formatName
+      continue
+    }
+
+    if (!inSection) continue
+
+    // Match lines like "  chat: 81"
+    const fileMatch = line.match(/^\s+(\S+):\s+(\d+)/)
+    if (fileMatch) {
+      const fileName = fileMatch[1]
+      if (fileName !== "Total" && fileName !== "json-counts-cache") {
+        results.set(fileName, parseInt(fileMatch[2]))
+      }
+    }
+  }
+
+  return results
+}
+
 // Compute per-file counts using legacy tokenizer (for consistent chart comparisons)
 function computePerFileLegacyCounts(formatDir: string, ext: string, transform?: (content: string) => string): PerFileStats {
   const results = new Map<string, number>()
@@ -694,6 +727,22 @@ async function main() {
     const legacyJsonMini = legacyPerFile.get("json-mini")!
     const legacyChart = buildPerFileChart(legacyPerFile, legacyJsonMini)
     tokenCounts = updateChart(tokenCounts, legacyChart, "LEGACY_CHART")
+
+    // Claude chart (from claude-counts-sonnet.txt)
+    const claudePerFile = new Map<string, PerFileStats>()
+    claudePerFile.set("json-mini", parseClaudePerFileCounts("JSON (mini)"))
+    claudePerFile.set("jot", parseClaudePerFileCounts("Jot"))
+    claudePerFile.set("lax", parseClaudePerFileCounts("Lax"))
+    claudePerFile.set("yaml", parseClaudePerFileCounts("YAML"))
+    claudePerFile.set("toon", parseClaudePerFileCounts("TOON"))
+
+    const claudeJsonMini = claudePerFile.get("json-mini")
+    if (claudeJsonMini && claudeJsonMini.size > 0) {
+      const claudeChart = buildPerFileChart(claudePerFile, claudeJsonMini)
+      tokenCounts = updateChart(tokenCounts, claudeChart, "CLAUDE_CHART")
+    } else {
+      console.log("Skipping Claude chart - no Claude per-file data")
+    }
 
     writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
     console.log("Updated TOKEN_COUNTS.md")
