@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 // Verify round-trip encode/decode for all test files
-import { readdirSync, readFileSync } from "fs"
-import { join } from "path"
+import { readdirSync, readFileSync } from "node:fs"
+import { join } from "node:path"
 import { stringify as jotStringify, parse as jotParse } from "../encoding-formats/jot/jot"
 import { stringify as laxStringify, parse as laxParse } from "../encoding-formats/lax/lax"
 import { encode as d2Encode, decode as d2Decode } from "../encoding-formats/d2/d2"

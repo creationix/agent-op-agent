@@ -5,8 +5,9 @@
  * 1. Minimal quoting - only quote strings when necessary
  *    {name:Alice,age:30,city:New York}
  *
- * 2. Key folding - collapse single-property object chains
- *    {a:{b:{c:1}}} => (a.b.c:1)
+ * 2. Key folding - collapse single-property object chains with dots
+ *    {a:{b:{c:1}}} => {a.b.c:1}
+ *    Use quoted keys for literal dots: {"a.b":1}
  *
  * 3. Array guards - prefix with element count
  *    [1,2,3] => 3x[1,2,3]
@@ -18,14 +19,14 @@
  *
  * Quoting rules - quote string values only if:
  *   - Parses as a number ("123", "1.0" - not "api5", "v2")
- *   - Contains unsafe chars: : , { } [ ] ( ) " |
+ *   - Contains unsafe chars: : , { } [ ] " |
  *   - Equals true, false, or null
  *   - Has leading/trailing whitespace or is empty
  *   - Contains control characters (codepoint < 32)
  */
 
 const UNSAFE_STRINGS = new Set(["true", "false", "null"])
-const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '(', ')', '"', '|']
+const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', '|']
 
 function needsQuoting(str: string): boolean {
   if (str === "") return true
@@ -97,12 +98,12 @@ function stringifyValue(value: unknown): string {
 
 // Options for stringify
 export interface StringifyOptions {
-  guards?: boolean  // Include Nx/Nm count prefixes (default: true)
+  guards?: boolean  // Include Nx/Nm count prefixes (default: false)
   pretty?: boolean  // Pretty print with newlines and indentation (default: false)
   indent?: string   // Indentation string (default: "  ")
 }
 
-let currentOptions: StringifyOptions = { guards: true, pretty: false, indent: "  " }
+let currentOptions: StringifyOptions = { guards: false, pretty: false, indent: "  " }
 let depth = 0
 
 function ind(): string {
@@ -199,14 +200,6 @@ function stringifyTable(arr: Record<string, unknown>[]): string {
 function stringifyObject(obj: Record<string, unknown>): string {
   const keys = getObjectKeys(obj)
 
-  // Check for foldable chain at root - entire object is a single path (need 2+ levels)
-  if (keys.length === 1) {
-    const fold = getFoldPath(obj)
-    if (fold && fold.path.length >= 2) {
-      return `(${fold.path.join(".")}:${stringifyValue(fold.leaf)})`
-    }
-  }
-
   // Helper to stringify a key-value pair with folding
   const stringifyPair = (k: string, forPretty: boolean): string => {
     const val = obj[k]
@@ -244,7 +237,7 @@ function stringifyObject(obj: Record<string, unknown>): string {
 }
 
 export function stringify(data: unknown, options: StringifyOptions = {}): string {
-  currentOptions = { guards: true, pretty: false, indent: "  ", ...options }
+  currentOptions = { guards: false, pretty: false, indent: "  ", ...options }
   depth = 0
   return stringifyValue(data)
 }
@@ -281,7 +274,6 @@ class JotParser {
     this.skipWhitespace()
     const ch = this.peek()
 
-    if (ch === "(") return this.parseFoldedObject()
     if (ch === "{") return this.parseObject()
     if (ch === "[") return this.parseArrayOrTable()
     if (ch === '"') return this.parseQuotedString()
@@ -410,8 +402,7 @@ class JotParser {
 
     if (ch === '"') return this.parseQuotedString()
     if (ch === "{") return this.parseObject()
-    if (ch === "(") return this.parseFoldedObject()
-    if (ch === "[") return this.parseArray()
+    if (ch === "[") return this.parseArrayOrTable()
 
     // Check for guard prefix
     const guardMatch = this.input.slice(this.pos).match(/^(\d+)([xm])\[/)
@@ -468,13 +459,6 @@ class JotParser {
 
     // Regular array
     this.pos = savedPos
-    return this.parseArrayBody(null)
-  }
-
-  private parseArray(): unknown[] {
-    if (this.peek() !== "[") {
-      throw new Error(`Expected '[' at position ${this.pos}`)
-    }
     return this.parseArrayBody(null)
   }
 
@@ -644,33 +628,6 @@ class JotParser {
     return values
   }
 
-  // Parse folded object: (a.b.c:value)
-  private parseFoldedObject(): Record<string, unknown> {
-    if (this.peek() !== "(") {
-      throw new Error(`Expected '(' at position ${this.pos}`)
-    }
-    this.pos++ // skip (
-
-    this.skipWhitespace()
-    const keyPath = this.parseKey()
-    this.skipWhitespace()
-
-    if (this.peek() !== ":") {
-      throw new Error(`Expected ':' after key at position ${this.pos}`)
-    }
-    this.pos++ // skip :
-
-    const value = this.parseValue(")") // folded object value ends at )
-    this.skipWhitespace()
-
-    if (this.peek() !== ")") {
-      throw new Error(`Expected ')' at position ${this.pos}`)
-    }
-    this.pos++ // skip )
-
-    return this.unfoldKey(keyPath, value)
-  }
-
   // Parse regular object: {key:value,...}
   private parseObject(): Record<string, unknown> {
     if (this.peek() !== "{") {
@@ -686,7 +643,7 @@ class JotParser {
         throw new Error("Unterminated object")
       }
 
-      const keyPath = this.parseKey()
+      const { key: keyPath, quoted } = this.parseKey()
       this.skipWhitespace()
 
       if (this.peek() !== ":") {
@@ -696,9 +653,13 @@ class JotParser {
 
       const value = this.parseValue(",}") // object values end at comma or }
 
-      // Unfold key path and merge into result
-      const unfolded = this.unfoldKey(keyPath, value)
-      this.mergeObjects(result, unfolded)
+      // Quoted keys are literal (no unfolding), unquoted keys unfold dots
+      if (quoted) {
+        result[keyPath] = value
+      } else {
+        const unfolded = this.unfoldKey(keyPath, value)
+        this.mergeObjects(result, unfolded)
+      }
 
       this.skipWhitespace()
       if (this.peek() === ",") {
@@ -711,20 +672,28 @@ class JotParser {
     return result
   }
 
-  // Parse key which may be dotted (a.b.c)
-  private parseKey(): string {
+  // Parse key which may be dotted (a.b.c) or quoted ("a.b")
+  // Returns { key, quoted } where quoted=true means don't unfold dots
+  private parseKey(): { key: string; quoted: boolean } {
+    this.skipWhitespace()
+
+    // Handle quoted keys (preserves literal dots)
+    if (this.peek() === '"') {
+      return { key: this.parseQuotedString(), quoted: true }
+    }
+
     const start = this.pos
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
       // Keys can contain dots, stop at : or structural chars
-      if (/[:\,{}\[\]()|]/.test(ch) || /\s/.test(ch)) break
+      if (/[:\,{}\[\]|]/.test(ch) || /\s/.test(ch)) break
       this.pos++
     }
     const key = this.input.slice(start, this.pos)
     if (key === "") {
       throw new Error(`Expected key at position ${this.pos}`)
     }
-    return key
+    return { key, quoted: false }
   }
 
   // Convert dotted key to nested object: "a.b.c" + value → {a:{b:{c:value}}}
@@ -800,29 +769,29 @@ if ((import.meta as { main?: boolean }).main) {
     ["trailing space", "hi ", '"hi "'],
 
     // Arrays
-    ["empty array", [], "0x[]"],
-    ["simple array", [1, 2, 3], "3x[1,2,3]"],
-    ["string array", ["a", "b"], '2x[a,b]'],
+    ["empty array", [], "[]"],
+    ["simple array", [1, 2, 3], "[1,2,3]"],
+    ["string array", ["a", "b"], '[a,b]'],
 
     // Objects
     ["empty object", {}, "{}"],
     ["simple object", { name: "Alice", age: 30 }, "{name:Alice,age:30}"],
 
     // Key folding
-    ["fold 1 level", { a: { b: 1 } }, "(a.b:1)"],
-    ["fold 2 levels", { a: { b: { c: 1 } } }, "(a.b.c:1)"],
+    ["fold 1 level", { a: { b: 1 } }, "{a.b:1}"],
+    ["fold 2 levels", { a: { b: { c: 1 } } }, "{a.b.c:1}"],
     ["no fold primitive", { a: 1 }, "{a:1}"],
     ["fold in multi-key", { a: { b: 1 }, c: { d: 2 } }, "{a.b:1,c.d:2}"],
     ["no fold multi-key value", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
 
     // Tables (object arrays with schema reuse)
-    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "2m[:a,b|1,2|3,4]"],
-    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "3m[:x|1|2|3]"],
-    ["schema runs", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }], "4m[:a|1|2|:b|3|4]"],
+    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "[:a,b|1,2|3,4]"],
+    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "[:x|1|2|3]"],
+    ["schema runs", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }], "[:a|1|2|:b|3|4]"],
 
     // Object arrays without schema reuse (no table format)
     ["single obj array", [{ a: 1 }], "[{a:1}]"],
-    ["no schema reuse", [{ a: 1 }, { b: 2 }], "2x[{a:1},{b:2}]"],
+    ["no schema reuse", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
 
     // Single-item arrays (no guard prefix)
     ["single item", [42], "[42]"],
@@ -832,27 +801,27 @@ if ((import.meta as { main?: boolean }).main) {
     ["nested", { users: [{ id: 1, name: "Alice" }] }, "{users:[{id:1,name:Alice}]}"],
   ]
 
-  // Tests with guards: false
-  const noGuardTests: [string, unknown, string][] = [
-    ["array no guard", [1, 2, 3], "[1,2,3]"],
-    ["table no guard", [{ a: 1 }, { a: 2 }], "[:a|1|2]"],
-    ["nested no guard", { items: [1, 2] }, "{items:[1,2]}"],
+  // Tests with guards: true
+  const guardsTests: [string, unknown, string][] = [
+    ["array with guard", [1, 2, 3], "3x[1,2,3]"],
+    ["table with guard", [{ a: 1 }, { a: 2 }], "2m[:a|1|2]"],
+    ["nested with guard", { items: [1, 2] }, "{items:2x[1,2]}"],
   ]
 
   // Tests with pretty: true
   const prettyTests: [string, unknown, string][] = [
     ["pretty object", { a: 1, b: 2 }, "{\n  a: 1,\n  b: 2\n}"],
-    ["pretty array inline", [1, 2, 3], "3x[ 1, 2, 3 ]"],
-    ["pretty table", [{ x: 1 }, { x: 2 }], "2m[\n :x\n  1\n  2\n]"],
+    ["pretty array inline", [1, 2, 3], "[ 1, 2, 3 ]"],
+    ["pretty table", [{ x: 1 }, { x: 2 }], "[\n :x\n  1\n  2\n]"],
     ["pretty fold", { a: { b: 1 }, c: { d: 2 } }, "{\n  a.b: 1,\n  c.d: 2\n}"],
-    ["pretty array value", { items: [1, 2] }, "{ items: 2x[ 1, 2 ] }"],
-    ["pretty table value", { labels: [{ name: "bug" }, { name: "fix" }] }, "{ labels: 2m[\n :name\n  bug\n  fix\n] }"],
+    ["pretty array value", { items: [1, 2] }, "{ items: [ 1, 2 ] }"],
+    ["pretty table value", { labels: [{ name: "bug" }, { name: "fix" }] }, "{ labels: [\n :name\n  bug\n  fix\n] }"],
   ]
 
   let passed = 0
   let failed = 0
 
-  console.log("=== With guards (default) ===")
+  console.log("=== Default (no guards) ===")
   for (const [name, input, expected] of tests) {
     const result = stringify(input)
     if (result === expected) {
@@ -867,9 +836,9 @@ if ((import.meta as { main?: boolean }).main) {
     }
   }
 
-  console.log("\n=== Without guards ===")
-  for (const [name, input, expected] of noGuardTests) {
-    const result = stringify(input, { guards: false })
+  console.log("\n=== With guards ===")
+  for (const [name, input, expected] of guardsTests) {
+    const result = stringify(input, { guards: true })
     if (result === expected) {
       console.log(`✓ ${name}`)
       passed++
@@ -933,13 +902,12 @@ if ((import.meta as { main?: boolean }).main) {
     ["parse simple object", "{name:Alice,age:30}", { name: "Alice", age: 30 }],
     ["parse nested object", "{a:{b:1,c:2}}", { a: { b: 1, c: 2 } }],
 
-    // Key folding - parens
-    ["parse fold parens 1", "(a.b:1)", { a: { b: 1 } }],
-    ["parse fold parens 2", "(a.b.c:1)", { a: { b: { c: 1 } } }],
-
-    // Key folding - inline
-    ["parse fold inline", "{a.b:1,c.d:2}", { a: { b: 1 }, c: { d: 2 } }],
-    ["parse fold deep inline", "{x.y.z:hello}", { x: { y: { z: "hello" } } }],
+    // Key folding
+    ["parse fold 1 level", "{a.b:1}", { a: { b: 1 } }],
+    ["parse fold 2 levels", "{a.b.c:1}", { a: { b: { c: 1 } } }],
+    ["parse fold multi-key", "{a.b:1,c.d:2}", { a: { b: 1 }, c: { d: 2 } }],
+    ["parse fold deep", "{x.y.z:hello}", { x: { y: { z: "hello" } } }],
+    ["parse quoted key literal", '{"a.b":1}', { "a.b": 1 }],
 
     // Tables
     ["parse uniform table", "2m[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
