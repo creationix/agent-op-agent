@@ -23,7 +23,7 @@
  */
 
 const UNSAFE_STRINGS = new Set(["true", "false", "null"])
-const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', '|']
+const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '(', ')', '"', '|']
 
 function needsQuoting(str: string): boolean {
   if (str === "") return true
@@ -172,7 +172,7 @@ function stringifyTable(arr: Record<string, unknown>[]): string {
     // Emit schema row if schema changed
     if (schemaKey !== currentSchema) {
       const sep = currentOptions.pretty ? ", " : ","
-      parts.push(":" + keys.join(sep))
+      parts.push(keys.join(sep))
       currentSchema = schemaKey
     }
 
@@ -188,11 +188,12 @@ function stringifyTable(arr: Record<string, unknown>[]): string {
     depth++
     const dataInd = ind()
     const schemaInd = dataInd.slice(1)  // One char less
-    const rows = parts.map(p => (p.startsWith(":") ? schemaInd + p : dataInd + p)).join("\n")
+    // First row is schema, rest alternate between schema and data
+    const rows = parts.map((p, i) => (i === 0 ? schemaInd + p : dataInd + p)).join("\n")
     depth--
-    return `[\n${rows}\n${ind()}]`
+    return `(\n${rows}\n${ind()})`
   }
-  return `[${parts.join("|")}]`
+  return `(${parts.join("|")})`
 }
 
 function stringifyObject(obj: Record<string, unknown>): string {
@@ -284,7 +285,8 @@ class JotParser {
     const ch = this.peek()
 
     if (ch === "{") return this.parseObject()
-    if (ch === "[") return this.parseArrayOrTable()
+    if (ch === "[") return this.parseArray()
+    if (ch === "(") return this.parseTable()
     if (ch === '"') return this.parseQuotedString()
 
     // Unquoted value - read until terminator
@@ -398,7 +400,8 @@ class JotParser {
 
     if (ch === '"') return this.parseQuotedString()
     if (ch === "{") return this.parseObject()
-    if (ch === "[") return this.parseArrayOrTable()
+    if (ch === "[") return this.parseArray()
+    if (ch === "(") return this.parseTable()
 
     // Read until terminator
     const start = this.pos
@@ -423,77 +426,8 @@ class JotParser {
     return token
   }
 
-  // Detect whether [...] is an array or a table (table starts with :schema)
-  private parseArrayOrTable(): unknown[] {
-    if (this.peek() !== "[") {
-      throw new Error(`Expected '[' at position ${this.pos}`)
-    }
-
-    // Peek ahead to see if this is a table (starts with :)
-    const savedPos = this.pos
-    this.pos++ // skip [
-    this.skipWhitespace()
-
-    if (this.peek() === ":") {
-      // It's a table without a guard - count rows by parsing
-      this.pos = savedPos
-      return this.parseTableNoGuard()
-    }
-
-    // Regular array
-    this.pos = savedPos
-    return this.parseArrayBody(null)
-  }
-
-  // Parse a table without knowing the row count upfront
-  private parseTableNoGuard(): unknown[] {
-    if (this.peek() !== "[") {
-      throw new Error(`Expected '[' at position ${this.pos}`)
-    }
-    this.pos++ // skip [
-
-    const result: Record<string, unknown>[] = []
-    let currentSchema: string[] = []
-
-    this.skipWhitespace()
-
-    while (this.peek() !== "]") {
-      if (this.pos >= this.input.length) {
-        throw new Error("Unterminated table")
-      }
-
-      // Check for schema row (starts with :)
-      if (this.peek() === ":") {
-        this.pos++ // skip :
-        currentSchema = this.parseSchemaRow()
-        this.skipWhitespace()
-        if (this.peek() === "|") {
-          this.pos++
-          this.skipWhitespace()
-        }
-        continue
-      }
-
-      // Parse data row
-      const values = this.parseDataRow(currentSchema.length)
-      const obj: Record<string, unknown> = {}
-      for (let i = 0; i < currentSchema.length; i++) {
-        obj[currentSchema[i]] = values[i] ?? null
-      }
-      result.push(obj)
-
-      this.skipWhitespace()
-      if (this.peek() === "|") {
-        this.pos++
-        this.skipWhitespace()
-      }
-    }
-
-    this.pos++ // skip ]
-    return result
-  }
-
-  private parseArrayBody(_expectedCount: number | null): unknown[] {
+  // Parse array: [item, item, ...]
+  private parseArray(): unknown[] {
     if (this.peek() !== "[") {
       throw new Error(`Expected '[' at position ${this.pos}`)
     }
@@ -506,7 +440,7 @@ class JotParser {
       if (this.pos >= this.input.length) {
         throw new Error("Unterminated array")
       }
-      result.push(this.parseValue(",]")) // array values end at comma or ]
+      result.push(this.parseValue(",])")) // array values end at comma, ], or )
       this.skipWhitespace()
       if (this.peek() === ",") {
         this.pos++ // skip comma
@@ -518,13 +452,56 @@ class JotParser {
     return result
   }
 
+  // Parse table: (schema|row|row|...)
+  // First row is schema, all following rows are data (no schema changes with () syntax)
+  private parseTable(): unknown[] {
+    if (this.peek() !== "(") {
+      throw new Error(`Expected '(' at position ${this.pos}`)
+    }
+    this.pos++ // skip (
+
+    const result: Record<string, unknown>[] = []
+    this.skipWhitespace()
+
+    // First row is always schema
+    const schema = this.parseSchemaRow()
+    this.skipWhitespace()
+    if (this.peek() === "|") {
+      this.pos++
+      this.skipWhitespace()
+    }
+
+    // Remaining rows are data
+    while (this.peek() !== ")") {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated table")
+      }
+
+      const values = this.parseDataRow(schema.length)
+      const obj: Record<string, unknown> = {}
+      for (let i = 0; i < schema.length; i++) {
+        obj[schema[i]] = values[i] ?? null
+      }
+      result.push(obj)
+
+      this.skipWhitespace()
+      if (this.peek() === "|") {
+        this.pos++
+        this.skipWhitespace()
+      }
+    }
+
+    this.pos++ // skip )
+    return result
+  }
+
   private parseSchemaRow(): string[] {
     const cols: string[] = []
     let col = ""
 
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
-      if (ch === "|" || ch === "]" || ch === "\n") {
+      if (ch === "|" || ch === ")" || ch === "]" || ch === "\n") {
         if (col.trim()) cols.push(col.trim())
         break
       }
@@ -546,7 +523,7 @@ class JotParser {
 
     for (let i = 0; i < colCount; i++) {
       this.skipWhitespace()
-      const terminators = i < colCount - 1 ? ",|]:\n" : "|]:\n"
+      const terminators = i < colCount - 1 ? ",|)]\n" : "|)]\n"
       const value = this.parseTableValue(terminators)
       values.push(value)
       this.skipWhitespace()

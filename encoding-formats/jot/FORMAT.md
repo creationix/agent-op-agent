@@ -4,7 +4,7 @@ Jot is JSON with three modifications:
 
 1. **Minimal quoting** — Strings don't need quotes unless ambiguous
 2. **Key folding** — Single-key object chains collapse: `{"a":{"b":1}}` → `{a.b:1}`
-3. **Tables** — Arrays of uniform objects use `[:schema|row|row]` syntax
+3. **Tables** — Arrays where ALL objects have identical keys use `(schema|row|row)` syntax
 
 Everything else is exactly like JSON: `{key:value}` objects, `[item,item]` arrays, same data types.
 
@@ -22,10 +22,8 @@ Everything else is exactly like JSON: `{key:value}` objects, `[item,item]` array
     {"id": 2, "name": "Bob", "role": "user"}
   ],
   "events": [
-    {"type": "click", "x": 100, "y": 200},
-    {"type": "click", "x": 150, "y": 250},
-    {"type": "scroll", "offset": 500},
-    {"type": "resize", "width": 1920, "height": 1080}
+    {"type": "click", "x": 100},
+    {"type": "scroll", "offset": 500}
   ],
   "tags": ["production", "api"],
   "metadata": {
@@ -40,88 +38,67 @@ Everything else is exactly like JSON: `{key:value}` objects, `[item,item]` array
 ```jot
 {
   config: {name: my-app, version: 1.0.0},
-  users: [:id,name,role|1,Alice,admin|2,Bob,user],
-  events: [:type,x,y|click,100,200|click,150,250|:type,offset|scroll,500|:type,width,height|resize,1920,1080],
+  users: (id,name,role|1,Alice,admin|2,Bob,user),
+  events: [{type:click,x:100},{type:scroll,offset:500}],
   tags: [production,api],
   metadata.nested.value: 42
 }
 ```
 
-Note how `events` has 3 different schemas:
-- `:type,x,y` for click events
-- `:type,offset` for scroll event
-- `:type,width,height` for resize event
+Note:
+- `users` becomes a table with `()` (all objects have same keys: id, name, role)
+- `events` stays as array `[]` (objects have different keys)
+- `tags` is a simple array `[]`
 
-**Compact Jot (same thing, no whitespace):**
+## Arrays vs Tables
+
+**Arrays use brackets `[]`:**
 ```jot
-{config:{name:my-app,version:1.0.0},users:[:id,name,role|1,Alice,admin|2,Bob,user],events:[:type,x,y|click,100,200|click,150,250|:type,offset|scroll,500|:type,width,height|resize,1920,1080],tags:[production,api],metadata.nested.value:42}
+[a,b,c]                    simple array
+[{x:1},{y:2}]              objects with different keys
 ```
 
-## Arrays
-
-**Simple arrays** (strings, numbers) — just comma-separated values:
+**Tables use parentheses `()` — like CSV with `|` instead of newlines:**
 ```jot
-["a","b","c"]  →  [a,b,c]
-[1,2,3]        →  [1,2,3]
+(id,name|1,Alice|2,Bob)    objects with SAME keys
 ```
 
-**Arrays of objects** — use table syntax with schema row:
-
-## Table Syntax
-
-Arrays of objects with the same keys become tables:
-
-```
-Standard array:  [{id:1,name:Alice},{id:2,name:Bob}]
-Table form:      [:id,name|1,Alice|2,Bob]
+This is equivalent to:
+```csv
+id,name
+1,Alice
+2,Bob
 ```
 
-- Schema row starts with `:` and lists field names
-- Data rows follow, separated by `|`
-- **Schema rows declare field names for data rows.** The field names in JSON become column names in the schema:
+Only use `()` tables when ALL objects have the exact same keys.
 
+Table cells can contain nested values:
 ```jot
-[{"name":"A","specs":{"x":1}},{"name":"B","variants":[1,2]}]
-
-Schema for items with "specs":    :name,specs
-Schema for items with "variants": :name,variants
-
-→ [:name,specs|A,{x:1}|:name,variants|B,[1,2]]
-```
-
-WRONG (using "specs" when JSON says "variants"):
-```jot
-[:name,specs|A,{x:1}|B,[1,2]]  ✗ item B has "variants" not "specs"!
-```
-
-Tables can contain nested values:
-```jot
-[:id,meta,tags|1,{x:10},[a,b]|2,{y:20},[c]]
+(id,meta,tags|1,{x:10},[a,b]|2,{y:20},[c])
 ```
 
 ## Key Folding
 
-Only fold single-key chains with primitive (non-array, non-object) values:
+Only fold when the nested object has exactly ONE key:
 
 ```
-{a:{b:1}}           → {a.b:1}           ✓ fold (single key, primitive)
-{a:{b:1,c:2}}       → {a:{b:1,c:2}}     ✗ don't fold (multiple keys)
+{a:{b:1}}           → {a.b:1}           ✓ fold (one key)
+{a:{b:1,c:2}}       → {a:{b:1,c:2}}     ✗ DON'T fold (two keys!)
 {a:{b:[1,2]}}       → {a:{b:[1,2]}}     ✗ don't fold (array value)
-{a:{b:{c:1}}}       → {a.b.c:1}         ✓ fold chain (still single keys)
+{user:{login:x,id:1}} → {user:{login:x,id:1}}  ✗ DON'T fold into user.login + user.id
 ```
 
 ## Quoting Rules
 
-Quote strings ONLY when they:
-- Parse as a number: `"123"` → `"123"` (stays quoted to preserve string type)
-- Are boolean/null keywords: `"true"`, `"false"`, `"null"` → `"true"`, `"false"`, `"null"`
-- Contain special characters: `: , { } [ ] " |` or leading/trailing whitespace
+**Quote strings that contain ANY of these:** `: , { } [ ] ( ) " |` or whitespace
 
-Otherwise, remove quotes:
 ```
-"hello"        → hello
-"my-app"       → my-app
-"user@email"   → user@email
-"has space"    → "has space"
-"123"          → "123"
+"hello"                    → hello
+"my-app"                   → my-app
+"has space"                → "has space"    (contains space)
+"a, b, c"                  → "a, b, c"      (contains comma)
+"key: value"               → "key: value"   (contains colon)
+"123"                      → "123"          (looks like number)
 ```
+
+**Important:** If unsure, keep the quotes. Unquoted strings with special characters will break parsing.

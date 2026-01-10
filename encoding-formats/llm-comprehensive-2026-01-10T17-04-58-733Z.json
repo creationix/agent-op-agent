@@ -1,0 +1,247 @@
+{
+  "timestamp": "2026-01-10T17:04:58.733Z",
+  "runsPerDoc": 1,
+  "summary": [
+    {
+      "format": "jot",
+      "exactRate": 0,
+      "semanticRate": 0.6470588235294118,
+      "totalRuns": 17,
+      "exactPasses": 0,
+      "semanticPasses": 11
+    }
+  ],
+  "details": [
+    {
+      "format": "jot",
+      "docs": [
+        {
+          "doc": "chat",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  messages: (role,content|user,\"How do I configure TypeScript for a monorepo?\"|assistant,\"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.\"|user,\"What about path aliases?\")\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "metrics",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  series: cpu_usage,\n  points: (t,v|1704067200,45.2|1704067260,52.1|1704067320,48.7|1704067380,61.3|1704067440,55.9)\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "large",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  apiVersion: 2.0,\n  kind: Deployment,\n  metadata: {name: web-server, namespace: production, labels: {app: web, tier: frontend, environment: production}},\n  spec: {replicas: 3, selector: {matchLabels: {app: web, tier: frontend}}, template: {metadata: {labels: {app: web, tier: frontend, version: 1."
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        },
+        {
+          "doc": "key-folding-mixed",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  app: {name: MyApp, version: 2.1.0},\n  server: {host: localhost, port: 8080, ssl: {enabled: true, cert: /path/to/cert.pem}},\n  database.connection.url: postgresql://localhost:5432/mydb,\n  feature.flags.beta: true\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "logs",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  logs: (ts,level,service,msg,method,path,duration_ms,status,user_id,ip,retry,key,count,error,endpoint,used_mb,max_mb,query,event,client,deprecated|2024-01-15T10:00:01Z,info,api,\"Server started on port 3000\"|2024-01-15T10:00:02Z,info,db,\"Connected to database\"|2024-01-15T10:00:05Z,debug,auth,\"Load"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        },
+        {
+          "doc": "firewall",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  active: true,\n  ruleGroups: {\n    php_attacks: {\n      active: true,\n      action: deny,\n      rules: {\n        php_suffix: {\n          has: [{type: path, key: null, value: {suf: .php}}],\n          missing: [{type: header, key: x-secret, value: {eq: bypass}}],\n          phase: finalize,\n        "
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        },
+        {
+          "doc": "small",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  name: config,\n  version: 1.0.0,\n  enabled: true,\n  maxRetries: 3,\n  timeout: 30000,\n  tags: [production,api,v1]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "github-issue",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  id: 12345,\n  title: \"Bug: Memory leak in worker threads\",\n  state: open,\n  user.login: devuser,\n  user.id: 789,\n  labels: (name,color|bug,d73a4a|priority-high,ff0000),\n  body: \"When running multiple workers, memory increases continuously without garbage collection.\"\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        },
+        {
+          "doc": "users-50",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  users: (id,name,email,role,active|1,Alice Chen,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false|4,Dan Wilson,dan@example.com,moderator,true|5,Eve Brown,eve@example.com,user,true|6,Frank Lee,frank@example.com,user,true|7,Grace Kim,grace"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "medium",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  users: (id,name,email,role,active|1,Alice Johnson,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false),\n  metadata: {total: 3, page: 1, perPage: 10}\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "hikes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  context: {task: Our favorite hikes together, location: Boulder, season: spring_2025},\n  friends: [ana,luis,sam],\n  hikes: (id,name,distanceKm,elevationGain,companion,wasSunny|1,Blue Lake Trail,7.5,320,ana,true|2,Ridge Overlook,9.2,540,luis,false|3,Wildflower Loop,5.1,180,sam,true)\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "package",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  name: my-app,\n  version: 1.0.0,\n  scripts: {dev: vite, build: \"tsc && vite build\", test: vitest},\n  dependencies: {react: ^18.2.0, \"react-dom\": ^18.2.0},\n  devDependencies: {typescript: ^5.0.0, vite: ^5.0.0, vitest: ^1.0.0}\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-basic",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  server.host: localhost,\n  database.connection.username: admin,\n  app.info.name: MyApp,\n  release.meta.version: 1.0.0,\n  cache.layer.ttlSeconds: 300\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "irregular",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{events: [{type:click,x:100,y:200},{type:scroll,offset:450},{type:keypress,key:Enter,shift:true},{type:resize,width:1920,height:1080}]}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-with-array",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  api.endpoint.url: https://api.example.com,\n  data.meta.items: [widget,gadget,tool],\n  stats.meta.count: 3,\n  user.preferences.tags: [productivity,development]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "products",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  catalog: {version: 2.1, updated: 2024-01-15, currency: USD},\n  categories: (id,name,parent|electronics,Electronics,null|computers,Computers,electronics|phones,Phones,electronics|clothing,Clothing,null|mens,Men's,clothing|womens,Women's,clothing),\n  products: [(sku,name,category,price,stock,specs"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        },
+        {
+          "doc": "routes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  before_filesystem: (\n    src,dest|^\\._analytics/script\\\\.js$|https://cdn.analytics.io/v1/script.js\n    |^\\._analytics/events$|https://events.analytics.io/v1/collect?key=abc123&env=prod\n    |^\\.(?:_metrics|perf)/(script\\\\.js)$|https://cdn.metrics.io/v1/$1\n    |^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        }
+      ],
+      "overallExactRate": 0,
+      "overallSemanticRate": 0.6470588235294118,
+      "totalRuns": 17,
+      "exactPasses": 0,
+      "semanticPasses": 11
+    }
+  ]
+}

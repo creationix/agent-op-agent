@@ -1,5 +1,5 @@
-{ users: [
- :id, name, email, role, active
+{ users: (
+ id, name, email, role, active
   1, Alice Chen, alice@example.com, admin, true
   2, Bob Smith, bob@example.com, user, true
   3, Carol Davis, carol@example.com, user, false
@@ -50,4 +50,4 @@
   48, Vera Walsh, vera@example.com, user, true
   49, Will Xavier, will@example.com, user, false
   50, Xena York, xena@example.com, moderator, true
-] }
+) }

@@ -101,11 +101,11 @@
             value.regex: "(BadBot|Scraper|Harvester)" }],
           phase: init,
           system: true },
-        suspicious_rate: { has: [
-           :type, key, value
+        suspicious_rate: { has: (
+           type, key, value
             rate, ip, { gt: 50 }
             header, user-agent, { regex: ^Mozilla }
-          ],
+          ),
           phase: finalize,
           system: false } } },
     custom_rules: { active: true,
