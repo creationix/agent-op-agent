@@ -1,113 +1,69 @@
-{ catalog: { version: "2.1",
+{
+  catalog: {
+    version: "2.1",
     updated: 2024-01-15,
-    currency: USD },
+    currency: USD
+  },
   categories: {{
-   id, name, parent
-    electronics, Electronics, null
-    computers, Computers, electronics
-    phones, Phones, electronics
-    clothing, Clothing, null
-    mens, Men's, clothing
-    womens, Women's, clothing
+    :id, name, parent
+      electronics, Electronics, null
+      computers, Computers, electronics
+      phones, Phones, electronics
+      clothing, Clothing, null
+      mens, Men's, clothing
+      womens, Women's, clothing
   }},
-  products: [
-    { sku: LAPTOP-001,
-      name: ProBook 15,
-      category: computers,
-      price: 1299.99,
-      stock: 45,
-      specs: { cpu: Intel i7,
+  products: {{
+    :sku, name, category, price, stock, specs, tags, rating, reviews
+      LAPTOP-001, ProBook 15, computers, 1299.99, 45, {
+        cpu: Intel i7,
         ram: 16GB,
         storage: 512GB SSD,
-        display: 15.6 inch },
-      tags: [ laptop, business, portable ],
-      rating: 4.5,
-      reviews: 234 },
-    { sku: LAPTOP-002,
-      name: GameMaster X,
-      category: computers,
-      price: 1899.99,
-      stock: 23,
-      specs: { cpu: AMD Ryzen 9,
+        display: 15.6 inch
+      }, [ laptop, business, portable ], 4.5, 234
+      LAPTOP-002, GameMaster X, computers, 1899.99, 23, {
+        cpu: AMD Ryzen 9,
         ram: 32GB,
         storage: 1TB NVMe,
-        gpu: RTX 4070 },
-      tags: [ laptop, gaming, high-performance ],
-      rating: 4.8,
-      reviews: 567 },
-    { sku: PHONE-001,
-      name: SmartPhone Pro,
-      category: phones,
-      price: 999,
-      stock: 150,
-      specs: { screen: 6.7 inch OLED,
+        gpu: RTX 4070
+      }, [ laptop, gaming, high-performance ], 4.8, 567
+      PHONE-001, SmartPhone Pro, phones, 999, 150, {
+        screen: 6.7 inch OLED,
         camera: 108MP,
-        battery: 5000mAh },
-      tags: [ smartphone, flagship, 5G ],
-      rating: 4.6,
-      reviews: 1023 },
-    { sku: PHONE-002,
-      name: BudgetPhone SE,
-      category: phones,
-      price: 299,
-      stock: 500,
-      specs: { screen: 6.1 inch LCD,
+        battery: 5000mAh
+      }, [ smartphone, flagship, 5G ], 4.6, 1023
+      PHONE-002, BudgetPhone SE, phones, 299, 500, {
+        screen: 6.1 inch LCD,
         camera: 48MP,
-        battery: 4000mAh },
-      tags: [ smartphone, budget, value ],
-      rating: 4.2,
-      reviews: 445 },
-    { sku: SHIRT-001,
-      name: Classic Oxford Shirt,
-      category: mens,
-      price: 59.99,
-      stock: 200,
-      variants: {{
-       size, color, stock
-        S, white, 40
-        M, white, 60
-        L, white, 50
-        M, blue, 30
-        L, blue, 20
-      }},
-      tags: [ shirt, formal, cotton ],
-      rating: 4.4,
-      reviews: 89 },
-    { sku: DRESS-001,
-      name: Summer Floral Dress,
-      category: womens,
-      price: 79.99,
-      stock: 75,
-      variants: {{
-       size, color, stock
-        XS, floral-pink, 15
-        S, floral-pink, 20
-        M, floral-pink, 25
-        L, floral-pink, 15
-      }},
-      tags: [ dress, casual, summer ],
-      rating: 4.7,
-      reviews: 156 },
-    { sku: MONITOR-001,
-      name: UltraWide 34,
-      category: electronics,
-      price: 549.99,
-      stock: 67,
-      specs: { size: 34 inch,
+        battery: 4000mAh
+      }, [ smartphone, budget, value ], 4.2, 445
+    :sku, name, category, price, stock, variants, tags, rating, reviews
+      SHIRT-001, Classic Oxford Shirt, mens, 59.99, 200, {{
+        :size, color, stock
+          S, white, 40
+          M, white, 60
+          L, white, 50
+          M, blue, 30
+          L, blue, 20
+      }}, [ shirt, formal, cotton ], 4.4, 89
+      DRESS-001, Summer Floral Dress, womens, 79.99, 75, {{
+        :size, color, stock
+          XS, floral-pink, 15
+          S, floral-pink, 20
+          M, floral-pink, 25
+          L, floral-pink, 15
+      }}, [ dress, casual, summer ], 4.7, 156
+    :sku, name, category, price, stock, specs, tags, rating, reviews
+      MONITOR-001, UltraWide 34, electronics, 549.99, 67, {
+        size: 34 inch,
         resolution: 3440x1440,
         refresh: 144Hz,
-        panel: IPS },
-      tags: [ monitor, ultrawide, gaming ],
-      rating: 4.6,
-      reviews: 312 },
-    { sku: KEYBOARD-001,
-      name: Mechanical Pro,
-      category: electronics,
-      price: 149.99,
-      stock: 120,
-      specs: { switches: Cherry MX Brown,
+        panel: IPS
+      }, [ monitor, ultrawide, gaming ], 4.6, 312
+      KEYBOARD-001, Mechanical Pro, electronics, 149.99, 120, {
+        switches: Cherry MX Brown,
         layout: full,
-        backlight: RGB },
-      tags: [ keyboard, mechanical, gaming ],
-      rating: 4.5,
-      reviews: 678 } ] }
+        backlight: RGB
+      }, [ keyboard, mechanical, gaming ], 4.5, 678
+  }}
+}

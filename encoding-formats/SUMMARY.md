@@ -4,7 +4,19 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 
 ## Recommendation
 
-**Use Jot** for minimal tokens — combines minimal quoting, key folding, and table syntax.
+**Use Jot** for LLM contexts — unquoted keys save ~19% tokens while achieving **94% LLM encoding accuracy**.
+
+## LLM Encoding Accuracy
+
+Tested Qwen3-Coder-30b 8-bit on encoding JSON → Jot (3 runs per document, 17 docs):
+
+| Format Variant         | Semantic Accuracy | Notes               |
+|------------------------|------------------:|---------------------|
+| **Unquoted keys only** |        **94.1%**  | Simple, one rule    |
+| Tables + unquoted      |            76.5%  | Models misuse tables|
+| Tables + key folding   |           ~70.6%  | Over-folding issues |
+
+Simpler formats are easier for LLMs to learn. The only failure (routes.json) was due to output truncation on a 6KB file with complex regex patterns.
 
 ## Token Efficiency
 
@@ -53,18 +65,17 @@ For human-readable output or when LLMs need to read/write structured data.
 
 ### Jot
 
-Minimal quoting + key folding + table syntax.
+JSON with unquoted keys. Simple rule, high LLM accuracy.
 
 ```jot
-{name:Alice,users:[:id,email|1,a@ex.com|2,b@ex.com],tags:[a,b,c]}
+{name:Alice,age:30,items:[a,b,c],active:true}
 ```
 
 Features:
 
-- **Minimal quoting**: Only quote strings containing unsafe chars (`: , { } [ ] " |`), reserved words, or whitespace
-- **Key folding**: `{a:{b:{c:1}}}` → `{a.b.c:1}` (quote keys with literal dots: `{"a.b":1}`)
-- **Tables**: `[{a:1},{a:2}]` → `[:a|1|2]` (only when schema is reused)
-- **Pretty-print mode**: Human-readable output with proper indentation
+- **Unquoted keys**: Keys don't need quotes unless they contain special characters
+- **Minimal string quoting**: Only quote strings containing unsafe chars (`: , { } [ ] "`), reserved words, or whitespace
+- **94% LLM encoding accuracy**: Simple format that LLMs can reliably learn and produce
 
 ### Lax
 

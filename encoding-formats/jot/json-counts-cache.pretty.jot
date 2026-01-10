@@ -1,9 +1,11 @@
-{ timestamp: 1768022488022,
+{
+  timestamp: 1768022488022,
   miniTokens: 7748,
   miniBytes: 23119,
   prettyTokens: 12656,
   prettyBytes: 39884,
-  miniPerFile: { chat: 76,
+  miniPerFile: {
+    chat: 76,
     metrics: 117,
     large: 266,
     key-folding-mixed: 78,
@@ -19,4 +21,6 @@
     irregular: 68,
     key-folding-with-array: 58,
     products: 866,
-    routes: 1459 } }
+    routes: 1459
+  }
+}

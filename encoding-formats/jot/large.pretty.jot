@@ -1,39 +1,72 @@
-{ apiVersion: "2.0",
+{
+  apiVersion: "2.0",
   kind: Deployment,
-  metadata: { name: web-server,
+  metadata: {
+    name: web-server,
     namespace: production,
-    labels: { app: web,
+    labels: {
+      app: web,
       tier: frontend,
-      environment: production } },
-  spec: { replicas: 3,
-    selector.matchLabels: { app: web,
-      tier: frontend },
-    template: { metadata.labels: { app: web,
+      environment: production
+    }
+  },
+  spec: {
+    replicas: 3,
+    selector.matchLabels: {
+      app: web,
+      tier: frontend
+    },
+    template: {
+      metadata.labels: {
+        app: web,
         tier: frontend,
-        version: 1.2.3 },
+        version: 1.2.3
+      },
       spec.containers: [
-        { name: nginx,
+        {
+          name: nginx,
           image: "nginx:1.21",
           ports: {{
-           containerPort, protocol
-            80, TCP
-            443, TCP
+            :containerPort, protocol
+              80, TCP
+              443, TCP
           }},
-          resources: { requests: { cpu: 100m,
-              memory: 128Mi },
-            limits: { cpu: 500m,
-              memory: 512Mi } },
+          resources: {
+            requests: {
+              cpu: 100m,
+              memory: 128Mi
+            },
+            limits: {
+              cpu: 500m,
+              memory: 512Mi
+            }
+          },
           env: {{
-           name, value
-            NODE_ENV, production
-            LOG_LEVEL, info
-            MAX_CONNECTIONS, "1000"
-          }} },
-        { name: sidecar,
+            :name, value
+              NODE_ENV, production
+              LOG_LEVEL, info
+              MAX_CONNECTIONS, "1000"
+          }}
+        },
+        {
+          name: sidecar,
           image: "envoy:1.20",
-          ports: [{ containerPort: 8080,
-            protocol: TCP }],
-          resources: { requests: { cpu: 50m,
-              memory: 64Mi },
-            limits: { cpu: 200m,
-              memory: 256Mi } } } ] } } }
+          ports: [{
+            containerPort: 8080,
+            protocol: TCP
+          }],
+          resources: {
+            requests: {
+              cpu: 50m,
+              memory: 64Mi
+            },
+            limits: {
+              cpu: 200m,
+              memory: 256Mi
+            }
+          }
+        }
+      ]
+    }
+  }
+}

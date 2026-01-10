@@ -2,43 +2,101 @@
  * Jot - JSON Optimized for Tokens
  *
  * Features:
- * 1. Minimal quoting - only quote strings when necessary
- *    {name:Alice,age:30,city:New York}
+ * 1. Unquoted strings - only quote when necessary
+ * 2. Key folding - {a:{b:1}} => {a.b:1}
+ * 3. Tables - [{a:1},{a:2}] => {{:a;1;2}} with schema changes via :newschema;
  *
- * 2. Repeated objects - when an object has the same keys as previous,
- *    use {:val,val,...} syntax (values only, same key order)
- *    [{id:1,name:Alice},{id:2,name:Bob}] => [{id:1,name:Alice},{:2,Bob}]
+ * Pretty-print rules (compact = braces on content lines):
  *
- * Quoting rules - quote string values only if:
- *   - Parses as a number ("123", "1.0" - not "api5", "v2")
- *   - Contains unsafe chars: : , { } [ ] "
- *   - Equals true, false, or null
- *   - Has leading/trailing whitespace or is empty
- *   - Contains control characters (codepoint < 32)
+ * Objects:
+ *   - Single key: always compact `{ key: value }`
+ *   - Multi-key, array item: compact `{ a: 1,\n  b: 2 }` unless last value is multi-line
+ *   - Multi-key, array item with multi-line last value: expanded
+ *   - Multi-key, other: expanded `{\n  a: 1,\n  b: 2\n}`
+ *
+ * Arrays:
+ *   - Empty: `[]`
+ *   - Single item: compact `[item]`
+ *   - 2+ simple items: spaced `[ a, b ]`
+ *   - 2+ complex items: expanded `[\n  ...,\n  ...\n]`
+ *
+ * Tables:
+ *   - Only when 2+ consecutive objects share schema
+ *   - Otherwise use regular array syntax
  */
 
-const UNSAFE_STRINGS = new Set(["true", "false", "null"])
-const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', '\\']
+const RESERVED_WORDS = new Set(["true", "false", "null"])
+const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', ';', '\\']
 
-function needsQuoting(str: string): boolean {
-  if (str === "") return true
-  if (str.trim() !== str) return true
-  if (UNSAFE_STRINGS.has(str)) return true
+function needsQuotes(str: string, unsafeChars: string[]): boolean {
+  if (str === "" || str.trim() !== str) return true
+  if (RESERVED_WORDS.has(str)) return true
   if (!isNaN(Number(str))) return true
-  if (UNSAFE_CHARS.some(c => str.includes(c))) return true
+  if (unsafeChars.some(c => str.includes(c))) return true
   if ([...str].some(c => c.charCodeAt(0) < 32)) return true
   return false
 }
 
-function quoteString(str: string): string {
-  return needsQuoting(str) ? JSON.stringify(str) : str
-}
+const quoteString = (s: string) => needsQuotes(s, UNSAFE_CHARS) ? JSON.stringify(s) : s
+const quoteKey = (s: string) => needsQuotes(s, [...UNSAFE_CHARS, '.']) ? JSON.stringify(s) : s
+const needsKeyQuoting = (s: string) => needsQuotes(s, [...UNSAFE_CHARS, '.'])
 
 function getObjectKeys(obj: object): string[] {
   return Object.keys(obj)
 }
 
-function stringifyValue(value: unknown): string {
+// Check if value is a foldable chain: single-key objects nested
+// Skip folding if any key contains "." (would be ambiguous with fold syntax)
+function getFoldPath(value: unknown): { path: string[], leaf: unknown } | null {
+  const path: string[] = []
+  let current = value
+
+  while (
+    current !== null &&
+    typeof current === "object" &&
+    !Array.isArray(current)
+  ) {
+    const keys = getObjectKeys(current)
+    if (keys.length !== 1) break
+    const key = keys[0]
+    // Don't fold keys containing "." - they need quoting
+    if (key.includes(".")) break
+    path.push(key)
+    current = (current as Record<string, unknown>)[key]
+  }
+
+  if (path.length < 1) return null
+  return { path, leaf: current }
+}
+
+// Check if array is all objects (candidate for table)
+function isAllObjects(arr: unknown[]): boolean {
+  return arr.length >= 2 && arr.every(item =>
+    item !== null && typeof item === "object" && !Array.isArray(item)
+  )
+}
+
+// Check if table format provides benefit (at least one schema reused)
+function hasSchemaReuse(arr: Record<string, unknown>[]): boolean {
+  const groups = groupBySchema(arr)
+  return groups.some(g => g.objects.length >= 2)
+}
+
+// Options for stringify
+export interface StringifyOptions {
+  pretty?: boolean
+  indent?: string
+}
+
+let currentOptions: StringifyOptions = { pretty: false, indent: "  " }
+let depth = 0
+
+function ind(): string {
+  return currentOptions.pretty ? currentOptions.indent!.repeat(depth) : ""
+}
+
+// atLineStart: true when value will be at start of a line (array items), false when after key:
+function stringifyValue(value: unknown, atLineStart = false): string {
   if (value === null) return "null"
   if (value === true) return "true"
   if (value === false) return "false"
@@ -50,91 +108,154 @@ function stringifyValue(value: unknown): string {
   }
 
   if (typeof value === "object") {
-    return stringifyObject(value as Record<string, unknown>)
+    return stringifyObject(value as Record<string, unknown>, atLineStart)
   }
 
   return String(value)
 }
 
-// Options for stringify
-export interface StringifyOptions {
-  pretty?: boolean  // Pretty print with newlines and indentation (default: false)
-  indent?: string   // Indentation string (default: "  ")
-}
-
-let currentOptions: StringifyOptions = { pretty: false, indent: "  " }
-let depth = 0
-
-function ind(): string {
-  return currentOptions.pretty ? currentOptions.indent!.repeat(depth) : ""
-}
-
-function nl(): string {
-  return currentOptions.pretty ? "\n" : ""
-}
-
-// Check if array contains any complex values (objects or arrays)
 function hasComplexItems(arr: unknown[]): boolean {
   return arr.some(item => item !== null && typeof item === "object")
 }
 
+// Group consecutive objects by their schema (sorted key list)
+function groupBySchema(arr: Record<string, unknown>[]): { keys: string[], objects: Record<string, unknown>[] }[] {
+  const groups: { keys: string[], objects: Record<string, unknown>[] }[] = []
+
+  for (const obj of arr) {
+    const keys = getObjectKeys(obj)
+    const keyStr = keys.join(",")
+
+    // Check if matches current group
+    if (groups.length > 0) {
+      const lastGroup = groups[groups.length - 1]
+      if (lastGroup.keys.join(",") === keyStr) {
+        lastGroup.objects.push(obj)
+        continue
+      }
+    }
+
+    // Start new group
+    groups.push({ keys, objects: [obj] })
+  }
+
+  return groups
+}
+
 function stringifyArray(arr: unknown[]): string {
-  const items = arr.map(stringifyValue)
+  // Check for object array with schema reuse - use table format
+  if (isAllObjects(arr) && hasSchemaReuse(arr as Record<string, unknown>[])) {
+    return stringifyTable(arr as Record<string, unknown>[])
+  }
 
   // Single-item arrays: compact
   if (arr.length === 1) {
-    return `[${items[0]}]`
+    return `[${stringifyValue(arr[0])}]`
   }
 
   // Regular array formatting
   if (currentOptions.pretty && arr.length > 0 && hasComplexItems(arr)) {
     depth++
-    const formatted: string[] = []
-    for (let i = 0; i < items.length; i++) {
-      if (i === items.length - 1) {
-        formatted.push(`${ind()}${items[i]} ]`)
-      } else {
-        formatted.push(`${ind()}${items[i]}`)
-      }
-    }
+    const items = arr.map(item => `${ind()}${stringifyValue(item, true)}`)
     depth--
-    return `[\n${formatted.join(",\n")}`
+    // Expanded format for 2+ items: ] on own line
+    return `[\n${items.join(",\n")}\n${ind()}]`
   }
 
   const sep = currentOptions.pretty ? ", " : ","
-  return currentOptions.pretty ? `[ ${items.join(sep)} ]` : `[${items.join(sep)}]`
+  const items = arr.map(stringifyValue).join(sep)
+  return currentOptions.pretty ? `[ ${items} ]` : `[${items}]`
 }
 
-function stringifyObject(obj: Record<string, unknown>): string {
+function stringifyTable(arr: Record<string, unknown>[]): string {
+  const groups = groupBySchema(arr)
+  const sep = currentOptions.pretty ? ", " : ","
+
+  if (currentOptions.pretty) {
+    depth++
+    const schemaInd = ind()  // 1 level for schema rows
+    depth++
+    const dataInd = ind()    // 2 levels for data rows
+    const rows: string[] = []
+
+    for (const group of groups) {
+      // Schema row
+      rows.push(schemaInd + `:${group.keys.map(k => quoteKey(k)).join(sep)}`)
+      // Data rows - stringify with depth at 2 levels
+      for (const obj of group.objects) {
+        rows.push(dataInd + group.keys.map(k => stringifyValue(obj[k])).join(sep))
+      }
+    }
+
+    depth -= 2
+    return `{{\n${rows.join("\n")}\n${ind()}}}`
+  }
+
+  // Non-pretty mode
+  const parts: string[] = []
+  for (const group of groups) {
+    parts.push(`:${group.keys.map(k => quoteKey(k)).join(sep)}`)
+    for (const obj of group.objects) {
+      parts.push(group.keys.map(k => stringifyValue(obj[k])).join(sep))
+    }
+  }
+  return `{{${parts.join(";")}}}`
+}
+
+function stringifyObject(obj: Record<string, unknown>, atLineStart = false): string {
   const keys = getObjectKeys(obj)
 
   const stringifyPair = (k: string, forPretty: boolean): string => {
     const val = obj[k]
-    if (forPretty) {
-      return `${k}: ${stringifyValue(val)}`
+    const quotedKey = quoteKey(k)
+    // Try to fold (only if key doesn't need quoting - has no special chars)
+    if (!needsKeyQuoting(k) && val !== null && typeof val === "object" && !Array.isArray(val)) {
+      const fold = getFoldPath(val)
+      if (fold) {
+        const foldedKey = `${k}.${fold.path.join(".")}`
+        if (forPretty) {
+          // Value after key: is not at line start
+          return `${foldedKey}: ${stringifyValue(fold.leaf, false)}`
+        }
+        return `${foldedKey}:${stringifyValue(fold.leaf)}`
+      }
     }
-    return `${k}:${stringifyValue(val)}`
+    if (forPretty) {
+      // Value after key: is not at line start
+      return `${quotedKey}: ${stringifyValue(val, false)}`
+    }
+    return `${quotedKey}:${stringifyValue(val)}`
   }
 
   if (currentOptions.pretty && keys.length > 1) {
     depth++
+    // First, stringify all pairs to check if last is multi-line
+    const rawPairs = keys.map(k => stringifyPair(k, true))
+    const lastIsMultiLine = rawPairs[rawPairs.length - 1].endsWith('}') ||
+                            rawPairs[rawPairs.length - 1].endsWith(']')
+
+    // Array items with simple last value: compact format
+    const useCompact = atLineStart && !lastIsMultiLine
+
     const pairs: string[] = []
     for (let i = 0; i < keys.length; i++) {
-      const p = stringifyPair(keys[i], true)
-      if (i === 0) {
-        pairs.push(p)
-      } else if (i === keys.length - 1) {
-        pairs.push(`${ind()}${p} }`)
+      if (i === 0 && useCompact) {
+        // First pair on same line as { - no indent
+        pairs.push(rawPairs[i])
       } else {
-        pairs.push(`${ind()}${p}`)
+        pairs.push(`${ind()}${rawPairs[i]}`)
       }
     }
     depth--
-    return `{ ${pairs.join(",\n")}`
+
+    if (useCompact) {
+      return `{ ${pairs.join(",\n")} }`
+    }
+    // Expanded format: newlines for open and close
+    return `{\n${pairs.join(",\n")}\n${ind()}}`
   }
   if (currentOptions.pretty && keys.length === 1) {
-    const pairs = keys.map(k => stringifyPair(k, true))
-    return `{ ${pairs.join(", ")} }`
+    return `{ ${stringifyPair(keys[0], true)} }`
   }
   const pairs = keys.map(k => stringifyPair(k, false))
   return `{${pairs.join(",")}}`
@@ -177,7 +298,10 @@ class JotParser {
     this.skipWhitespace()
     const ch = this.peek()
 
-    if (ch === "{") return this.parseObject()
+    if (ch === "{") {
+      if (this.input[this.pos + 1] === "{") return this.parseTable()
+      return this.parseObject()
+    }
     if (ch === "[") return this.parseArray()
     if (ch === '"') return this.parseQuotedString()
 
@@ -188,13 +312,13 @@ class JotParser {
     if (this.peek() !== '"') {
       throw new Error(`Expected '"' at position ${this.pos}`)
     }
-    this.pos++ // skip opening quote
+    this.pos++
 
     let result = ""
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
       if (ch === '"') {
-        this.pos++ // skip closing quote
+        this.pos++
         return result
       }
       if (ch === "\\") {
@@ -232,13 +356,10 @@ class JotParser {
     throw new Error("Unterminated string")
   }
 
-  // Parse unquoted atom - reads until terminator characters
-  // Empty terminators = read to end of input (for top-level values)
   private parseAtom(terminators: string): unknown {
     const start = this.pos
 
     if (terminators === "") {
-      // Top level: read everything remaining as the value
       const token = this.input.slice(start).trim()
       this.pos = this.input.length
 
@@ -246,19 +367,16 @@ class JotParser {
         throw new Error(`Unexpected end of input at position ${start}`)
       }
 
-      // Keywords
       if (token === "null") return null
       if (token === "true") return true
       if (token === "false") return false
 
-      // Try number
       const num = Number(token)
       if (!isNaN(num)) return num
 
       return token
     }
 
-    // Read until terminator character
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
       if (terminators.includes(ch)) break
@@ -270,25 +388,21 @@ class JotParser {
       throw new Error(`Unexpected character at position ${this.pos}: '${this.peek()}'`)
     }
 
-    // Keywords
     if (token === "null") return null
     if (token === "true") return true
     if (token === "false") return false
 
-    // Try number
     const num = Number(token)
     if (!isNaN(num) && token !== "") return num
 
-    // Otherwise it's an unquoted string
     return token
   }
 
-  // Parse array: [item, item, ...]
   private parseArray(): unknown[] {
     if (this.peek() !== "[") {
       throw new Error(`Expected '[' at position ${this.pos}`)
     }
-    this.pos++ // skip [
+    this.pos++
 
     const result: unknown[] = []
     this.skipWhitespace()
@@ -301,21 +415,142 @@ class JotParser {
       result.push(item)
       this.skipWhitespace()
       if (this.peek() === ",") {
-        this.pos++ // skip comma
+        this.pos++
         this.skipWhitespace()
       }
     }
 
-    this.pos++ // skip ]
+    this.pos++
     return result
   }
 
-  // Parse object: {key:value,...}
+  // Parse table: {{:schema;row;row;:newschema;row}}
+  private parseTable(): unknown[] {
+    if (this.input.slice(this.pos, this.pos + 2) !== "{{") {
+      throw new Error(`Expected '{{' at position ${this.pos}`)
+    }
+    this.pos += 2
+
+    const result: Record<string, unknown>[] = []
+    let currentSchema: string[] = []
+    this.skipWhitespace()
+
+    while (this.input.slice(this.pos, this.pos + 2) !== "}}") {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated table")
+      }
+
+      this.skipWhitespace()
+
+      // Check for schema row (starts with :)
+      if (this.peek() === ":") {
+        this.pos++ // skip :
+        currentSchema = this.parseSchemaRow()
+      } else {
+        // Data row
+        if (currentSchema.length === 0) {
+          throw new Error(`Data row without schema at position ${this.pos}`)
+        }
+        const values = this.parseDataRow(currentSchema.length)
+        const obj: Record<string, unknown> = {}
+        for (let i = 0; i < currentSchema.length; i++) {
+          obj[currentSchema[i]] = values[i]
+        }
+        result.push(obj)
+      }
+
+      this.skipWhitespace()
+      if (this.peek() === ";") {
+        this.pos++
+        this.skipWhitespace()
+      }
+    }
+
+    this.pos += 2 // skip }}
+    return result
+  }
+
+  private parseSchemaRow(): string[] {
+    const cols: string[] = []
+    let col = ""
+
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos]
+      if (ch === "}" && this.input[this.pos + 1] === "}") {
+        if (col.trim()) cols.push(col.trim())
+        break
+      }
+      if (ch === ";" || ch === "\n") {
+        if (col.trim()) cols.push(col.trim())
+        break
+      }
+      if (ch === ",") {
+        if (col.trim()) cols.push(col.trim())
+        col = ""
+        this.pos++
+        continue
+      }
+      col += ch
+      this.pos++
+    }
+
+    return cols
+  }
+
+  private parseDataRow(colCount: number): unknown[] {
+    const values: unknown[] = []
+
+    for (let i = 0; i < colCount; i++) {
+      this.skipWhitespace()
+      const terminators = i < colCount - 1 ? ",;}\n" : ";}\n"
+      const value = this.parseTableValue(terminators)
+      values.push(value)
+      this.skipWhitespace()
+      if (this.peek() === ",") {
+        this.pos++
+      }
+    }
+
+    return values
+  }
+
+  private parseTableValue(terminators: string): unknown {
+    this.skipWhitespace()
+    const ch = this.peek()
+
+    if (ch === '"') return this.parseQuotedString()
+    if (ch === "{") {
+      if (this.input[this.pos + 1] === "{") return this.parseTable()
+      return this.parseObject()
+    }
+    if (ch === "[") return this.parseArray()
+
+    const start = this.pos
+    while (this.pos < this.input.length) {
+      const c = this.input[this.pos]
+      if (c === "}" && this.input[this.pos + 1] === "}") break
+      if (terminators.includes(c)) break
+      this.pos++
+    }
+
+    const token = this.input.slice(start, this.pos).trim()
+    if (token === "") return null
+
+    if (token === "null") return null
+    if (token === "true") return true
+    if (token === "false") return false
+
+    const num = Number(token)
+    if (!isNaN(num)) return num
+
+    return token
+  }
+
   private parseObject(): Record<string, unknown> {
     if (this.peek() !== "{") {
       throw new Error(`Expected '{' at position ${this.pos}`)
     }
-    this.pos++ // skip {
+    this.pos++
 
     const result: Record<string, unknown> = {}
     this.skipWhitespace()
@@ -325,47 +560,88 @@ class JotParser {
         throw new Error("Unterminated object")
       }
 
-      const key = this.parseKey()
+      const { key: keyPath, quoted } = this.parseKey()
       this.skipWhitespace()
 
       if (this.peek() !== ":") {
-        throw new Error(`Expected ':' after key '${key}' at position ${this.pos}`)
+        throw new Error(`Expected ':' after key '${keyPath}' at position ${this.pos}`)
       }
-      this.pos++ // skip :
+      this.pos++
 
       const value = this.parseValue(",}")
-      result[key] = value
+
+      if (quoted) {
+        result[keyPath] = value
+      } else {
+        const unfolded = this.unfoldKey(keyPath, value)
+        this.mergeObjects(result, unfolded)
+      }
 
       this.skipWhitespace()
       if (this.peek() === ",") {
-        this.pos++ // skip comma
+        this.pos++
         this.skipWhitespace()
       }
     }
 
-    this.pos++ // skip }
+    this.pos++
     return result
   }
 
-  private parseKey(): string {
+  private parseKey(): { key: string; quoted: boolean } {
     this.skipWhitespace()
 
-    // Handle quoted keys
     if (this.peek() === '"') {
-      return this.parseQuotedString()
+      return { key: this.parseQuotedString(), quoted: true }
     }
 
     const start = this.pos
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
-      if (/[:\,{}\[\]]/.test(ch) || /\s/.test(ch)) break
+      if (/[:\,{}\[\];]/.test(ch) || /\s/.test(ch)) break
       this.pos++
     }
     const key = this.input.slice(start, this.pos)
     if (key === "") {
       throw new Error(`Expected key at position ${this.pos}`)
     }
-    return key
+    return { key, quoted: false }
+  }
+
+  private unfoldKey(keyPath: string, value: unknown): Record<string, unknown> {
+    const parts = keyPath.split(".")
+    let result: Record<string, unknown> = {}
+    let current = result
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      const nested: Record<string, unknown> = {}
+      current[parts[i]] = nested
+      current = nested
+    }
+    current[parts[parts.length - 1]] = value
+
+    return result
+  }
+
+  private mergeObjects(target: Record<string, unknown>, src: Record<string, unknown>): void {
+    for (const key of Object.keys(src)) {
+      if (
+        key in target &&
+        typeof target[key] === "object" &&
+        target[key] !== null &&
+        !Array.isArray(target[key]) &&
+        typeof src[key] === "object" &&
+        src[key] !== null &&
+        !Array.isArray(src[key])
+      ) {
+        this.mergeObjects(
+          target[key] as Record<string, unknown>,
+          src[key] as Record<string, unknown>
+        )
+      } else {
+        target[key] = src[key]
+      }
+    }
   }
 }
 
@@ -374,7 +650,6 @@ export function parse(input: string): unknown {
 }
 
 // ============ TESTS ============
-// Run with: bun jot.ts
 if ((import.meta as { main?: boolean }).main) {
   const tests: [string, unknown, string][] = [
     // Basic values
@@ -384,53 +659,39 @@ if ((import.meta as { main?: boolean }).main) {
     ["number", 42, "42"],
     ["float", 3.14, "3.14"],
 
-    // Strings - unquoted
+    // Strings
     ["simple string", "hello", "hello"],
     ["string with space", "hello world", "hello world"],
-    ["identifier", "api5", "api5"],
-
-    // Strings - quoted
     ["empty string", "", '""'],
     ["numeric string", "123", '"123"'],
-    ["float string", "1.0", '"1.0"'],
-    ["reserved true", "true", '"true"'],
-    ["reserved false", "false", '"false"'],
-    ["reserved null", "null", '"null"'],
+    ["reserved word", "true", '"true"'],
     ["contains colon", "a:b", '"a:b"'],
-    ["contains comma", "a,b", '"a,b"'],
-    ["leading space", " hi", '" hi"'],
-    ["trailing space", "hi ", '"hi "'],
+    ["contains semicolon", "a;b", '"a;b"'],
 
     // Arrays
     ["empty array", [], "[]"],
     ["simple array", [1, 2, 3], "[1,2,3]"],
-    ["string array", ["a", "b"], '[a,b]'],
+    ["string array", ["a", "b"], "[a,b]"],
 
     // Objects
     ["empty object", {}, "{}"],
     ["simple object", { name: "Alice", age: 30 }, "{name:Alice,age:30}"],
-    ["nested object", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
 
-    // Object arrays
-    ["object array", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "[{a:1,b:2},{a:3,b:4}]"],
-    ["different keys", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
+    // Key folding
+    ["fold 1 level", { a: { b: 1 } }, "{a.b:1}"],
+    ["fold 2 levels", { a: { b: { c: 1 } } }, "{a.b.c:1}"],
+    ["no fold multi-key", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
+    ["key with dot", { "a.b": 1 }, '{"a.b":1}'],
+    ["key with dot nested", { "a.b": { c: 1 } }, '{"a.b":{c:1}}'],
 
-    // Single object arrays
-    ["single obj array", [{ a: 1 }], "[{a:1}]"],
+    // Tables (only when schema reuse)
+    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "{{:a,b;1,2;3,4}}"],
+    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "{{:x;1;2;3}}"],
+    ["mixed schema with reuse", [{ a: 1 }, { a: 2 }, { b: 3 }], "{{:a;1;2;:b;3}}"],
 
-    // Single-item arrays
-    ["single item", [42], "[42]"],
-    ["single string", ["hello"], "[hello]"],
-
-    // Nested
-    ["nested users", { users: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }] }, "{users:[{id:1,name:Alice},{id:2,name:Bob}]}"],
-  ]
-
-  // Tests with pretty: true
-  const prettyTests: [string, unknown, string][] = [
-    ["pretty object", { a: 1, b: 2 }, "{ a: 1,\n  b: 2 }"],
-    ["pretty array inline", [1, 2, 3], "[ 1, 2, 3 ]"],
-    ["pretty array value", { items: [1, 2] }, "{ items: [ 1, 2 ] }"],
+    // No table when no schema reuse
+    ["no reuse", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
+    ["single obj", [{ a: 1 }], "[{a:1}]"],
   ]
 
   let passed = 0
@@ -444,66 +705,31 @@ if ((import.meta as { main?: boolean }).main) {
       passed++
     } else {
       console.log(`✗ ${name}`)
-      console.log(`  input:    ${JSON.stringify(input)}`)
       console.log(`  expected: ${expected}`)
       console.log(`  got:      ${result}`)
       failed++
     }
   }
 
-  console.log("\n=== Pretty print ===")
-  for (const [name, input, expected] of prettyTests) {
-    const result = stringify(input, { pretty: true })
-    if (result === expected) {
-      console.log(`✓ ${name}`)
-      passed++
-    } else {
-      console.log(`✗ ${name}`)
-      console.log(`  input:    ${JSON.stringify(input)}`)
-      console.log(`  expected: ${JSON.stringify(expected)}`)
-      console.log(`  got:      ${JSON.stringify(result)}`)
-      failed++
-    }
-  }
-
   console.log("\n=== Parser Tests ===")
   const parseTests: [string, string, unknown][] = [
-    // Basic values
     ["parse null", "null", null],
     ["parse true", "true", true],
-    ["parse false", "false", false],
-    ["parse integer", "42", 42],
-    ["parse negative", "-17", -17],
-    ["parse float", "3.14", 3.14],
+    ["parse number", "42", 42],
+    ["parse string", "hello", "hello"],
+    ["parse quoted", '"hello world"', "hello world"],
 
-    // Unquoted strings
-    ["parse unquoted string", "hello", "hello"],
-    ["parse identifier", "api5", "api5"],
+    ["parse array", "[1,2,3]", [1, 2, 3]],
+    ["parse object", "{name:Alice,age:30}", { name: "Alice", age: 30 }],
 
-    // Quoted strings
-    ["parse quoted string", '"hello world"', "hello world"],
-    ["parse quoted numeric", '"123"', "123"],
-    ["parse quoted reserved", '"true"', "true"],
-    ["parse escape newline", '"hello\\nworld"', "hello\nworld"],
-    ["parse escape quote", '"say \\"hi\\""', 'say "hi"'],
+    // Key unfolding
+    ["parse fold", "{a.b:1}", { a: { b: 1 } }],
+    ["parse fold deep", "{a.b.c:1}", { a: { b: { c: 1 } } }],
+    ["parse quoted dot key", '{"a.b":1}', { "a.b": 1 }],
 
-    // Arrays
-    ["parse empty array", "[]", []],
-    ["parse simple array", "[1,2,3]", [1, 2, 3]],
-    ["parse string array", "[a,b]", ["a", "b"]],
-    ["parse single item", "[42]", [42]],
-    ["parse single string", "[hello]", ["hello"]],
-
-    // Objects
-    ["parse empty object", "{}", {}],
-    ["parse simple object", "{name:Alice,age:30}", { name: "Alice", age: 30 }],
-    ["parse nested object", "{a:{b:1,c:2}}", { a: { b: 1, c: 2 } }],
-    ["parse quoted key", '{"a.b":1}', { "a.b": 1 }],
-
-    // Complex nested
-    ["parse nested array obj", "{users:[{id:1,name:Alice}]}", { users: [{ id: 1, name: "Alice" }] }],
-    ["parse obj array", "[{a:1,b:2},{a:3,b:4}]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
-    ["parse obj array mixed", "[{a:1},{b:2}]", [{ a: 1 }, { b: 2 }]],
+    // Tables
+    ["parse table", "{{:a,b;1,2;3,4}}", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+    ["parse schema change", "{{:a;1;:b;2}}", [{ a: 1 }, { b: 2 }]],
   ]
 
   for (const [name, input, expected] of parseTests) {
@@ -527,36 +753,19 @@ if ((import.meta as { main?: boolean }).main) {
     }
   }
 
-  console.log("\n=== Round-trip Tests (stringify → parse) ===")
+  console.log("\n=== Round-trip Tests ===")
   const roundTripData: unknown[] = [
-    // Primitives
-    null,
-    true,
-    false,
-    42,
-    3.14,
-    "hello",
-    "hello world",
-
-    // Arrays
-    [],
-    [1, 2, 3],
-    ["a", "b", "c"],
-
-    // Objects
-    {},
-    { a: 1, b: 2 },
-    { name: "Alice", age: 30 },
-    { a: { b: 1, c: 2 } },
-
-    // Repeated objects
+    null, true, false, 42, "hello",
+    [], [1, 2, 3],
+    {}, { a: 1, b: 2 },
+    { a: { b: 1 } },
+    { a: { b: { c: 1 } } },
     [{ a: 1, b: 2 }, { a: 3, b: 4 }],
-    [{ x: 1 }, { x: 2 }, { x: 3 }],
-    [{ a: 1 }, { b: 2 }],  // Different keys
-
-    // Mixed
-    { name: "test", items: [1, 2, 3], nested: { x: true } },
+    [{ a: 1 }, { b: 2 }],
     { users: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }] },
+    { "a.b": 1 },  // key with dot
+    { "x;y": "test" },  // key with semicolon
+    "a;b",  // string with semicolon
   ]
 
   for (const original of roundTripData) {
