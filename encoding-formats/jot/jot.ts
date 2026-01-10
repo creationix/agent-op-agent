@@ -249,6 +249,527 @@ export function stringify(data: unknown, options: StringifyOptions = {}): string
   return stringifyValue(data)
 }
 
+// ============ PARSER ============
+
+class JotParser {
+  private pos = 0
+  constructor(private input: string) {}
+
+  parse(): unknown {
+    this.skipWhitespace()
+    const result = this.parseValue("") // empty terminators = read to end for top-level atoms
+    this.skipWhitespace()
+    if (this.pos < this.input.length) {
+      throw new Error(`Unexpected character at position ${this.pos}: '${this.input[this.pos]}'`)
+    }
+    return result
+  }
+
+  private skipWhitespace(): void {
+    while (this.pos < this.input.length && /\s/.test(this.input[this.pos])) {
+      this.pos++
+    }
+  }
+
+  private peek(): string {
+    return this.input[this.pos] || ""
+  }
+
+  // Parse a value with specified terminators for unquoted strings
+  // terminators: characters that end an unquoted string value
+  private parseValue(terminators = ""): unknown {
+    this.skipWhitespace()
+    const ch = this.peek()
+
+    if (ch === "(") return this.parseFoldedObject()
+    if (ch === "{") return this.parseObject()
+    if (ch === "[") return this.parseArrayOrTable()
+    if (ch === '"') return this.parseQuotedString()
+
+    // Check for guard prefix: Nx[...] or Nm[...]
+    const guardMatch = this.input.slice(this.pos).match(/^(\d+)([xm])\[/)
+    if (guardMatch) {
+      const count = parseInt(guardMatch[1])
+      const type = guardMatch[2]
+      this.pos += guardMatch[0].length - 1 // position at [
+      if (type === "m") {
+        return this.parseTable(count)
+      } else {
+        return this.parseArrayBody(count)
+      }
+    }
+
+    // Unquoted value - read until terminator
+    return this.parseAtom(terminators)
+  }
+
+  private parseQuotedString(): string {
+    if (this.peek() !== '"') {
+      throw new Error(`Expected '"' at position ${this.pos}`)
+    }
+    this.pos++ // skip opening quote
+
+    let result = ""
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos]
+      if (ch === '"') {
+        this.pos++ // skip closing quote
+        return result
+      }
+      if (ch === "\\") {
+        this.pos++
+        if (this.pos >= this.input.length) {
+          throw new Error("Unexpected end of input in string escape")
+        }
+        const escaped = this.input[this.pos]
+        switch (escaped) {
+          case '"': result += '"'; break
+          case "\\": result += "\\"; break
+          case "/": result += "/"; break
+          case "b": result += "\b"; break
+          case "f": result += "\f"; break
+          case "n": result += "\n"; break
+          case "r": result += "\r"; break
+          case "t": result += "\t"; break
+          case "u": {
+            if (this.pos + 4 >= this.input.length) {
+              throw new Error("Invalid unicode escape")
+            }
+            const hex = this.input.slice(this.pos + 1, this.pos + 5)
+            result += String.fromCharCode(parseInt(hex, 16))
+            this.pos += 4
+            break
+          }
+          default:
+            throw new Error(`Invalid escape sequence '\\${escaped}'`)
+        }
+      } else {
+        result += ch
+      }
+      this.pos++
+    }
+    throw new Error("Unterminated string")
+  }
+
+  // Parse unquoted atom - reads until terminator characters
+  // Empty terminators = read to end of input (for top-level values)
+  private parseAtom(terminators: string): unknown {
+    const start = this.pos
+
+    if (terminators === "") {
+      // Top level: read everything remaining as the value
+      const token = this.input.slice(start).trim()
+      this.pos = this.input.length
+
+      if (token === "") {
+        throw new Error(`Unexpected end of input at position ${start}`)
+      }
+
+      // Keywords
+      if (token === "null") return null
+      if (token === "true") return true
+      if (token === "false") return false
+
+      // Try number
+      const num = Number(token)
+      if (!isNaN(num)) return num
+
+      return token
+    }
+
+    // Read until terminator character
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos]
+      if (terminators.includes(ch)) break
+      this.pos++
+    }
+
+    const token = this.input.slice(start, this.pos).trim()
+    if (token === "") {
+      throw new Error(`Unexpected character at position ${this.pos}: '${this.peek()}'`)
+    }
+
+    // Keywords
+    if (token === "null") return null
+    if (token === "true") return true
+    if (token === "false") return false
+
+    // Try number
+    const num = Number(token)
+    if (!isNaN(num) && token !== "") return num
+
+    // Otherwise it's an unquoted string
+    return token
+  }
+
+  // Parse value that may include unquoted strings with spaces
+  // Used in table cells and array items where context determines boundaries
+  private parseTableValue(terminators: string): unknown {
+    this.skipWhitespace()
+    const ch = this.peek()
+
+    if (ch === '"') return this.parseQuotedString()
+    if (ch === "{") return this.parseObject()
+    if (ch === "(") return this.parseFoldedObject()
+    if (ch === "[") return this.parseArray()
+
+    // Check for guard prefix
+    const guardMatch = this.input.slice(this.pos).match(/^(\d+)([xm])\[/)
+    if (guardMatch) {
+      const count = parseInt(guardMatch[1])
+      const type = guardMatch[2]
+      this.pos += guardMatch[0].length - 1
+      if (type === "m") {
+        return this.parseTable(count)
+      } else {
+        return this.parseArrayBody(count)
+      }
+    }
+
+    // Read until terminator
+    const start = this.pos
+    while (this.pos < this.input.length) {
+      const c = this.input[this.pos]
+      if (terminators.includes(c)) break
+      this.pos++
+    }
+
+    let token = this.input.slice(start, this.pos).trim()
+    if (token === "") return null // empty cell
+
+    // Keywords
+    if (token === "null") return null
+    if (token === "true") return true
+    if (token === "false") return false
+
+    // Try number
+    const num = Number(token)
+    if (!isNaN(num)) return num
+
+    return token
+  }
+
+  // Detect whether [...] is an array or a table (table starts with :schema)
+  private parseArrayOrTable(): unknown[] {
+    if (this.peek() !== "[") {
+      throw new Error(`Expected '[' at position ${this.pos}`)
+    }
+
+    // Peek ahead to see if this is a table (starts with :)
+    const savedPos = this.pos
+    this.pos++ // skip [
+    this.skipWhitespace()
+
+    if (this.peek() === ":") {
+      // It's a table without a guard - count rows by parsing
+      this.pos = savedPos
+      return this.parseTableNoGuard()
+    }
+
+    // Regular array
+    this.pos = savedPos
+    return this.parseArrayBody(null)
+  }
+
+  private parseArray(): unknown[] {
+    if (this.peek() !== "[") {
+      throw new Error(`Expected '[' at position ${this.pos}`)
+    }
+    return this.parseArrayBody(null)
+  }
+
+  // Parse a table without knowing the row count upfront
+  private parseTableNoGuard(): unknown[] {
+    if (this.peek() !== "[") {
+      throw new Error(`Expected '[' at position ${this.pos}`)
+    }
+    this.pos++ // skip [
+
+    const result: Record<string, unknown>[] = []
+    let currentSchema: string[] = []
+
+    this.skipWhitespace()
+
+    while (this.peek() !== "]") {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated table")
+      }
+
+      // Check for schema row (starts with :)
+      if (this.peek() === ":") {
+        this.pos++ // skip :
+        currentSchema = this.parseSchemaRow()
+        this.skipWhitespace()
+        if (this.peek() === "|") {
+          this.pos++
+          this.skipWhitespace()
+        }
+        continue
+      }
+
+      // Parse data row
+      const values = this.parseDataRow(currentSchema.length)
+      const obj: Record<string, unknown> = {}
+      for (let i = 0; i < currentSchema.length; i++) {
+        obj[currentSchema[i]] = values[i] ?? null
+      }
+      result.push(obj)
+
+      this.skipWhitespace()
+      if (this.peek() === "|") {
+        this.pos++
+        this.skipWhitespace()
+      }
+    }
+
+    this.pos++ // skip ]
+    return result
+  }
+
+  private parseArrayBody(_expectedCount: number | null): unknown[] {
+    if (this.peek() !== "[") {
+      throw new Error(`Expected '[' at position ${this.pos}`)
+    }
+    this.pos++ // skip [
+
+    const result: unknown[] = []
+    this.skipWhitespace()
+
+    while (this.peek() !== "]") {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated array")
+      }
+      result.push(this.parseValue(",]")) // array values end at comma or ]
+      this.skipWhitespace()
+      if (this.peek() === ",") {
+        this.pos++ // skip comma
+        this.skipWhitespace()
+      }
+    }
+
+    this.pos++ // skip ]
+    return result
+  }
+
+  private parseTable(rowCount: number): unknown[] {
+    if (this.peek() !== "[") {
+      throw new Error(`Expected '[' at position ${this.pos}`)
+    }
+    this.pos++ // skip [
+
+    const result: Record<string, unknown>[] = []
+    let currentSchema: string[] = []
+    let rowsProcessed = 0
+
+    this.skipWhitespace()
+
+    while (this.peek() !== "]" && rowsProcessed < rowCount) {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated table")
+      }
+
+      // Check for schema row (starts with :)
+      if (this.peek() === ":") {
+        this.pos++ // skip :
+        currentSchema = this.parseSchemaRow()
+        this.skipWhitespace()
+        // After schema, expect | or ] or data
+        if (this.peek() === "|") {
+          this.pos++
+          this.skipWhitespace()
+        }
+        continue
+      }
+
+      // Parse data row
+      const values = this.parseDataRow(currentSchema.length)
+      const obj: Record<string, unknown> = {}
+      for (let i = 0; i < currentSchema.length; i++) {
+        obj[currentSchema[i]] = values[i] ?? null
+      }
+      result.push(obj)
+      rowsProcessed++
+
+      this.skipWhitespace()
+      if (this.peek() === "|") {
+        this.pos++
+        this.skipWhitespace()
+      }
+    }
+
+    if (this.peek() === "]") {
+      this.pos++ // skip ]
+    }
+
+    return result
+  }
+
+  private parseSchemaRow(): string[] {
+    const cols: string[] = []
+    let col = ""
+
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos]
+      if (ch === "|" || ch === "]" || ch === "\n") {
+        if (col.trim()) cols.push(col.trim())
+        break
+      }
+      if (ch === ",") {
+        if (col.trim()) cols.push(col.trim())
+        col = ""
+        this.pos++
+        continue
+      }
+      col += ch
+      this.pos++
+    }
+
+    return cols
+  }
+
+  private parseDataRow(colCount: number): unknown[] {
+    const values: unknown[] = []
+
+    for (let i = 0; i < colCount; i++) {
+      this.skipWhitespace()
+      const terminators = i < colCount - 1 ? ",|]:\n" : "|]:\n"
+      const value = this.parseTableValue(terminators)
+      values.push(value)
+      this.skipWhitespace()
+      if (this.peek() === ",") {
+        this.pos++
+      }
+    }
+
+    return values
+  }
+
+  // Parse folded object: (a.b.c:value)
+  private parseFoldedObject(): Record<string, unknown> {
+    if (this.peek() !== "(") {
+      throw new Error(`Expected '(' at position ${this.pos}`)
+    }
+    this.pos++ // skip (
+
+    this.skipWhitespace()
+    const keyPath = this.parseKey()
+    this.skipWhitespace()
+
+    if (this.peek() !== ":") {
+      throw new Error(`Expected ':' after key at position ${this.pos}`)
+    }
+    this.pos++ // skip :
+
+    const value = this.parseValue(")") // folded object value ends at )
+    this.skipWhitespace()
+
+    if (this.peek() !== ")") {
+      throw new Error(`Expected ')' at position ${this.pos}`)
+    }
+    this.pos++ // skip )
+
+    return this.unfoldKey(keyPath, value)
+  }
+
+  // Parse regular object: {key:value,...}
+  private parseObject(): Record<string, unknown> {
+    if (this.peek() !== "{") {
+      throw new Error(`Expected '{' at position ${this.pos}`)
+    }
+    this.pos++ // skip {
+
+    const result: Record<string, unknown> = {}
+    this.skipWhitespace()
+
+    while (this.peek() !== "}") {
+      if (this.pos >= this.input.length) {
+        throw new Error("Unterminated object")
+      }
+
+      const keyPath = this.parseKey()
+      this.skipWhitespace()
+
+      if (this.peek() !== ":") {
+        throw new Error(`Expected ':' after key '${keyPath}' at position ${this.pos}`)
+      }
+      this.pos++ // skip :
+
+      const value = this.parseValue(",}") // object values end at comma or }
+
+      // Unfold key path and merge into result
+      const unfolded = this.unfoldKey(keyPath, value)
+      this.mergeObjects(result, unfolded)
+
+      this.skipWhitespace()
+      if (this.peek() === ",") {
+        this.pos++ // skip comma
+        this.skipWhitespace()
+      }
+    }
+
+    this.pos++ // skip }
+    return result
+  }
+
+  // Parse key which may be dotted (a.b.c)
+  private parseKey(): string {
+    const start = this.pos
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos]
+      // Keys can contain dots, stop at : or structural chars
+      if (/[:\,{}\[\]()|]/.test(ch) || /\s/.test(ch)) break
+      this.pos++
+    }
+    const key = this.input.slice(start, this.pos)
+    if (key === "") {
+      throw new Error(`Expected key at position ${this.pos}`)
+    }
+    return key
+  }
+
+  // Convert dotted key to nested object: "a.b.c" + value → {a:{b:{c:value}}}
+  private unfoldKey(keyPath: string, value: unknown): Record<string, unknown> {
+    const parts = keyPath.split(".")
+    let result: Record<string, unknown> = {}
+    let current = result
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      const nested: Record<string, unknown> = {}
+      current[parts[i]] = nested
+      current = nested
+    }
+    current[parts[parts.length - 1]] = value
+
+    return result
+  }
+
+  // Deep merge src into target
+  private mergeObjects(target: Record<string, unknown>, src: Record<string, unknown>): void {
+    for (const key of Object.keys(src)) {
+      if (
+        key in target &&
+        typeof target[key] === "object" &&
+        target[key] !== null &&
+        !Array.isArray(target[key]) &&
+        typeof src[key] === "object" &&
+        src[key] !== null &&
+        !Array.isArray(src[key])
+      ) {
+        this.mergeObjects(
+          target[key] as Record<string, unknown>,
+          src[key] as Record<string, unknown>
+        )
+      } else {
+        target[key] = src[key]
+      }
+    }
+  }
+}
+
+export function parse(input: string): unknown {
+  return new JotParser(input).parse()
+}
+
 // ============ TESTS ============
 // Run with: bun nqjson2.ts
 if ((import.meta as { main?: boolean }).main) {
@@ -372,6 +893,142 @@ if ((import.meta as { main?: boolean }).main) {
       console.log(`  input:    ${JSON.stringify(input)}`)
       console.log(`  expected: ${JSON.stringify(expected)}`)
       console.log(`  got:      ${JSON.stringify(result)}`)
+      failed++
+    }
+  }
+
+  console.log("\n=== Parser Tests ===")
+  const parseTests: [string, string, unknown][] = [
+    // Basic values
+    ["parse null", "null", null],
+    ["parse true", "true", true],
+    ["parse false", "false", false],
+    ["parse integer", "42", 42],
+    ["parse negative", "-17", -17],
+    ["parse float", "3.14", 3.14],
+
+    // Unquoted strings
+    ["parse unquoted string", "hello", "hello"],
+    ["parse identifier", "api5", "api5"],
+
+    // Quoted strings
+    ["parse quoted string", '"hello world"', "hello world"],
+    ["parse quoted numeric", '"123"', "123"],
+    ["parse quoted reserved", '"true"', "true"],
+    ["parse escape newline", '"hello\\nworld"', "hello\nworld"],
+    ["parse escape quote", '"say \\"hi\\""', 'say "hi"'],
+
+    // Arrays with guards
+    ["parse empty array", "0x[]", []],
+    ["parse simple array", "3x[1,2,3]", [1, 2, 3]],
+    ["parse string array", "2x[a,b]", ["a", "b"]],
+
+    // Arrays without guards
+    ["parse array no guard", "[1,2,3]", [1, 2, 3]],
+    ["parse single item", "[42]", [42]],
+    ["parse single string", "[hello]", ["hello"]],
+
+    // Objects
+    ["parse empty object", "{}", {}],
+    ["parse simple object", "{name:Alice,age:30}", { name: "Alice", age: 30 }],
+    ["parse nested object", "{a:{b:1,c:2}}", { a: { b: 1, c: 2 } }],
+
+    // Key folding - parens
+    ["parse fold parens 1", "(a.b:1)", { a: { b: 1 } }],
+    ["parse fold parens 2", "(a.b.c:1)", { a: { b: { c: 1 } } }],
+
+    // Key folding - inline
+    ["parse fold inline", "{a.b:1,c.d:2}", { a: { b: 1 }, c: { d: 2 } }],
+    ["parse fold deep inline", "{x.y.z:hello}", { x: { y: { z: "hello" } } }],
+
+    // Tables
+    ["parse uniform table", "2m[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+    ["parse 3-row table", "3m[:x|1|2|3]", [{ x: 1 }, { x: 2 }, { x: 3 }]],
+    ["parse schema change", "4m[:a|1|2|:b|3|4]", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }]],
+
+    // Tables without guards
+    ["parse table no guard", "[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+
+    // Complex nested
+    ["parse nested array obj", "{users:[{id:1,name:Alice}]}", { users: [{ id: 1, name: "Alice" }] }],
+    ["parse obj array guarded", "2x[{a:1},{b:2}]", [{ a: 1 }, { b: 2 }]],
+  ]
+
+  for (const [name, input, expected] of parseTests) {
+    try {
+      const result = parse(input)
+      if (JSON.stringify(result) === JSON.stringify(expected)) {
+        console.log(`✓ ${name}`)
+        passed++
+      } else {
+        console.log(`✗ ${name}`)
+        console.log(`  input:    ${input}`)
+        console.log(`  expected: ${JSON.stringify(expected)}`)
+        console.log(`  got:      ${JSON.stringify(result)}`)
+        failed++
+      }
+    } catch (e) {
+      console.log(`✗ ${name}`)
+      console.log(`  input:    ${input}`)
+      console.log(`  error:    ${(e as Error).message}`)
+      failed++
+    }
+  }
+
+  console.log("\n=== Round-trip Tests (stringify → parse) ===")
+  const roundTripData: unknown[] = [
+    // Primitives
+    null,
+    true,
+    false,
+    42,
+    3.14,
+    "hello",
+    "hello world",
+
+    // Arrays
+    [],
+    [1, 2, 3],
+    ["a", "b", "c"],
+
+    // Objects
+    {},
+    { a: 1, b: 2 },
+    { name: "Alice", age: 30 },
+
+    // Key folding cases
+    { a: { b: 1 } },
+    { a: { b: { c: 1 } } },
+    { a: { b: 1 }, c: { d: 2 } },
+    { a: { b: 1, c: 2 } },
+
+    // Tables
+    [{ a: 1, b: 2 }, { a: 3, b: 4 }],
+    [{ x: 1 }, { x: 2 }, { x: 3 }],
+    [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }],
+
+    // Mixed
+    { name: "test", items: [1, 2, 3], nested: { x: true } },
+    { users: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }] },
+  ]
+
+  for (const original of roundTripData) {
+    const encoded = stringify(original)
+    try {
+      const decoded = parse(encoded)
+      if (JSON.stringify(decoded) === JSON.stringify(original)) {
+        console.log(`✓ round-trip: ${JSON.stringify(original).slice(0, 50)}`)
+        passed++
+      } else {
+        console.log(`✗ round-trip: ${JSON.stringify(original).slice(0, 50)}`)
+        console.log(`  encoded:  ${encoded}`)
+        console.log(`  decoded:  ${JSON.stringify(decoded)}`)
+        failed++
+      }
+    } catch (e) {
+      console.log(`✗ round-trip: ${JSON.stringify(original).slice(0, 50)}`)
+      console.log(`  encoded:  ${encoded}`)
+      console.log(`  error:    ${(e as Error).message}`)
       failed++
     }
   }

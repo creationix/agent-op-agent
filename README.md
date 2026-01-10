@@ -11,13 +11,14 @@ Testing token-efficient alternatives to standard LLM encodings and protocols.
 
 ## Results
 
-### Data Encoding ([encoding-formats/](encoding-formats/SUMMARY.md))
+### Data Encoding ([encoding-formats/SUMMARY.md](encoding-formats/SUMMARY.md))
 
-| Format | Tokens | vs JSON | LLM Can Generate |
-|--------|-------:|--------:|------------------|
-| Jot | 4,556 | **-17%** | Yes |
-| JSON | 5,462 | baseline | Yes |
-| TOON | 5,405 | -1% | Yes |
+| Format | Tokens | vs JSON |
+|--------|-------:|--------:|
+| **Jot** | 6,388 | **-18%** |
+| Jot (pretty) | 8,092 | +4% |
+| JSON | 7,748 | baseline |
+| YAML | 9,330 | +20% |
 
 **Jot**: JSON Optimized for Tokens. Minimal quoting + key folding + table syntax + count guards.
 

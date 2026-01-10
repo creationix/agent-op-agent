@@ -8,46 +8,55 @@ ruleGroups:
         has[1]:
           - type: path
             key: null
-            value.suf: .php
+            value:
+              suf: .php
         missing[1]:
           - type: header
             key: x-secret
-            value.eq: bypass
+            value:
+              eq: bypass
         phase: finalize
         system: true
       jsp_suffix:
         has[2]:
           - type: path
             key: null
-            value.suf: .jsp
+            value:
+              suf: .jsp
           - type: status
-            value.eq: 404
+            value:
+              eq: 404
         missing[1]:
           - type: header
             key: x-secret
-            value.eq: bypass
+            value:
+              eq: bypass
         phase: init
         system: true
       asp_suffix:
         has[1]:
           - type: path
             key: null
-            value.suf: .asp
+            value:
+              suf: .asp
         missing[1]:
           - type: header
             key: x-secret
-            value.eq: bypass
+            value:
+              eq: bypass
         phase: finalize
         system: true
       cgi_suffix:
         has[1]:
           - type: path
             key: null
-            value.suf: .cgi
+            value:
+              suf: .cgi
         missing[1]:
           - type: header
             key: x-secret
-            value.eq: bypass
+            value:
+              eq: bypass
         phase: finalize
         system: true
   sql_injection:
@@ -58,21 +67,24 @@ ruleGroups:
         has[1]:
           - type: query
             key: null
-            value.contains: UNION SELECT
+            value:
+              contains: UNION SELECT
         phase: init
         system: true
       drop_table:
         has[1]:
           - type: query
             key: null
-            value.contains: DROP TABLE
+            value:
+              contains: DROP TABLE
         phase: init
         system: true
       or_1_equals_1:
         has[1]:
           - type: query
             key: null
-            value.regex: "OR\\s+1\\s*=\\s*1"
+            value:
+              regex: "OR\\s+1\\s*=\\s*1"
         phase: init
         system: true
   rate_limiting:
@@ -83,7 +95,8 @@ ruleGroups:
         has[1]:
           - type: path
             key: null
-            value.pre: /api/
+            value:
+              pre: /api/
         rateLimit:
           requests: 100
           window: 60
@@ -94,7 +107,8 @@ ruleGroups:
         has[1]:
           - type: path
             key: null
-            value.pre: /auth/
+            value:
+              pre: /auth/
         rateLimit:
           requests: 10
           window: 60
@@ -105,7 +119,8 @@ ruleGroups:
         has[1]:
           - type: path
             key: null
-            value.eq: /search
+            value:
+              eq: /search
         rateLimit:
           requests: 30
           window: 60
@@ -115,17 +130,20 @@ ruleGroups:
   geo_blocking:
     active: false
     action: deny
-    rules.blocked_countries:
-      has[1]:
-        - type: geo
-          key: country
-          value.in[3]: XX,YY,ZZ
-      missing[1]:
-        - type: header
-          key: x-bypass-geo
-          value.eq: allowed
-      phase: init
-      system: false
+    rules:
+      blocked_countries:
+        has[1]:
+          - type: geo
+            key: country
+            value:
+              in[3]: XX,YY,ZZ
+        missing[1]:
+          - type: header
+            key: x-bypass-geo
+            value:
+              eq: allowed
+        phase: init
+        system: false
   bot_protection:
     active: true
     action: challenge
@@ -134,24 +152,28 @@ ruleGroups:
         missing[1]:
           - type: header
             key: user-agent
-            value.exists: true
+            value:
+              exists: true
         phase: init
         system: true
       known_bad_bots:
         has[1]:
           - type: header
             key: user-agent
-            value.regex: (BadBot|Scraper|Harvester)
+            value:
+              regex: (BadBot|Scraper|Harvester)
         phase: init
         system: true
       suspicious_rate:
         has[2]:
           - type: rate
             key: ip
-            value.gt: 50
+            value:
+              gt: 50
           - type: header
             key: user-agent
-            value.regex: ^Mozilla
+            value:
+              regex: ^Mozilla
         phase: finalize
         system: false
   custom_rules:
@@ -162,21 +184,25 @@ ruleGroups:
         has[1]:
           - type: path
             key: null
-            value.pre: /admin
+            value:
+              pre: /admin
         missing[1]:
           - type: header
             key: x-admin-token
-            value.exists: true
+            value:
+              exists: true
         phase: init
         system: false
       api_key_required:
         has[1]:
           - type: path
             key: null
-            value.pre: /api/v2/
+            value:
+              pre: /api/v2/
         missing[1]:
           - type: header
             key: x-api-key
-            value.exists: true
+            value:
+              exists: true
         phase: init
         system: false

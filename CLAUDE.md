@@ -4,27 +4,56 @@
 
 Research project testing data encodings for LLM token efficiency. You (Claude) design experiments, local models (Qwen3 via LM Studio) are test subjects.
 
+## Current Results
+
+**Jot** is the leading format at -18% tokens vs JSON. See `encoding-formats/SUMMARY.md` for full comparison.
+
+| Format | vs JSON |
+| ------ | ------- |
+| Jot | -18% |
+| Jot (pretty) | +4% |
+| JSON | baseline |
+| YAML | +20% |
+
+## Jot Format
+
+Encoder: `encoding-formats/jot/jot.ts`
+
+Features:
+
+- Minimal quoting (only quote strings with unsafe chars)
+- Key folding: `{a:{b:1}}` → `(a.b.c:1)` or `{x.a.b:1}` nested
+- Tables: `[{a:1},{a:2}]` → `2m[:a|1|2]` (only when schema reused)
+- Count guards: `Nx[...]` arrays, `Nm[...]` tables (single-item arrays omit guard)
+- Pretty-print mode with `stringify(data, { pretty: true })`
+
+Pretty-print rules:
+
+- Single-key objects inline: `{ key: value }`
+- Single-item arrays compact: `[{...}]`
+- Schema rows indent 1 char less than data rows
+- Tables start on same line as key: `labels: 2m[`
+
 ## MCP Tools
 
 LM Studio bridge on `localhost:1234`:
 
-- `health_check()` - verify connection
-- `list_models()` / `get_current_model()` - model info
 - `chat_completion(prompt, system_prompt, temperature, max_tokens)` - query local model
 
 ## Scripts
 
-- `bun scripts/regen.ts` - regenerate all encodings and output token count table
+- `bun scripts/regen.ts` - regenerate all encodings and token counts
 - `bun scripts/count-tokens.ts file1 file2...` - count tokens for specific files
+
+## Next Steps
+
+1. **Implement decoders** for Lax and Jot (parse back to JSON)
+2. **Verify round-trip** encode/decode for top formats
+3. **LLM read/write testing** - measure model accuracy generating these formats
 
 ## Key Files
 
-- `encoding-formats/SUMMARY.md` - encoding comparison results
-- `encoding-formats/*/gen.ts` - encoders for each format
-- `encoding-formats/json/*.json` - source test data
-
-## Research Principles
-
-- Measure real token counts, not estimates
-- Test on small models (Qwen3), not frontier models
-- Formats must be LLM-generatable, not just parseable
+- `encoding-formats/SUMMARY.md` - token comparison results
+- `encoding-formats/jot/jot.ts` - Jot encoder (stringify + tests)
+- `encoding-formats/jot/gen.ts` - generates .jot and .pretty.jot files
+- `encoding-formats/json/*.json` - 17 source test documents

@@ -1,7 +1,10 @@
 #!/usr/bin/env bun
 // Generate samples by reading from ../json/*.json and writing the equivalent here.
-import { stringify } from "./lax.ts"
+import { stringify, parse } from "./lax.ts"
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
+
+let passed = 0
+let failed = 0
 
 // Iterate over files in "../json/*.json"
 for (const file of readdirSync("../json")) {
@@ -10,7 +13,26 @@ for (const file of readdirSync("../json")) {
     const targetFilePath = `./${file.replace(".json", ".lax")}`
     const data = JSON.parse(readFileSync(sourceFilePath, "utf-8"))
     const encodedString = stringify(data)
+
+    // Round-trip verification
+    try {
+      const decoded = parse(encodedString)
+      if (JSON.stringify(decoded) !== JSON.stringify(data)) {
+        console.error(`✗ ${file}: round-trip mismatch`)
+        failed++
+        continue
+      }
+    } catch (e) {
+      console.error(`✗ ${file}: parse error - ${(e as Error).message}`)
+      failed++
+      continue
+    }
+
     writeFileSync(targetFilePath, encodedString, "utf-8")
-    console.log(`Generated ${targetFilePath} from ${sourceFilePath}`)
+    console.log(`✓ ${file}`)
+    passed++
   }
 }
+
+console.log(`\n${passed} generated, ${failed} failed`)
+if (failed > 0) throw new Error("Round-trip verification failed")

@@ -15,9 +15,9 @@ Token counts measured on Qwen3-Coder-30b. For LLM systems, **tokens matter more 
 | [JSONito](https://github.com/creationix/jsonito)    |  7,615 |      -2% | 13,733 |     -41% |
 | [Lax](lax/)                                         |  7,678 |      -1% | 20,595 |     -11% |
 | [JSON](https://www.json.org/) (mini)                |  7,748 | baseline | 23,119 | baseline |
-| [TOON](toon/)                                       |  7,989 |      +3% | 21,725 |      -6% |
 | [D2](https://github.com/creationix/d2)              |  8,059 |      +4% | 16,891 |     -27% |
 | [Jot](jot/) (pretty)                                |  8,092 |      +4% | 22,656 |      -2% |
+| [TOON](toon/)                                       |  8,098 |      +5% | 22,380 |      -3% |
 | [YAML](https://yaml.org/)                           |  9,330 |     +20% | 26,366 |     +14% |
 | [TOML](https://toml.io/)                            |  9,980 |     +29% | 28,549 |     +23% |
 <!-- TOKEN_EFFICIENCY_END -->

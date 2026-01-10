@@ -6,7 +6,8 @@ before_filesystem[17]:
   - src: "^/(?:_metrics|perf)/(script\\.js)$"
     dest: "https://cdn.metrics.io/v1/$1"
   - src: "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
-    headers.Location: /$1
+    headers:
+      Location: /$1
     status: 308
     continue: true
   - src: ^/_internal/trace$
@@ -27,7 +28,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/submit.ts#submitForm
   - src: ^/(.*)$
     has[1]{type,key,value}:
@@ -35,7 +37,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/auth.ts#loginUser
   - src: ^/(.*)$
     has[1]{type,key,value}:
@@ -43,7 +46,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/auth.ts#logoutUser
   - src: ^/(.*)$
     has[1]{type,key,value}:
@@ -51,7 +55,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/data.ts#fetchItems
   - src: ^/(.*)$
     has[1]{type,key,value}:
@@ -59,7 +64,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/data.ts#updateItem
   - src: ^/(.*)$
     has[1]{type,key,value}:
@@ -67,7 +73,8 @@ before_filesystem[17]:
     transforms[1]:
       - type: request.headers
         op: append
-        target.key: x-action-name
+        target:
+          key: x-action-name
         args: app/api/data.ts#deleteItem
   - src: "^/(?<path>.+?)(?:/)?$"
     dest: /$path.segments/$segmentPath.segment.rsc
@@ -89,14 +96,16 @@ before_filesystem[17]:
     has[1]{type,key,value}:
       header,rsc,"1"
     dest: /index.rsc
-    headers.vary: "rsc, state-tree, prefetch, segment-prefetch"
+    headers:
+      vary: "rsc, state-tree, prefetch, segment-prefetch"
     continue: true
     override: true
   - src: "^/((?!.+\\.rsc).+?)(?:/)?$"
     has[1]{type,key,value}:
       header,rsc,"1"
     dest: /$1.rsc
-    headers.vary: "rsc, state-tree, prefetch, segment-prefetch"
+    headers:
+      vary: "rsc, state-tree, prefetch, segment-prefetch"
     continue: true
     override: true
 filesystem[3]:

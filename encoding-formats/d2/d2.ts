@@ -1,3 +1,79 @@
+// ============ DECODER ============
+
+export function decode(input: string): unknown {
+  const lines = input.split('\n').filter(line => line.trim() !== '')
+  const cache: (unknown | undefined)[] = new Array(lines.length)
+  const resolving = new Set<number>()
+
+  function resolve(lineNum: number): unknown {
+    if (cache[lineNum] !== undefined) return cache[lineNum]
+    if (resolving.has(lineNum)) {
+      throw new Error(`Circular reference at line ${lineNum + 1}`)
+    }
+    resolving.add(lineNum)
+
+    const line = lines[lineNum]
+    const parsed = JSON.parse(line)
+
+    // If the line is just a primitive (number, string, bool, null), return it directly
+    // Don't resolve numbers as references at the top level of a line
+    let result: unknown
+    if (Array.isArray(parsed)) {
+      result = resolveArray(parsed)
+    } else if (parsed && typeof parsed === 'object') {
+      result = resolveObject(parsed as Record<string, unknown>)
+    } else {
+      result = parsed
+    }
+
+    cache[lineNum] = result
+    resolving.delete(lineNum)
+    return result
+  }
+
+  function resolveArray(arr: unknown[]): unknown {
+    // Check for schema reference (negative first element)
+    if (arr.length > 0 && typeof arr[0] === 'number' && arr[0] < 0) {
+      const schemaLineNum = -arr[0] - 1
+      const keys = resolve(schemaLineNum) as string[]
+      const values = arr.slice(1).map(resolveRef)
+      const obj: Record<string, unknown> = {}
+      for (let i = 0; i < keys.length; i++) {
+        obj[keys[i]] = values[i]
+      }
+      return obj
+    }
+    return arr.map(resolveRef)
+  }
+
+  function resolveObject(obj: Record<string, unknown>): Record<string, unknown> {
+    const result: Record<string, unknown> = {}
+    for (const [k, v] of Object.entries(obj)) {
+      result[k] = resolveRef(v)
+    }
+    return result
+  }
+
+  // Inside arrays/objects, numbers are line references
+  function resolveRef(val: unknown): unknown {
+    if (typeof val === 'number' && Number.isInteger(val)) {
+      return resolve(val - 1)
+    }
+    if (Array.isArray(val)) {
+      return resolveArray(val)
+    }
+    if (val && typeof val === 'object') {
+      return resolveObject(val as Record<string, unknown>)
+    }
+    return val
+  }
+
+  // The last line is the root value
+  return resolve(lines.length - 1)
+}
+
+// ============ ENCODER ============
+
 interface EncodeOptions {
   objectThreshold?: number; // threshold for inline objects vs. own line
   arrayThreshold?: number; // threshold for inline arrays vs. own line

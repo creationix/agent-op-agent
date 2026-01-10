@@ -98,6 +98,26 @@ for (const doc of DOCS) {
 }
 rows.push({ format: "JSON (mini)", tokens: jsonTokens, total: jsonTotal, bytes: jsonBytes })
 
+// Add Jot pretty-printed
+const jotPrettyTokens: number[] = []
+let jotPrettyTotal = 0
+let jotPrettyBytes = 0
+for (const doc of DOCS) {
+  const filePath = join(ROOT, "jot", `${doc}.pretty.jot`)
+  if (existsSync(filePath)) {
+    const content = readFileSync(filePath, "utf-8")
+    const count = await countTokens(content)
+    console.log(`Counted ${count} tokens for jot/${doc}.pretty.jot`)
+    jotPrettyTokens.push(count)
+    jotPrettyTotal += count
+    jotPrettyBytes += new TextEncoder().encode(content).length
+  } else {
+    jotPrettyTokens.push(-1)
+    jotPrettyTotal += 9999
+  }
+}
+rows.push({ format: "jot-pretty", tokens: jotPrettyTokens, total: jotPrettyTotal, bytes: jotPrettyBytes })
+
 // Sort by total
 rows.sort((a, b) => a.total - b.total)
 
@@ -125,7 +145,7 @@ const jsonTotalBytes = jsonRow.bytes
 // Format links
 const formatLinks: Record<string, string> = {
   "jot": "**[Jot](jot/)**",
-  "jot-mix": "[Jot-mix](jot-mix/)",
+  "jot-pretty": "[Jot](jot/) (pretty)",
   "lax": "[Lax](lax/)",
   "toon": "[TOON](toon/)",
   "jsonito": "[JSONito](https://github.com/creationix/jsonito)",
