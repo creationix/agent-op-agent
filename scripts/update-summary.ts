@@ -453,22 +453,9 @@ function buildPerFileChart(perFileData: Map<string, PerFileStats>, jsonMiniPerFi
   let minPct = 0
   let maxPct = 0
 
-  // Order formats by total savings (best first)
-  const formatOrder = Array.from(perFileData.entries())
-    .filter(([key]) => key !== "json-mini") // Don't show JSON mini (it's the baseline)
-    .map(([key, stats]) => {
-      let totalPct = 0
-      for (const file of fileNames) {
-        const baseline = jsonMiniPerFile.get(file) ?? 0
-        const val = stats.get(file) ?? 0
-        if (baseline > 0) {
-          totalPct += ((val - baseline) / baseline) * 100
-        }
-      }
-      return { key, avgPct: totalPct / fileNames.length }
-    })
-    .sort((a, b) => a.avgPct - b.avgPct)
-    .map((f) => f.key)
+  // Only show key formats for readability (Jot, Lax, YAML, TOON)
+  const CHART_FORMATS = ["jot", "lax", "yaml", "toon"]
+  const formatOrder = CHART_FORMATS.filter((key) => perFileData.has(key))
 
   for (const formatKey of formatOrder) {
     const stats = perFileData.get(formatKey)
