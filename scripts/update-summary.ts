@@ -453,9 +453,13 @@ function buildPerFileChart(perFileData: Map<string, PerFileStats>, jsonMiniPerFi
   let minPct = 0
   let maxPct = 0
 
-  // Only show key formats for readability (Jot, Lax, YAML, TOON)
+  // Only show key formats for readability (JSON baseline + Jot, Lax, YAML, TOON)
   const CHART_FORMATS = ["jot", "lax", "yaml", "toon"]
   const formatOrder = CHART_FORMATS.filter((key) => perFileData.has(key))
+
+  // Add JSON as 0% baseline first
+  const jsonBaseline = fileNames.map(() => 0)
+  formatLines.push(`    line "JSON" [${jsonBaseline.join(", ")}]`)
 
   for (const formatKey of formatOrder) {
     const stats = perFileData.get(formatKey)

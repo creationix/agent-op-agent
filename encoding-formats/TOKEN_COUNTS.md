@@ -6,6 +6,7 @@ xychart-beta
     title "Token Savings vs JSON (negative = better)"
     x-axis ["Users50", "Medium", "Firewall", "Hikes", "Routes", "KF-arr", "Products", "Package", "Chat", "KF-basic", "KF-mix", "Large", "Issue", "Logs", "Small", "Irregular", "Metrics"]
     y-axis "% vs JSON" -60 --> 100
+    line "JSON" [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     line "Jot" [-50, -26, -21, -20, -20, -17, -10, -9, -4, -4, 0, 2, 8, 17, 22, 31, 33]
     line "Lax" [-7, -3, -7, 4, -5, 12, 14, 2, 13, 12, 6, 11, 22, 24, 25, 44, 56]
     line "YAML" [20, 29, 22, 35, 12, 33, 42, 12, 17, 31, 29, 37, 36, 42, 56, 81, 87]
@@ -14,9 +15,9 @@ xychart-beta
 <!-- CHART_END -->
 
 - Jot (blue) — best compact, consistently lowest
-- Lax (red) — alternative compact, middle ground
-- YAML (yellow) — pretty baseline, consistently highest
-- TOON (white) — interesting variation, good on tabular data
+- Lax (green) — alternative compact, middle ground
+- YAML (red) — pretty baseline, consistently highest
+- TOON (yellow) — interesting variation, good on tabular data
 
 ## Per-File Breakdown
 
