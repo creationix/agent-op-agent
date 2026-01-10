@@ -65,7 +65,6 @@ async function main() {
     },
     { name: "Jot", getContent: (f) => readFileSync(join(ROOT, "jot", `${f}.jot`), "utf-8") },
     { name: "Jot (pretty)", getContent: (f) => readFileSync(join(ROOT, "jot", `${f}.pretty.jot`), "utf-8") },
-    { name: "Lax", getContent: (f) => readFileSync(join(ROOT, "lax", `${f}.lax`), "utf-8") },
     { name: "JSONito", getContent: (f) => readFileSync(join(ROOT, "jsonito", `${f}.jito`), "utf-8") },
     { name: "TOON", getContent: (f) => readFileSync(join(ROOT, "toon", `${f}.toon`), "utf-8") },
     { name: "YAML", getContent: (f) => readFileSync(join(ROOT, "yaml", `${f}.yaml`), "utf-8") },

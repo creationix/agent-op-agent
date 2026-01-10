@@ -14,11 +14,11 @@ Note: Small models (e.g., Qwen3-30b) may struggle to encode large Jot documents 
 ```mermaid
 xychart-beta
     title "Token Counts by Format"
-    x-axis ["Jot", "JSON-m", "JSONito", "Lax", "Jot-P", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
+    x-axis ["Jot", "JSON-m", "JSONito", "Jot-P", "D2", "TOON", "YAML", "TOML", "JSON-s", "JSON-p"]
     y-axis "Tokens" 0 --> 16000
-    line "Qwen" [6525, 7748, 7757, 7832, 8239, 8292, 8315, 9543, 10180, 11799, 12656]
-    line "Legacy" [6420, 7377, 7794, 7335, 7204, 7582, 7079, 7661, 11204, 10966, 11937]
-    line "Claude" [6747, 8132, 8327, 7881, 8500, 7928, 8405, 9456, 11485, 12687, 14403]
+    line "Qwen" [6525, 7748, 7757, 8239, 8292, 8315, 9543, 10180, 11799, 12656]
+    line "Legacy" [6420, 7377, 7794, 7204, 7582, 7079, 7661, 11204, 10966, 11937]
+    line "Claude" [6747, 8132, 8327, 8500, 7928, 8405, 9456, 11485, 12687, 14403]
 ```
 <!-- CHART_END -->
 
@@ -32,7 +32,6 @@ For machine-to-machine or LLM contexts where readability isn't required.
 | **[Jot](jot/)**                                     |   6,525 (-16%) |   6,420 (-13%) |   6,747 (-17%) |  16,621 (-28%) |
 | [JSON](https://www.json.org/) (mini)                |          7,748 |          7,377 |          8,132 |         23,119 |
 | [JSONito](https://github.com/creationix/jsonito)    |    7,757 (+0%) |    7,794 (+6%) |    8,327 (+2%) |  14,059 (-39%) |
-| [Lax](lax/)                                         |    7,832 (+1%) |    7,335 (-1%) |    7,881 (-3%) |   20,932 (-9%) |
 | [D2](https://github.com/creationix/d2)              |    8,292 (+7%) |    7,582 (+3%) |    7,928 (-3%) |  17,328 (-25%) |
 <!-- COMPACT_END -->
 
@@ -53,7 +52,7 @@ For human-readable output or when LLMs need to read/write structured data.
 
 ## Format Descriptions
 
-### Jot
+### [Jot](jot/)
 
 JSON with minimal quoting. Unquoted keys and string values where safe.
 
@@ -66,15 +65,7 @@ Optional features (enabled in encoder, tested separately for LLM accuracy):
 - **Key folding**: `{a:{b:1}}` → `{a.b:1}` for single-key nested objects
 - **Tables**: `[{a:1},{a:2}]` → `{{:a;1;2}}` for uniform object arrays
 
-### Lax
-
-Whitespace-separated JSON: no commas between elements.
-
-```lax
-{name:"Alice" age:30 items:["a" "b" "c"]}
-```
-
-### TOON
+### [TOON](https://github.com/creationix/toon)
 
 YAML-like indentation with optional table syntax and count guards.
 
@@ -84,11 +75,11 @@ users[2]{id,name}:
   2,Bob
 ```
 
-### JSONito
+### [JSONito](https://github.com/creationix/jsonito)
 
 Byte-optimized JSON with string deduplication via preamble dictionary.
 
-### D2
+### [D2](https://github.com/creationix/d2)
 
 Declarative data format using `=` assignment and shell-like quoting.
 

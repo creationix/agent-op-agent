@@ -31,7 +31,7 @@ type Result = {
 }
 
 async function main() {
-  const formats = ["json", "jot", "lax"]
+  const formats = ["json", "jot"]
 
   for (const format of formats) {
     console.log(`\n=== ${format.toUpperCase()} ===\n`)
@@ -77,7 +77,6 @@ async function main() {
   console.log(`\n=== SEPARATOR TEST ===\n`)
   const tests = [
     { name: 'JSON commas', content: `"a","b","c","d","e"` },
-    { name: 'Lax spaces', content: `"a" "b" "c" "d" "e"` },
     { name: 'Jot unquoted', content: `a,b,c,d,e` },
   ]
 

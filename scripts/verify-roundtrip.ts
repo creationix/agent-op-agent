@@ -3,7 +3,6 @@
 import { readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { stringify as jotStringify, parse as jotParse } from "../encoding-formats/jot/jot"
-import { stringify as laxStringify, parse as laxParse } from "../encoding-formats/lax/lax"
 import { encode as d2Encode, decode as d2Decode } from "../encoding-formats/d2/d2"
 import { stringify as jsonitoStringify, parse as jsonitoParse } from "../encoding-formats/jsonito/jsonito"
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon"
@@ -22,7 +21,6 @@ interface Format {
 const formats: Format[] = [
   { name: "Jot", encode: jotStringify, decode: jotParse },
   { name: "Jot Pretty", encode: d => jotStringify(d, { pretty: true }), decode: jotParse },
-  { name: "Lax", encode: laxStringify, decode: laxParse },
   { name: "D2", encode: d2Encode, decode: d2Decode },
   { name: "JSONito", encode: jsonitoStringify, decode: jsonitoParse },
   { name: "Toon", encode: toonEncode, decode: toonDecode },

@@ -9,7 +9,6 @@ import { join, dirname } from "node:path"
 
 // Import parsers for semantic comparison
 import { parse as parseJot } from "../encoding-formats/jot/jot.ts"
-import { parse as parseLax } from "../encoding-formats/lax/lax.ts"
 import { decode as parseToon } from "@toon-format/toon"
 
 const LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
@@ -19,12 +18,11 @@ const ROOT = join(SCRIPT_DIR, "..", "encoding-formats")
 // Format-specific parsers for semantic comparison
 const PARSERS: Record<string, (s: string) => unknown> = {
   jot: parseJot,
-  lax: parseLax,
   toon: parseToon,
 }
 
 // Formats with FORMAT.md files
-const SUPPORTED_FORMATS = ["jot", "lax", "toon"]
+const SUPPORTED_FORMATS = ["jot", "toon"]
 
 // Test files to use (smaller subset for faster testing)
 const TEST_FILES = ["small", "medium", "package"]
@@ -122,7 +120,7 @@ function semanticCompare(
 }
 
 function getExtension(format: string): string {
-  return format // jot -> .jot, lax -> .lax, toon -> .toon
+  return format // jot -> .jot, toon -> .toon
 }
 
 async function testEncode(

@@ -34,7 +34,6 @@ const FORMAT_INFO: Record<string, { link: string; bold?: boolean }> = {
   "json-pretty": { link: "[JSON](https://www.json.org/) (pretty)" },
   "json-smart": { link: "[JSON](json/smart-json.ts) (smart)" },
   jsonito: { link: "[JSONito](https://github.com/creationix/jsonito)" },
-  lax: { link: "[Lax](lax/)" },
   toon: { link: "[TOON](toon/)" },
   d2: { link: "[D2](https://github.com/creationix/d2)" },
   yaml: { link: "[YAML](https://yaml.org/)" },
@@ -49,7 +48,6 @@ const CLAUDE_FORMAT_MAP: Record<string, string> = {
   "JSON (pretty)": "json-pretty",
   "JSON (smart)": "json-smart",
   "JSONito": "jsonito",
-  "Lax": "lax",
   "TOON": "toon",
   "YAML": "yaml",
   "D2": "d2",
@@ -57,7 +55,7 @@ const CLAUDE_FORMAT_MAP: Record<string, string> = {
 }
 
 // Which category each format belongs to
-const COMPACT_FORMATS = ["jot", "jsonito", "lax", "d2", "json-mini"]
+const COMPACT_FORMATS = ["jot", "jsonito", "d2", "json-mini"]
 const PRETTY_FORMATS = ["jot-pretty", "json-smart", "yaml", "toml", "toon", "json-pretty"]
 
 type FormatStats = { tokens: number; bytes: number; claudeTokens?: number; legacyTokens?: number }
@@ -263,11 +261,6 @@ function computeLegacyCounts(): Map<string, number> {
     readFileSync(join(ROOT, "jot", `${f}.pretty.jot`), "utf-8")
   ))
 
-  // Lax
-  results.set("lax", countAll((f) =>
-    readFileSync(join(ROOT, "lax", `${f}.lax`), "utf-8")
-  ))
-
   // JSONito
   results.set("jsonito", countAll((f) =>
     readFileSync(join(ROOT, "jsonito", `${f}.jito`), "utf-8")
@@ -399,7 +392,6 @@ const CHART_LABELS: Record<string, string> = {
   jot: "Jot",
   "jot-pretty": "Jot-P",
   jsonito: "JSONito",
-  lax: "Lax",
   "json-mini": "JSON-m",
   "json-pretty": "JSON-p",
   "json-smart": "JSON-s",
@@ -481,7 +473,6 @@ const FORMAT_FILE_INFO: Record<string, { dir: string; ext: string }> = {
   jot: { dir: "jot", ext: "jot" },
   "jot-pretty": { dir: "jot", ext: "pretty.jot" },
   jsonito: { dir: "jsonito", ext: "jito" },
-  lax: { dir: "lax", ext: "lax" },
   "json-mini": { dir: "json", ext: "json" },
   d2: { dir: "d2", ext: "d2" },
   yaml: { dir: "yaml", ext: "yaml" },
@@ -514,8 +505,8 @@ function buildPerFileChart(perFileData: Map<string, PerFileStats>, jsonMiniPerFi
   let minPct = 0
   let maxPct = 0
 
-  // Only show key formats for readability (JSON baseline + Jot, Lax, YAML, TOON)
-  const CHART_FORMATS = ["jot", "lax", "yaml", "toon"]
+  // Only show key formats for readability (JSON baseline + Jot, YAML, TOON)
+  const CHART_FORMATS = ["jot", "yaml", "toon"]
   const formatOrder = CHART_FORMATS.filter((key) => perFileData.has(key))
 
   // Add JSON as 0% baseline first
@@ -770,7 +761,7 @@ async function main() {
       tokenCounts = updateChart(tokenCounts, qwenChart, "QWEN_CHART")
 
       // Qwen table - includes all formats with Qwen per-file data
-      const qwenFormats = ["jot", "jsonito", "lax", "json-mini", "jot-pretty", "d2", "toon", "yaml", "toml"]
+      const qwenFormats = ["jot", "jsonito", "json-mini", "jot-pretty", "d2", "toon", "yaml", "toml"]
         .filter((f) => perFileData.has(f))
       const qwenTable = buildPerFileTable(perFileData, qwenFormats)
       tokenCounts = updateChart(tokenCounts, qwenTable, "QWEN_TABLE")
@@ -782,7 +773,6 @@ async function main() {
     const legacyPerFile = new Map<string, PerFileStats>()
     legacyPerFile.set("json-mini", computePerFileLegacyCounts("json", "json", (c) => JSON.stringify(JSON.parse(c))))
     legacyPerFile.set("jot", computePerFileLegacyCounts("jot", "jot"))
-    legacyPerFile.set("lax", computePerFileLegacyCounts("lax", "lax"))
     legacyPerFile.set("yaml", computePerFileLegacyCounts("yaml", "yaml"))
     legacyPerFile.set("toon", computePerFileLegacyCounts("toon", "toon"))
 
@@ -791,14 +781,13 @@ async function main() {
     tokenCounts = updateChart(tokenCounts, legacyChart, "LEGACY_CHART")
 
     // Legacy table
-    const legacyTable = buildPerFileTable(legacyPerFile, ["jot", "lax", "json-mini", "yaml", "toon"])
+    const legacyTable = buildPerFileTable(legacyPerFile, ["jot", "json-mini", "yaml", "toon"])
     tokenCounts = updateChart(tokenCounts, legacyTable, "LEGACY_TABLE")
 
     // Claude chart (from claude-counts-sonnet.txt)
     const claudePerFile = new Map<string, PerFileStats>()
     claudePerFile.set("json-mini", parseClaudePerFileCounts("JSON (mini)"))
     claudePerFile.set("jot", parseClaudePerFileCounts("Jot"))
-    claudePerFile.set("lax", parseClaudePerFileCounts("Lax"))
     claudePerFile.set("yaml", parseClaudePerFileCounts("YAML"))
     claudePerFile.set("toon", parseClaudePerFileCounts("TOON"))
 
@@ -808,7 +797,7 @@ async function main() {
       tokenCounts = updateChart(tokenCounts, claudeChart, "CLAUDE_CHART")
 
       // Claude table
-      const claudeTable = buildPerFileTable(claudePerFile, ["jot", "lax", "json-mini", "yaml", "toon"])
+      const claudeTable = buildPerFileTable(claudePerFile, ["jot", "json-mini", "yaml", "toon"])
       tokenCounts = updateChart(tokenCounts, claudeTable, "CLAUDE_TABLE")
     } else {
       console.log("Skipping Claude chart and table - no Claude per-file data")

@@ -7,7 +7,6 @@ import { join, dirname } from "node:path"
 
 // Import format encoders
 import { stringify as jotStringify, parse as jotParse } from "./jot/jot.ts"
-import { stringify as laxStringify, parse as laxParse } from "./lax/lax.ts"
 import { stringify as jsonitoStringify, parse as jsonitoParse } from "./jsonito/jsonito.ts"
 import { encode as d2Encode, decode as d2Decode } from "./d2/d2.ts"
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon"
@@ -70,13 +69,6 @@ const formats: FormatConfig[] = [
     extraFiles: (data, baseName) => [
       { name: `${baseName}.pretty.jot`, content: jotStringify(data, { pretty: true }) },
     ],
-  },
-  {
-    name: "Lax",
-    dir: "lax",
-    ext: "lax",
-    encode: laxStringify,
-    decode: laxParse,
   },
   {
     name: "JSONito",

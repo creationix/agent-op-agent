@@ -107,27 +107,6 @@ Generated: 2026-01-10T22:17:09.404Z
   routes: 1778
   Total: 8500
 
-=== Lax ===
-  chat: 80
-  metrics: 87
-  large: 263
-  key-folding-mixed: 79
-  logs: 1823
-  firewall: 886
-  small: 47
-  github-issue: 83
-  users-50: 1368
-  medium: 104
-  json-counts-cache: 142
-  hikes: 162
-  package: 102
-  key-folding-basic: 58
-  irregular: 62
-  key-folding-with-array: 62
-  products: 836
-  routes: 1637
-  Total: 7881
-
 === JSONito ===
   chat: 89
   metrics: 89
@@ -239,7 +218,6 @@ Generated: 2026-01-10T22:17:09.404Z
 Format        | Tokens | vs Mini | vs Pretty
 --------------|--------|---------|----------
 Jot           |   6747 |    -17% |     -53%
-Lax           |   7881 |     -3% |     -45%
 D2            |   7928 |     -3% |     -45%
 JSON (mini)   |   8132 | baseline |     -44%
 JSONito       |   8327 |      2% |     -42%

@@ -7,7 +7,6 @@ import { join, dirname } from "node:path"
 
 // Import parsers for semantic comparison
 import { parse as parseJot } from "../encoding-formats/jot/jot.ts"
-import { parse as parseLax } from "../encoding-formats/lax/lax.ts"
 import { decode as parseToon } from "@toon-format/toon"
 
 const LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
@@ -60,11 +59,10 @@ ${response.slice(0, 2000)}${response.length > 2000 ? "\n... (truncated)" : ""}
 
 const PARSERS: Record<string, (s: string) => unknown> = {
   jot: parseJot,
-  lax: parseLax,
   toon: parseToon,
 }
 
-const SUPPORTED_FORMATS = ["jot", "lax", "toon"]
+const SUPPORTED_FORMATS = ["jot", "toon"]
 
 interface RunResult {
   run: number

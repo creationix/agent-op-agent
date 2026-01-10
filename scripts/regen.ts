@@ -146,7 +146,6 @@ const jsonTotalBytes = jsonRow.bytes
 const formatLinks: Record<string, string> = {
   "jot": "**[Jot](jot/)**",
   "jot-pretty": "[Jot](jot/) (pretty)",
-  "lax": "[Lax](lax/)",
   "toon": "[TOON](toon/)",
   "jsonito": "[JSONito](https://github.com/creationix/jsonito)",
   "d2": "[D2](https://github.com/creationix/d2)",

@@ -38,7 +38,7 @@ Pretty-print rules:
 bun encoding-formats/gen.ts
 ```
 
-Regenerates all format files (.jot, .lax, .yaml, etc.) from source JSON files.
+Regenerates all format files (.jot, .yaml, etc.) from source JSON files.
 
 ### Counting Tokens
 
