@@ -1,0 +1,247 @@
+{
+  "timestamp": "2026-01-10T17:22:38.203Z",
+  "runsPerDoc": 1,
+  "summary": [
+    {
+      "format": "jot",
+      "exactRate": 0,
+      "semanticRate": 0.9411764705882353,
+      "totalRuns": 17,
+      "exactPasses": 0,
+      "semanticPasses": 16
+    }
+  ],
+  "details": [
+    {
+      "format": "jot",
+      "docs": [
+        {
+          "doc": "chat",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  messages: [\n    {role: \"user\", content: \"How do I configure TypeScript for a monorepo?\"},\n    {role: \"assistant\", content: \"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.\"},\n    {role: \"user\", content: \"What about path aliases?"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "metrics",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  series: \"cpu_usage\",\n  points: [\n    {t: 1704067200, v: 45.2},\n    {t: 1704067260, v: 52.1},\n    {t: 1704067320, v: 48.7},\n    {t: 1704067380, v: 61.3},\n    {t: 1704067440, v: 55.9}\n  ]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "large",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  apiVersion: \"2.0\",\n  kind: \"Deployment\",\n  metadata: {\n    name: \"web-server\",\n    namespace: \"production\",\n    labels: {app: \"web\", tier: \"frontend\", environment: \"production\"}\n  },\n  spec: {\n    replicas: 3,\n    selector: {matchLabels: {app: \"web\", tier: \"frontend\"}},\n    template: {\n      met"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-mixed",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  app.name: \"MyApp\",\n  app.version: \"2.1.0\",\n  server.host: \"localhost\",\n  server.port: 8080,\n  server.ssl.enabled: true,\n  server.ssl.cert: \"/path/to/cert.pem\",\n  database.connection.url: \"postgresql://localhost:5432/mydb\",\n  feature.flags.beta: true\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "logs",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  logs: [\n    {ts: \"2024-01-15T10:00:01Z\", level: \"info\", service: \"api\", msg: \"Server started on port 3000\"},\n    {ts: \"2024-01-15T10:00:02Z\", level: \"info\", service: \"db\", msg: \"Connected to database\"},\n    {ts: \"2024-01-15T10:00:05Z\", level: \"debug\", service: \"auth\", msg: \"Loading JWT keys\"},\n "
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "firewall",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  active: true,\n  ruleGroups.php_attacks: {\n    active: true,\n    action: \"deny\",\n    rules: {\n      php_suffix: {\n        has: [{type: \"path\", key: null, value: {suf: \".php\"}}],\n        missing: [{type: \"header\", key: \"x-secret\", value: {eq: \"bypass\"}}],\n        phase: \"finalize\",\n        system:"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "small",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  name: \"config\",\n  version: \"1.0.0\",\n  enabled: true,\n  maxRetries: 3,\n  timeout: 30000,\n  tags: [\"production\", \"api\", \"v1\"]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "github-issue",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  id: 12345,\n  title: \"Bug: Memory leak in worker threads\",\n  state: \"open\",\n  user.login: \"devuser\",\n  user.id: 789,\n  labels: [{name: \"bug\", color: \"d73a4a\"}, {name: \"priority-high\", color: \"ff0000\"}],\n  body: \"When running multiple workers, memory increases continuously without garbage collecti"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "users-50",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  users: [\n    {id: 1, name: \"Alice Chen\", email: \"alice@example.com\", role: \"admin\", active: true},\n    {id: 2, name: \"Bob Smith\", email: \"bob@example.com\", role: \"user\", active: true},\n    {id: 3, name: \"Carol Davis\", email: \"carol@example.com\", role: \"user\", active: false},\n    {id: 4, name: \"D"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "medium",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  users: [\n    {id: 1, name: \"Alice Johnson\", email: \"alice@example.com\", role: \"admin\", active: true},\n    {id: 2, name: \"Bob Smith\", email: \"bob@example.com\", role: \"user\", active: true},\n    {id: 3, name: \"Carol Davis\", email: \"carol@example.com\", role: \"user\", active: false}\n  ],\n  metadata: {"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "hikes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  context: {task: \"Our favorite hikes together\", location: \"Boulder\", season: \"spring_2025\"},\n  friends: [\"ana\", \"luis\", \"sam\"],\n  hikes: [\n    {id: 1, name: \"Blue Lake Trail\", distanceKm: 7.5, elevationGain: 320, companion: \"ana\", wasSunny: true},\n    {id: 2, name: \"Ridge Overlook\", distanceKm: 9"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "package",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  name: \"my-app\",\n  version: \"1.0.0\",\n  scripts: {dev: \"vite\", build: \"tsc && vite build\", test: \"vitest\"},\n  dependencies: {react: \"^18.2.0\", \"react-dom\": \"^18.2.0\"},\n  devDependencies: {typescript: \"^5.0.0\", vite: \"^5.0.0\", vitest: \"^1.0.0\"}\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-basic",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  server.host: \"localhost\",\n  database.connection.username: \"admin\",\n  app.info.name: \"MyApp\",\n  release.meta.version: \"1.0.0\",\n  cache.layer.ttlSeconds: 300\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "irregular",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  events: [\n    {type: \"click\", x: 100, y: 200},\n    {type: \"scroll\", offset: 450},\n    {type: \"keypress\", key: \"Enter\", shift: true},\n    {type: \"resize\", width: 1920, height: 1080}\n  ]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-with-array",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  api.endpoint.url: \"https://api.example.com\",\n  data.meta.items: [\"widget\", \"gadget\", \"tool\"],\n  stats.meta.count: 3,\n  user.preferences.tags: [\"productivity\", \"development\"]\n}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "products",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{\n  catalog: {version: \"2.1\", updated: \"2024-01-15\", currency: \"USD\"},\n  categories: [\n    {id: \"electronics\", name: \"Electronics\", parent: null},\n    {id: \"computers\", name: \"Computers\", parent: \"electronics\"},\n    {id: \"phones\", name: \"Phones\", parent: \"electronics\"},\n    {id: \"clothing\", name: \"C"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "routes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{\n  before_filesystem: [\n    {src: \"^/_analytics/script\\\\\\\\.js$\", dest: \"https://cdn.analytics.io/v1/script.js\"},\n    {src: \"^/_analytics/events$\", dest: \"https://events.analytics.io/v1/collect?key=abc123&env=prod\"},\n    {src: \"^/(?:_metrics|perf)/(script\\\\\\\\.js)$\", dest: \"https://cdn.metrics.io/v1/"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        }
+      ],
+      "overallExactRate": 0,
+      "overallSemanticRate": 0.9411764705882353,
+      "totalRuns": 17,
+      "exactPasses": 0,
+      "semanticPasses": 16
+    }
+  ]
+}
