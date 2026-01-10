@@ -306,28 +306,50 @@ const CHART_LABELS: Record<string, string> = {
   toml: "TOML",
 }
 
-function buildChart(allStats: Map<string, FormatStats>): string {
-  // Build array of {key, label, tokens} and sort by tokens
+function buildChart(
+  allStats: Map<string, FormatStats>,
+  claudeCounts: Map<string, number>,
+  legacyCounts: Map<string, number>
+): string {
+  // Build array with all token counts and sort by Qwen tokens
   const items = Array.from(allStats.entries())
     .filter(([key]) => CHART_LABELS[key])
     .map(([key, stats]) => ({
+      key,
       label: CHART_LABELS[key],
-      tokens: stats.tokens,
+      qwen: stats.tokens,
+      legacy: legacyCounts.get(key) ?? 0,
+      claude: claudeCounts.get(key) ?? 0,
     }))
-    .sort((a, b) => a.tokens - b.tokens)
+    .sort((a, b) => a.qwen - b.qwen)
 
   const labels = items.map((i) => i.label)
-  const values = items.map((i) => i.tokens)
+  const qwenValues = items.map((i) => i.qwen)
+  const legacyValues = items.map((i) => i.legacy)
+  const claudeValues = items.map((i) => i.claude)
 
-  const maxVal = Math.max(...values)
+  const allValues = [...qwenValues, ...legacyValues, ...claudeValues].filter((v) => v > 0)
+  const maxVal = Math.max(...allValues)
   const yMax = Math.ceil(maxVal / 1000) * 1000 + 1000
+
+  // Check if we have data for each tokenizer
+  const hasLegacy = legacyValues.some((v) => v > 0)
+  const hasClaude = claudeValues.some((v) => v > 0)
+
+  let bars = `    bar "Qwen" [${qwenValues.join(", ")}]`
+  if (hasLegacy) {
+    bars += `\n    bar "Legacy" [${legacyValues.join(", ")}]`
+  }
+  if (hasClaude) {
+    bars += `\n    bar "Claude" [${claudeValues.join(", ")}]`
+  }
 
   return `\`\`\`mermaid
 xychart-beta
-    title "Token Counts by Format (Qwen3)"
+    title "Token Counts by Format"
     x-axis [${labels.map((l) => `"${l}"`).join(", ")}]
     y-axis "Tokens" 0 --> ${yMax}
-    bar [${values.join(", ")}]
+${bars}
 \`\`\``
 }
 
@@ -471,7 +493,7 @@ async function main() {
   const prettyTable = buildTable(prettyRows, "json-pretty", claudeCounts, legacyCounts)
 
   // Build chart
-  const chart = buildChart(allStats)
+  const chart = buildChart(allStats, claudeCounts, legacyCounts)
 
   // Update SUMMARY.md
   let summary = readFileSync(SUMMARY_PATH, "utf-8")
