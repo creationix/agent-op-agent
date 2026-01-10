@@ -54,18 +54,17 @@ For human-readable output or when LLMs need to read/write structured data.
 
 ### [Jot](jot/)
 
-JSON with minimal quoting. Unquoted keys and string values where safe.
+JSON with three optimizations:
+
+1. **Unquoted strings** — omit quotes unless value contains `: ; , { } [ ] "` or parses as number/boolean/null
+2. **Key folding** — `{a:{b:1}}` → `{a.b:1}` for single-key nested objects
+3. **Tables** — `[{a:1},{a:2}]` → `{{:a;1;2}}` for repeating object schemas
 
 ```jot
-{name:Alice,age:30,items:[a,b,c],active:true}
+{config.host:localhost,users:{{:id,name;1,Alice;2,Bob}}}
 ```
 
-Optional features (enabled in encoder, tested separately for LLM accuracy):
-
-- **Key folding**: `{a:{b:1}}` → `{a.b:1}` for single-key nested objects
-- **Tables**: `[{a:1},{a:2}]` → `{{:a;1;2}}` for uniform object arrays
-
-### [TOON](https://github.com/creationix/toon)
+### [TOON](toon/)
 
 YAML-like indentation with optional table syntax and count guards.
 
