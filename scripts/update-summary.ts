@@ -155,6 +155,21 @@ function parseClaudeCounts(): Map<string, number> {
   return results
 }
 
+// Compute JSON mini per-file counts using legacy tokenizer (for chart baseline)
+function computeJsonMiniPerFile(): PerFileStats {
+  const results = new Map<string, number>()
+  const jsonDir = join(ROOT, "json")
+  const sourceFiles = readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))
+
+  for (const file of sourceFiles) {
+    const baseName = file.replace(".json", "")
+    const content = JSON.stringify(JSON.parse(readFileSync(join(jsonDir, file), "utf-8")))
+    results.set(baseName, countLegacyTokens(content))
+  }
+
+  return results
+}
+
 // Compute legacy tokenizer counts for all formats
 function computeLegacyCounts(): Map<string, number> {
   const results = new Map<string, number>()
@@ -413,29 +428,46 @@ const FILE_LABELS: Record<string, string> = {
   routes: "Routes",
 }
 
-// Build chart showing per-file token counts for different formats
-function buildPerFileChart(perFileData: Map<string, PerFileStats>): string {
-  // Get all file names from the first format
-  const firstFormat = perFileData.values().next().value
-  if (!firstFormat) return ""
-
-  const fileNames = Array.from(firstFormat.keys())
+// Build chart showing % savings vs JSON (mini) for each file
+function buildPerFileChart(perFileData: Map<string, PerFileStats>, jsonMiniPerFile: PerFileStats): string {
+  // Get all file names from the baseline
+  const fileNames = Array.from(jsonMiniPerFile.keys())
     .filter((f) => FILE_LABELS[f])
-    .sort((a, b) => (firstFormat.get(a) ?? 0) - (firstFormat.get(b) ?? 0))
+    // Sort by absolute savings (Jot tokens - JSON tokens), most savings first
+    .sort((a, b) => {
+      const jotData = perFileData.get("jot")
+      const jotA = jotData?.get(a) ?? jsonMiniPerFile.get(a) ?? 0
+      const jotB = jotData?.get(b) ?? jsonMiniPerFile.get(b) ?? 0
+      const jsonA = jsonMiniPerFile.get(a) ?? 0
+      const jsonB = jsonMiniPerFile.get(b) ?? 0
+      // Sort by % savings (most negative = most savings)
+      const pctA = jsonA > 0 ? ((jotA - jsonA) / jsonA) * 100 : 0
+      const pctB = jsonB > 0 ? ((jotB - jsonB) / jsonB) * 100 : 0
+      return pctA - pctB
+    })
 
   const labels = fileNames.map((f) => FILE_LABELS[f] || f)
 
-  // Build lines for each format
+  // Build lines for each format (% change vs JSON mini)
   const formatLines: string[] = []
-  let maxVal = 0
+  let minPct = 0
+  let maxPct = 0
 
-  // Order formats by total tokens (ascending)
+  // Order formats by total savings (best first)
   const formatOrder = Array.from(perFileData.entries())
-    .map(([key, stats]) => ({
-      key,
-      total: Array.from(stats.values()).reduce((a, b) => a + b, 0),
-    }))
-    .sort((a, b) => a.total - b.total)
+    .filter(([key]) => key !== "json-mini") // Don't show JSON mini (it's the baseline)
+    .map(([key, stats]) => {
+      let totalPct = 0
+      for (const file of fileNames) {
+        const baseline = jsonMiniPerFile.get(file) ?? 0
+        const val = stats.get(file) ?? 0
+        if (baseline > 0) {
+          totalPct += ((val - baseline) / baseline) * 100
+        }
+      }
+      return { key, avgPct: totalPct / fileNames.length }
+    })
+    .sort((a, b) => a.avgPct - b.avgPct)
     .map((f) => f.key)
 
   for (const formatKey of formatOrder) {
@@ -443,18 +475,26 @@ function buildPerFileChart(perFileData: Map<string, PerFileStats>): string {
     if (!stats) continue
 
     const label = CHART_LABELS[formatKey] || formatKey
-    const values = fileNames.map((f) => stats.get(f) ?? 0)
-    maxVal = Math.max(maxVal, ...values)
-    formatLines.push(`    line "${label}" [${values.join(", ")}]`)
+    const pctValues = fileNames.map((f) => {
+      const baseline = jsonMiniPerFile.get(f) ?? 0
+      const val = stats.get(f) ?? 0
+      if (baseline === 0) return 0
+      return Math.round(((val - baseline) / baseline) * 100)
+    })
+    minPct = Math.min(minPct, ...pctValues)
+    maxPct = Math.max(maxPct, ...pctValues)
+    formatLines.push(`    line "${label}" [${pctValues.join(", ")}]`)
   }
 
-  const yMax = Math.ceil(maxVal / 500) * 500 + 500
+  // Round y-axis to nice values
+  const yMin = Math.floor(minPct / 10) * 10 - 10
+  const yMax = Math.ceil(maxPct / 10) * 10 + 10
 
   return `\`\`\`mermaid
 xychart-beta
-    title "Token Counts by File"
+    title "Token Savings vs JSON (negative = better)"
     x-axis [${labels.map((l) => `"${l}"`).join(", ")}]
-    y-axis "Tokens" 0 --> ${yMax}
+    y-axis "% vs JSON" ${yMin} --> ${yMax}
 ${formatLines.join("\n")}
 \`\`\``
 }
@@ -613,10 +653,11 @@ async function main() {
   summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)
 
-  // Update TOKEN_COUNTS.md with per-file chart
+  // Update TOKEN_COUNTS.md with per-file chart (% savings vs JSON)
   if (existsSync(TOKEN_COUNTS_PATH)) {
     let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
-    const perFileChart = buildPerFileChart(perFileData)
+    const jsonMiniPerFile = computeJsonMiniPerFile()
+    const perFileChart = buildPerFileChart(perFileData, jsonMiniPerFile)
     tokenCounts = updateChart(tokenCounts, perFileChart)
     writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
     console.log("Updated TOKEN_COUNTS.md")
