@@ -20,9 +20,6 @@
 const UNSAFE_STRINGS = new Set(["true", "false", "null"])
 const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', '\\']
 
-// Track previous object keys for {:...} syntax
-let prevObjectKeys: string[] | null = null
-
 function needsQuoting(str: string): boolean {
   if (str === "") return true
   if (str.trim() !== str) return true
@@ -81,47 +78,8 @@ function hasComplexItems(arr: unknown[]): boolean {
   return arr.some(item => item !== null && typeof item === "object")
 }
 
-// Check if two key arrays are identical (same keys, same order)
-function sameKeys(a: string[], b: string[]): boolean {
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
-}
-
 function stringifyArray(arr: unknown[]): string {
-  // Save previous keys state and reset for this array
-  const savedPrevKeys = prevObjectKeys
-  prevObjectKeys = null
-
-  const items: string[] = []
-
-  for (const item of arr) {
-    if (item !== null && typeof item === "object" && !Array.isArray(item)) {
-      // It's an object - check if keys match previous
-      const obj = item as Record<string, unknown>
-      const keys = getObjectKeys(obj)
-
-      if (prevObjectKeys && sameKeys(keys, prevObjectKeys)) {
-        // Same keys as previous - use {:val,val,...} syntax
-        const vals = keys.map(k => stringifyValue(obj[k]))
-        const sep = currentOptions.pretty ? ", " : ","
-        items.push(`{:${vals.join(sep)}}`)
-      } else {
-        // Different keys or first object - use full syntax
-        items.push(stringifyObject(obj))
-        prevObjectKeys = keys
-      }
-    } else {
-      // Not an object - reset previous keys and stringify normally
-      prevObjectKeys = null
-      items.push(stringifyValue(item))
-    }
-  }
-
-  // Restore previous keys state
-  prevObjectKeys = savedPrevKeys
+  const items = arr.map(stringifyValue)
 
   // Single-item arrays: compact
   if (arr.length === 1) {
@@ -185,7 +143,6 @@ function stringifyObject(obj: Record<string, unknown>): string {
 export function stringify(data: unknown, options: StringifyOptions = {}): string {
   currentOptions = { pretty: false, indent: "  ", ...options }
   depth = 0
-  prevObjectKeys = null
   return stringifyValue(data)
 }
 
@@ -193,7 +150,6 @@ export function stringify(data: unknown, options: StringifyOptions = {}): string
 
 class JotParser {
   private pos = 0
-  private prevKeys: string[] | null = null  // Track previous object keys for {:...}
 
   constructor(private input: string) {}
 
@@ -221,11 +177,7 @@ class JotParser {
     this.skipWhitespace()
     const ch = this.peek()
 
-    if (ch === "{") {
-      // Check if it's {: (values-only object)
-      if (this.input[this.pos + 1] === ":") return this.parseValuesOnlyObject()
-      return this.parseObject()
-    }
+    if (ch === "{") return this.parseObject()
     if (ch === "[") return this.parseArray()
     if (ch === '"') return this.parseQuotedString()
 
@@ -331,45 +283,6 @@ class JotParser {
     return token
   }
 
-  // Parse value that may include unquoted strings with spaces
-  // Used in table cells and array items where context determines boundaries
-  private parseTableValue(terminators: string): unknown {
-    this.skipWhitespace()
-    const ch = this.peek()
-
-    if (ch === '"') return this.parseQuotedString()
-    if (ch === "{") {
-      // Check for {{ (table) vs { (object)
-      if (this.input[this.pos + 1] === "{") return this.parseTable()
-      return this.parseObject()
-    }
-    if (ch === "[") return this.parseArray()
-
-    // Read until terminator, but check for }} specially
-    const start = this.pos
-    while (this.pos < this.input.length) {
-      const c = this.input[this.pos]
-      // Check for }} table end
-      if (c === "}" && this.input[this.pos + 1] === "}") break
-      if (terminators.includes(c)) break
-      this.pos++
-    }
-
-    let token = this.input.slice(start, this.pos).trim()
-    if (token === "") return "" // empty cell (for sparse tables)
-
-    // Keywords
-    if (token === "null") return null
-    if (token === "true") return true
-    if (token === "false") return false
-
-    // Try number
-    const num = Number(token)
-    if (!isNaN(num)) return num
-
-    return token
-  }
-
   // Parse array: [item, item, ...]
   private parseArray(): unknown[] {
     if (this.peek() !== "[") {
@@ -384,7 +297,8 @@ class JotParser {
       if (this.pos >= this.input.length) {
         throw new Error("Unterminated array")
       }
-      result.push(this.parseValue(",])")) // array values end at comma, ], or )
+      const item = this.parseValue(",]")
+      result.push(item)
       this.skipWhitespace()
       if (this.peek() === ",") {
         this.pos++ // skip comma
@@ -396,108 +310,7 @@ class JotParser {
     return result
   }
 
-  // Parse table: {{schema|row|row|...}}
-  // First row is schema, all following rows are data
-  private parseTable(): unknown[] {
-    if (this.input.slice(this.pos, this.pos + 2) !== "{{") {
-      throw new Error(`Expected '{{' at position ${this.pos}`)
-    }
-    this.pos += 2 // skip {{
-
-    const result: Record<string, unknown>[] = []
-    this.skipWhitespace()
-
-    // First row is always schema
-    const schema = this.parseSchemaRow()
-    if (schema.length === 0) {
-      throw new Error(`Empty schema in table at position ${this.pos}`)
-    }
-    this.skipWhitespace()
-    if (this.peek() === ";") {
-      this.pos++
-      this.skipWhitespace()
-    }
-
-    // Remaining rows are data - look for }}
-    let lastPos = -1
-    while (this.input.slice(this.pos, this.pos + 2) !== "}}") {
-      if (this.pos >= this.input.length) {
-        throw new Error("Unterminated table")
-      }
-      // Safety check: ensure we're making progress
-      if (this.pos === lastPos) {
-        throw new Error(`Parser stuck at position ${this.pos}`)
-      }
-      lastPos = this.pos
-
-      const values = this.parseDataRow(schema.length)
-      const obj: Record<string, unknown> = {}
-      for (let i = 0; i < schema.length; i++) {
-        // Sparse tables: skip keys with empty/missing values
-        if (values[i] !== "" && values[i] !== undefined) {
-          obj[schema[i]] = values[i]
-        }
-      }
-      result.push(obj)
-
-      this.skipWhitespace()
-      if (this.peek() === ";") {
-        this.pos++
-        this.skipWhitespace()
-      }
-    }
-
-    this.pos += 2 // skip }}
-    return result
-  }
-
-  private parseSchemaRow(): string[] {
-    const cols: string[] = []
-    let col = ""
-
-    while (this.pos < this.input.length) {
-      const ch = this.input[this.pos]
-      // Check for }} table end
-      if (ch === "}" && this.input[this.pos + 1] === "}") {
-        if (col.trim()) cols.push(col.trim())
-        break
-      }
-      if (ch === ";" || ch === "]" || ch === "\n") {
-        if (col.trim()) cols.push(col.trim())
-        break
-      }
-      if (ch === ",") {
-        if (col.trim()) cols.push(col.trim())
-        col = ""
-        this.pos++
-        continue
-      }
-      col += ch
-      this.pos++
-    }
-
-    return cols
-  }
-
-  private parseDataRow(colCount: number): unknown[] {
-    const values: unknown[] = []
-
-    for (let i = 0; i < colCount; i++) {
-      this.skipWhitespace()
-      // Use }} as table terminator, ; as row separator
-      const terminators = i < colCount - 1 ? ",;]\n" : ";]\n"
-      const value = this.parseTableValue(terminators)
-      values.push(value)
-      this.skipWhitespace()
-      if (this.peek() === ",") {
-        this.pos++
-      }
-    }
-
-    return values
-  }
-
-  // Parse regular object: {key:value,...}
+  // Parse object: {key:value,...}
   private parseObject(): Record<string, unknown> {
     if (this.peek() !== "{") {
       throw new Error(`Expected '{' at position ${this.pos}`)
@@ -512,23 +325,16 @@ class JotParser {
         throw new Error("Unterminated object")
       }
 
-      const { key: keyPath, quoted } = this.parseKey()
+      const key = this.parseKey()
       this.skipWhitespace()
 
       if (this.peek() !== ":") {
-        throw new Error(`Expected ':' after key '${keyPath}' at position ${this.pos}`)
+        throw new Error(`Expected ':' after key '${key}' at position ${this.pos}`)
       }
       this.pos++ // skip :
 
-      const value = this.parseValue(",}") // object values end at comma or }
-
-      // Quoted keys are literal (no unfolding), unquoted keys unfold dots
-      if (quoted) {
-        result[keyPath] = value
-      } else {
-        const unfolded = this.unfoldKey(keyPath, value)
-        this.mergeObjects(result, unfolded)
-      }
+      const value = this.parseValue(",}")
+      result[key] = value
 
       this.skipWhitespace()
       if (this.peek() === ",") {
@@ -541,66 +347,25 @@ class JotParser {
     return result
   }
 
-  // Parse key which may be dotted (a.b.c) or quoted ("a.b")
-  // Returns { key, quoted } where quoted=true means don't unfold dots
-  private parseKey(): { key: string; quoted: boolean } {
+  private parseKey(): string {
     this.skipWhitespace()
 
-    // Handle quoted keys (preserves literal dots)
+    // Handle quoted keys
     if (this.peek() === '"') {
-      return { key: this.parseQuotedString(), quoted: true }
+      return this.parseQuotedString()
     }
 
     const start = this.pos
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
-      // Keys can contain dots, stop at : or structural chars
-      if (/[:\,{}\[\]|]/.test(ch) || /\s/.test(ch)) break
+      if (/[:\,{}\[\]]/.test(ch) || /\s/.test(ch)) break
       this.pos++
     }
     const key = this.input.slice(start, this.pos)
     if (key === "") {
       throw new Error(`Expected key at position ${this.pos}`)
     }
-    return { key, quoted: false }
-  }
-
-  // Convert dotted key to nested object: "a.b.c" + value → {a:{b:{c:value}}}
-  private unfoldKey(keyPath: string, value: unknown): Record<string, unknown> {
-    const parts = keyPath.split(".")
-    let result: Record<string, unknown> = {}
-    let current = result
-
-    for (let i = 0; i < parts.length - 1; i++) {
-      const nested: Record<string, unknown> = {}
-      current[parts[i]] = nested
-      current = nested
-    }
-    current[parts[parts.length - 1]] = value
-
-    return result
-  }
-
-  // Deep merge src into target
-  private mergeObjects(target: Record<string, unknown>, src: Record<string, unknown>): void {
-    for (const key of Object.keys(src)) {
-      if (
-        key in target &&
-        typeof target[key] === "object" &&
-        target[key] !== null &&
-        !Array.isArray(target[key]) &&
-        typeof src[key] === "object" &&
-        src[key] !== null &&
-        !Array.isArray(src[key])
-      ) {
-        this.mergeObjects(
-          target[key] as Record<string, unknown>,
-          src[key] as Record<string, unknown>
-        )
-      } else {
-        target[key] = src[key]
-      }
-    }
+    return key
   }
 }
 
@@ -609,7 +374,7 @@ export function parse(input: string): unknown {
 }
 
 // ============ TESTS ============
-// Run with: bun nqjson2.ts
+// Run with: bun jot.ts
 if ((import.meta as { main?: boolean }).main) {
   const tests: [string, unknown, string][] = [
     // Basic values
@@ -633,7 +398,6 @@ if ((import.meta as { main?: boolean }).main) {
     ["reserved null", "null", '"null"'],
     ["contains colon", "a:b", '"a:b"'],
     ["contains comma", "a,b", '"a,b"'],
-    ["contains semicolon", "a;b", '"a;b"'],
     ["leading space", " hi", '" hi"'],
     ["trailing space", "hi ", '"hi "'],
 
@@ -645,22 +409,13 @@ if ((import.meta as { main?: boolean }).main) {
     // Objects
     ["empty object", {}, "{}"],
     ["simple object", { name: "Alice", age: 30 }, "{name:Alice,age:30}"],
+    ["nested object", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
 
-    // Key folding
-    ["fold 1 level", { a: { b: 1 } }, "{a.b:1}"],
-    ["fold 2 levels", { a: { b: { c: 1 } } }, "{a.b.c:1}"],
-    ["no fold primitive", { a: 1 }, "{a:1}"],
-    ["fold in multi-key", { a: { b: 1 }, c: { d: 2 } }, "{a.b:1,c.d:2}"],
-    ["no fold multi-key value", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
-
-    // Tables (uniform schema object arrays)
-    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "{{a,b;1,2;3,4}}"],
-    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "{{x;1;2;3}}"],
-    // Different keys use regular array
+    // Object arrays
+    ["object array", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "[{a:1,b:2},{a:3,b:4}]"],
     ["different keys", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
-    ["mixed keys", [{ a: 1, b: 2 }, { a: 3, c: 4 }], "[{a:1,b:2},{a:3,c:4}]"],
 
-    // Single object arrays stay as arrays
+    // Single object arrays
     ["single obj array", [{ a: 1 }], "[{a:1}]"],
 
     // Single-item arrays
@@ -668,17 +423,14 @@ if ((import.meta as { main?: boolean }).main) {
     ["single string", ["hello"], "[hello]"],
 
     // Nested
-    ["nested", { users: [{ id: 1, name: "Alice" }] }, "{users:[{id:1,name:Alice}]}"],
+    ["nested users", { users: [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }] }, "{users:[{id:1,name:Alice},{id:2,name:Bob}]}"],
   ]
 
   // Tests with pretty: true
   const prettyTests: [string, unknown, string][] = [
-    ["pretty object", { a: 1, b: 2 }, "{\n  a: 1,\n  b: 2\n}"],
+    ["pretty object", { a: 1, b: 2 }, "{ a: 1,\n  b: 2 }"],
     ["pretty array inline", [1, 2, 3], "[ 1, 2, 3 ]"],
-    ["pretty table", [{ x: 1 }, { x: 2 }], "{{\n x\n  1\n  2\n}}"],
-    ["pretty fold", { a: { b: 1 }, c: { d: 2 } }, "{\n  a.b: 1,\n  c.d: 2\n}"],
     ["pretty array value", { items: [1, 2] }, "{ items: [ 1, 2 ] }"],
-    ["pretty table value", { labels: [{ name: "bug" }, { name: "fix" }] }, "{ labels: {{\n name\n  bug\n  fix\n}} }"],
   ]
 
   let passed = 0
@@ -746,21 +498,11 @@ if ((import.meta as { main?: boolean }).main) {
     ["parse empty object", "{}", {}],
     ["parse simple object", "{name:Alice,age:30}", { name: "Alice", age: 30 }],
     ["parse nested object", "{a:{b:1,c:2}}", { a: { b: 1, c: 2 } }],
-
-    // Key folding
-    ["parse fold 1 level", "{a.b:1}", { a: { b: 1 } }],
-    ["parse fold 2 levels", "{a.b.c:1}", { a: { b: { c: 1 } } }],
-    ["parse fold multi-key", "{a.b:1,c.d:2}", { a: { b: 1 }, c: { d: 2 } }],
-    ["parse fold deep", "{x.y.z:hello}", { x: { y: { z: "hello" } } }],
-    ["parse quoted key literal", '{"a.b":1}', { "a.b": 1 }],
-
-    // Tables
-    ["parse uniform table", "{{a,b;1,2;3,4}}", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
-    ["parse 3-row table", "{{x;1;2;3}}", [{ x: 1 }, { x: 2 }, { x: 3 }]],
-    ["parse multi-schema", "{{a;1;2}}", [{ a: 1 }, { a: 2 }]],
+    ["parse quoted key", '{"a.b":1}', { "a.b": 1 }],
 
     // Complex nested
     ["parse nested array obj", "{users:[{id:1,name:Alice}]}", { users: [{ id: 1, name: "Alice" }] }],
+    ["parse obj array", "[{a:1,b:2},{a:3,b:4}]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
     ["parse obj array mixed", "[{a:1},{b:2}]", [{ a: 1 }, { b: 2 }]],
   ]
 
@@ -805,17 +547,12 @@ if ((import.meta as { main?: boolean }).main) {
     {},
     { a: 1, b: 2 },
     { name: "Alice", age: 30 },
-
-    // Key folding cases
-    { a: { b: 1 } },
-    { a: { b: { c: 1 } } },
-    { a: { b: 1 }, c: { d: 2 } },
     { a: { b: 1, c: 2 } },
 
-    // Tables
+    // Repeated objects
     [{ a: 1, b: 2 }, { a: 3, b: 4 }],
     [{ x: 1 }, { x: 2 }, { x: 3 }],
-    [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }],
+    [{ a: 1 }, { b: 2 }],  // Different keys
 
     // Mixed
     { name: "test", items: [1, 2, 3], nested: { x: true } },

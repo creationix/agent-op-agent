@@ -1,0 +1,451 @@
+{
+  "timestamp": "2026-01-10T20:59:30.538Z",
+  "runsPerDoc": 3,
+  "summary": [
+    {
+      "format": "jot",
+      "exactRate": 0,
+      "semanticRate": 0.9411764705882353,
+      "totalRuns": 51,
+      "exactPasses": 0,
+      "semanticPasses": 48
+    }
+  ],
+  "details": [
+    {
+      "format": "jot",
+      "docs": [
+        {
+          "doc": "chat",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{messages:[{role:\"user\",content:\"How do I configure TypeScript for a monorepo?\"},{role:\"assistant\",content:\"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.\"},{role:\"user\",content:\"What about path aliases?\"}]}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{messages:[{role:\"user\",content:\"How do I configure TypeScript for a monorepo?\"},{role:\"assistant\",content:\"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.\"},{role:\"user\",content:\"What about path aliases?\"}]}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{messages:[{role:\"user\",content:\"How do I configure TypeScript for a monorepo?\"},{role:\"assistant\",content:\"For a monorepo setup, create a base tsconfig.json at the root with shared settings, then extend it in each package.\"},{role:\"user\",content:\"What about path aliases?\"}]}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "metrics",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{series:\"cpu_usage\",points:[{t:1704067200,v:45.2},{t:1704067260,v:52.1},{t:1704067320,v:48.7},{t:1704067380,v:61.3},{t:1704067440,v:55.9}]}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{series:\"cpu_usage\",points:[{t:1704067200,v:45.2},{t:1704067260,v:52.1},{t:1704067320,v:48.7},{t:1704067380,v:61.3},{t:1704067440,v:55.9}]}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{series:\"cpu_usage\",points:[{t:1704067200,v:45.2},{t:1704067260,v:52.1},{t:1704067320,v:48.7},{t:1704067380,v:61.3},{t:1704067440,v:55.9}]}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "large",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{apiVersion:\"2.0\",kind:\"Deployment\",metadata:{name:\"web-server\",namespace:\"production\",labels:{app:\"web\",tier:\"frontend\",environment:\"production\"}},spec:{replicas:3,selector:{matchLabels:{app:\"web\",tier:\"frontend\"}},template:{metadata:{labels:{app:\"web\",tier:\"frontend\",version:\"1.2.3\"}},spec:{contai"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{apiVersion:\"2.0\",kind:\"Deployment\",metadata:{name:\"web-server\",namespace:\"production\",labels:{app:\"web\",tier:\"frontend\",environment:\"production\"}},spec:{replicas:3,selector:{matchLabels:{app:\"web\",tier:\"frontend\"}},template:{metadata:{labels:{app:\"web\",tier:\"frontend\",version:\"1.2.3\"}},spec:{contai"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{apiVersion:\"2.0\",kind:\"Deployment\",metadata:{name:\"web-server\",namespace:\"production\",labels:{app:\"web\",tier:\"frontend\",environment:\"production\"}},spec:{replicas:3,selector:{matchLabels:{app:\"web\",tier:\"frontend\"}},template:{metadata:{labels:{app:\"web\",tier:\"frontend\",version:\"1.2.3\"}},spec:{contai"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-mixed",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{app:{name:\"MyApp\",version:\"2.1.0\"},server:{host:\"localhost\",port:8080,ssl:{enabled:true,cert:\"/path/to/cert.pem\"}},database:{connection:{url:\"postgresql://localhost:5432/mydb\"}},feature:{flags:{beta:true}}}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{app:{name:\"MyApp\",version:\"2.1.0\"},server:{host:\"localhost\",port:8080,ssl:{enabled:true,cert:\"/path/to/cert.pem\"}},database:{connection:{url:\"postgresql://localhost:5432/mydb\"}},feature:{flags:{beta:true}}}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{app:{name:\"MyApp\",version:\"2.1.0\"},server:{host:\"localhost\",port:8080,ssl:{enabled:true,cert:\"/path/to/cert.pem\"}},database:{connection:{url:\"postgresql://localhost:5432/mydb\"}},feature:{flags:{beta:true}}}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "logs",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{logs:[{ts:\"2024-01-15T10:00:01Z\",level:\"info\",service:\"api\",msg:\"Server started on port 3000\"},{ts:\"2024-01-15T10:00:02Z\",level:\"info\",service:\"db\",msg:\"Connected to database\"},{ts:\"2024-01-15T10:00:05Z\",level:\"debug\",service:\"auth\",msg:\"Loading JWT keys\"},{ts:\"2024-01-15T10:00:10Z\",level:\"info\",se"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{logs:[{ts:\"2024-01-15T10:00:01Z\",level:\"info\",service:\"api\",msg:\"Server started on port 3000\"},{ts:\"2024-01-15T10:00:02Z\",level:\"info\",service:\"db\",msg:\"Connected to database\"},{ts:\"2024-01-15T10:00:05Z\",level:\"debug\",service:\"auth\",msg:\"Loading JWT keys\"},{ts:\"2024-01-15T10:00:10Z\",level:\"info\",se"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{logs:[{ts:\"2024-01-15T10:00:01Z\",level:\"info\",service:\"api\",msg:\"Server started on port 3000\"},{ts:\"2024-01-15T10:00:02Z\",level:\"info\",service:\"db\",msg:\"Connected to database\"},{ts:\"2024-01-15T10:00:05Z\",level:\"debug\",service:\"auth\",msg:\"Loading JWT keys\"},{ts:\"2024-01-15T10:00:10Z\",level:\"info\",se"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "firewall",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{active:true,ruleGroups:{php_attacks:{active:true,action:\"deny\",rules:{php_suffix:{has:[{type:\"path\",key:null,value:{suf:\".php\"}}],missing:[{type:\"header\",key:\"x-secret\",value:{eq:\"bypass\"}}],phase:\"finalize\",system:true},jsp_suffix:{has:[{type:\"path\",key:null,value:{suf:\".jsp\"}},{type:\"status\",valu"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{active:true,ruleGroups:{php_attacks:{active:true,action:\"deny\",rules:{php_suffix:{has:[{type:\"path\",key:null,value:{suf:\".php\"}}],missing:[{type:\"header\",key:\"x-secret\",value:{eq:\"bypass\"}}],phase:\"finalize\",system:true},jsp_suffix:{has:[{type:\"path\",key:null,value:{suf:\".jsp\"}},{type:\"status\",valu"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{active:true,ruleGroups:{php_attacks:{active:true,action:\"deny\",rules:{php_suffix:{has:[{type:\"path\",key:null,value:{suf:\".php\"}}],missing:[{type:\"header\",key:\"x-secret\",value:{eq:\"bypass\"}}],phase:\"finalize\",system:true},jsp_suffix:{has:[{type:\"path\",key:null,value:{suf:\".jsp\"}},{type:\"status\",valu"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "small",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[\"production\",\"api\",\"v1\"]}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[\"production\",\"api\",\"v1\"]}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[\"production\",\"api\",\"v1\"]}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "github-issue",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{id:12345,title:\"Bug: Memory leak in worker threads\",state:\"open\",user:{login:\"devuser\",id:789},labels:[{name:\"bug\",color:\"d73a4a\"},{name:\"priority-high\",color:\"ff0000\"}],body:\"When running multiple workers, memory increases continuously without garbage collection.\"}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{id:12345,title:\"Bug: Memory leak in worker threads\",state:\"open\",user:{login:\"devuser\",id:789},labels:[{name:\"bug\",color:\"d73a4a\"},{name:\"priority-high\",color:\"ff0000\"}],body:\"When running multiple workers, memory increases continuously without garbage collection.\"}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{id:12345,title:\"Bug: Memory leak in worker threads\",state:\"open\",user:{login:\"devuser\",id:789},labels:[{name:\"bug\",color:\"d73a4a\"},{name:\"priority-high\",color:\"ff0000\"}],body:\"When running multiple workers, memory increases continuously without garbage collection.\"}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "users-50",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Chen\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false},{id:4,name:\"Dan Wilson\",email:\"dan@example.com\",role:\"moderator\",ac"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Chen\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false},{id:4,name:\"Dan Wilson\",email:\"dan@example.com\",role:\"moderator\",ac"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Chen\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false},{id:4,name:\"Dan Wilson\",email:\"dan@example.com\",role:\"moderator\",ac"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "medium",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Johnson\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false}],metadata:{total:3,page:1,perPage:10}}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Johnson\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false}],metadata:{total:3,page:1,perPage:10}}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{users:[{id:1,name:\"Alice Johnson\",email:\"alice@example.com\",role:\"admin\",active:true},{id:2,name:\"Bob Smith\",email:\"bob@example.com\",role:\"user\",active:true},{id:3,name:\"Carol Davis\",email:\"carol@example.com\",role:\"user\",active:false}],metadata:{total:3,page:1,perPage:10}}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "hikes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{context:{task:\"Our favorite hikes together\",location:\"Boulder\",season:\"spring_2025\"},friends:[\"ana\",\"luis\",\"sam\"],hikes:[{id:1,name:\"Blue Lake Trail\",distanceKm:7.5,elevationGain:320,companion:\"ana\",wasSunny:true},{id:2,name:\"Ridge Overlook\",distanceKm:9.2,elevationGain:540,companion:\"luis\",wasSunn"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{context:{task:\"Our favorite hikes together\",location:\"Boulder\",season:\"spring_2025\"},friends:[\"ana\",\"luis\",\"sam\"],hikes:[{id:1,name:\"Blue Lake Trail\",distanceKm:7.5,elevationGain:320,companion:\"ana\",wasSunny:true},{id:2,name:\"Ridge Overlook\",distanceKm:9.2,elevationGain:540,companion:\"luis\",wasSunn"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{context:{task:\"Our favorite hikes together\",location:\"Boulder\",season:\"spring_2025\"},friends:[\"ana\",\"luis\",\"sam\"],hikes:[{id:1,name:\"Blue Lake Trail\",distanceKm:7.5,elevationGain:320,companion:\"ana\",wasSunny:true},{id:2,name:\"Ridge Overlook\",distanceKm:9.2,elevationGain:540,companion:\"luis\",wasSunn"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "package",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:\"my-app\",version:\"1.0.0\",scripts:{dev:\"vite\",build:\"tsc && vite build\",test:\"vitest\"},dependencies:{react:\"^18.2.0\",react-dom:\"^18.2.0\"},devDependencies:{typescript:\"^5.0.0\",vite:\"^5.0.0\",vitest:\"^1.0.0\"}}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:\"my-app\",version:\"1.0.0\",scripts:{dev:\"vite\",build:\"tsc && vite build\",test:\"vitest\"},dependencies:{react:\"^18.2.0\",react-dom:\"^18.2.0\"},devDependencies:{typescript:\"^5.0.0\",vite:\"^5.0.0\",vitest:\"^1.0.0\"}}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{name:\"my-app\",version:\"1.0.0\",scripts:{dev:\"vite\",build:\"tsc && vite build\",test:\"vitest\"},dependencies:{react:\"^18.2.0\",react-dom:\"^18.2.0\"},devDependencies:{typescript:\"^5.0.0\",vite:\"^5.0.0\",vitest:\"^1.0.0\"}}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-basic",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{server:{host:\"localhost\"},database:{connection:{username:\"admin\"}},app:{info:{name:\"MyApp\"}},release:{meta:{version:\"1.0.0\"}},cache:{layer:{ttlSeconds:300}}}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{server:{host:\"localhost\"},database:{connection:{username:\"admin\"}},app:{info:{name:\"MyApp\"}},release:{meta:{version:\"1.0.0\"}},cache:{layer:{ttlSeconds:300}}}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{server:{host:\"localhost\"},database:{connection:{username:\"admin\"}},app:{info:{name:\"MyApp\"}},release:{meta:{version:\"1.0.0\"}},cache:{layer:{ttlSeconds:300}}}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "irregular",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{events:[{type:\"click\",x:100,y:200},{type:\"scroll\",offset:450},{type:\"keypress\",key:\"Enter\",shift:true},{type:\"resize\",width:1920,height:1080}]}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{events:[{type:\"click\",x:100,y:200},{type:\"scroll\",offset:450},{type:\"keypress\",key:\"Enter\",shift:true},{type:\"resize\",width:1920,height:1080}]}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{events:[{type:\"click\",x:100,y:200},{type:\"scroll\",offset:450},{type:\"keypress\",key:\"Enter\",shift:true},{type:\"resize\",width:1920,height:1080}]}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "key-folding-with-array",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{api:{endpoint:{url:\"https://api.example.com\"}},data:{meta:{items:[\"widget\",\"gadget\",\"tool\"]}},stats:{meta:{count:3}},user:{preferences:{tags:[\"productivity\",\"development\"]}}}"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{api:{endpoint:{url:\"https://api.example.com\"}},data:{meta:{items:[\"widget\",\"gadget\",\"tool\"]}},stats:{meta:{count:3}},user:{preferences:{tags:[\"productivity\",\"development\"]}}}"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{api:{endpoint:{url:\"https://api.example.com\"}},data:{meta:{items:[\"widget\",\"gadget\",\"tool\"]}},stats:{meta:{count:3}},user:{preferences:{tags:[\"productivity\",\"development\"]}}}"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "products",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{catalog:{version:\"2.1\",updated:\"2024-01-15\",currency:\"USD\"},categories:[{id:\"electronics\",name:\"Electronics\",parent:null},{id:\"computers\",name:\"Computers\",parent:\"electronics\"},{id:\"phones\",name:\"Phones\",parent:\"electronics\"},{id:\"clothing\",name:\"Clothing\",parent:null},{id:\"mens\",name:\"Men's\",paren"
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{catalog:{version:\"2.1\",updated:\"2024-01-15\",currency:\"USD\"},categories:[{id:\"electronics\",name:\"Electronics\",parent:null},{id:\"computers\",name:\"Computers\",parent:\"electronics\"},{id:\"phones\",name:\"Phones\",parent:\"electronics\"},{id:\"clothing\",name:\"Clothing\",parent:null},{id:\"mens\",name:\"Men's\",paren"
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": true,
+              "actual": "{catalog:{version:\"2.1\",updated:\"2024-01-15\",currency:\"USD\"},categories:[{id:\"electronics\",name:\"Electronics\",parent:null},{id:\"computers\",name:\"Computers\",parent:\"electronics\"},{id:\"phones\",name:\"Phones\",parent:\"electronics\"},{id:\"clothing\",name:\"Clothing\",parent:null},{id:\"mens\",name:\"Men's\",paren"
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 1
+        },
+        {
+          "doc": "routes",
+          "runs": [
+            {
+              "run": 1,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{before_filesystem:[{src:\"^/_analytics/script\\\\\\\\.js$\",dest:\"https://cdn.analytics.io/v1/script.js\"},{src:\"^/_analytics/events$\",dest:\"https://events.analytics.io/v1/collect?key=abc123&env=prod\"},{src:\"^/(?:_metrics|perf)/(script\\\\\\\\.js)$\",dest:\"https://cdn.metrics.io/v1/$1\"},{src:\"^(?:/((?:[^/]+?)("
+            },
+            {
+              "run": 2,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{before_filesystem:[{src:\"^/_analytics/script\\\\\\\\.js$\",dest:\"https://cdn.analytics.io/v1/script.js\"},{src:\"^/_analytics/events$\",dest:\"https://events.analytics.io/v1/collect?key=abc123&env=prod\"},{src:\"^/(?:_metrics|perf)/(script\\\\\\\\.js)$\",dest:\"https://cdn.metrics.io/v1/$1\"},{src:\"^(?:/((?:[^/]+?)("
+            },
+            {
+              "run": 3,
+              "exactMatch": false,
+              "semantic": false,
+              "actual": "{before_filesystem:[{src:\"^/_analytics/script\\\\\\\\.js$\",dest:\"https://cdn.analytics.io/v1/script.js\"},{src:\"^/_analytics/events$\",dest:\"https://events.analytics.io/v1/collect?key=abc123&env=prod\"},{src:\"^/(?:_metrics|perf)/(script\\\\\\\\.js)$\",dest:\"https://cdn.metrics.io/v1/$1\"},{src:\"^(?:/((?:[^/]+?)("
+            }
+          ],
+          "exactRate": 0,
+          "semanticRate": 0
+        }
+      ],
+      "overallExactRate": 0,
+      "overallSemanticRate": 0.9411764705882353,
+      "totalRuns": 51,
+      "exactPasses": 0,
+      "semanticPasses": 48
+    }
+  ]
+}

@@ -1,18 +1,15 @@
 # Jot Format
 
-Jot is JSON with two optimizations:
-
-1. **Unquoted keys** — Keys can be unquoted if they are valid identifiers just like in JavaScript.
-2. **Repeated objects** — When an object has the same keys as the previous object, use `{:val,val,...}` (values only, same key order).
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
 
 ## Example
 
 ```json
-{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"},{"id":3,"name":"Charlie"}]}
+{"name":"Alice","age":30,"active":true}
 ```
+
+becomes:
 
 ```jot
-{users:[{id:1,name:"Alice"},{:2,"Bob"},{:3,"Charlie"}]}
+{name:"Alice",age:30,active:true}
 ```
-
-The `{:...}` means "same keys as previous object, just the values in order".

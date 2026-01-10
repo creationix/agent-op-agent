@@ -1,9 +1,9 @@
 === LLM Conversation Log ===
-Started: 2026-01-10T20:41:33.788Z
+Started: 2026-01-10T20:51:49.195Z
 
 
 ================================================================================
-[2026-01-10T20:41:35.514Z] jot/chat run 1
+[2026-01-10T20:51:50.895Z] jot/chat run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -18,12 +18,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -35,7 +38,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:36.955Z] jot/chat run 2
+[2026-01-10T20:51:52.339Z] jot/chat run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -50,12 +53,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -67,7 +73,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:38.401Z] jot/chat run 3
+[2026-01-10T20:51:53.779Z] jot/chat run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -82,12 +88,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -99,7 +108,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:40.739Z] jot/metrics run 1
+[2026-01-10T20:51:56.105Z] jot/metrics run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -114,12 +123,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -131,7 +143,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:42.832Z] jot/metrics run 2
+[2026-01-10T20:51:58.187Z] jot/metrics run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -146,12 +158,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -163,7 +178,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:44.919Z] jot/metrics run 3
+[2026-01-10T20:52:00.271Z] jot/metrics run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -178,12 +193,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -195,7 +213,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:50.331Z] jot/large run 1
+[2026-01-10T20:52:05.674Z] jot/large run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -210,12 +228,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -227,7 +248,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:41:55.339Z] jot/large run 2
+[2026-01-10T20:52:10.665Z] jot/large run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -242,12 +263,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -259,7 +283,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:42:00.350Z] jot/large run 3
+[2026-01-10T20:52:15.650Z] jot/large run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -274,12 +298,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -291,7 +318,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:42:02.014Z] jot/key-folding-mixed run 1
+[2026-01-10T20:52:17.308Z] jot/key-folding-mixed run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -306,12 +333,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -323,7 +353,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:42:03.455Z] jot/key-folding-mixed run 2
+[2026-01-10T20:52:18.751Z] jot/key-folding-mixed run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -338,12 +368,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -355,7 +388,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:42:04.908Z] jot/key-folding-mixed run 3
+[2026-01-10T20:52:20.249Z] jot/key-folding-mixed run 3
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -370,12 +403,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -387,7 +423,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:42:52.371Z] jot/logs run 1
+[2026-01-10T20:53:07.551Z] jot/logs run 1
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -402,12 +438,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -421,7 +460,7 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 
 ================================================================================
-[2026-01-10T20:43:36.829Z] jot/logs run 2
+[2026-01-10T20:53:51.473Z] jot/logs run 2
 ✅ SEMANTIC MATCH
 ================================================================================
 
@@ -436,12 +475,15 @@ Jot is JSON with unquoted keys. Keys don't need quotes unless they contain speci
 ## Example
 
 ```json
-{"name":"my-app","version":"1.0.0","users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"enabled":true}
+{"name":"Alice","age":30,"active":true}
 ```
 
+becomes:
+
 ```jot
-{name:"my-app",version:"1.0.0",users:[{id:1,name:"Alice"},{id:2,na
-... (truncated)
+{name:"Alice",age:30,active:true}
+```
+
 
 📝 USER PROMPT (test harness):
 Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
@@ -451,5 +493,1326 @@ Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
 
 🤖 QWEN RESPONSE:
 {logs:[{ts:"2024-01-15T10:00:01Z",level:"info",service:"api",msg:"Server started on port 3000"},{ts:"2024-01-15T10:00:02Z",level:"info",service:"db",msg:"Connected to database"},{ts:"2024-01-15T10:00:05Z",level:"debug",service:"auth",msg:"Loading JWT keys"},{ts:"2024-01-15T10:00:10Z",level:"info",service:"api",msg:"Health check endpoint ready"},{ts:"2024-01-15T10:01:23Z",level:"info",service:"api",msg:"Request received",method:"GET",path:"/users"},{ts:"2024-01-15T10:01:24Z",level:"debug",service:"db",msg:"Query executed",duration_ms:45},{ts:"2024-01-15T10:01:24Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:02:15Z",level:"warn",service:"auth",msg:"Invalid token attempt",ip:"192.168.1.100"},{ts:"2024-01-15T10:02:45Z",level:"info",service:"api",msg:"Request received",method:"POST",path:"/login"},{ts:"2024-01-15T10:02:46Z",level:"info",service:"auth",msg:"User authenticated",user_id:42},{ts:"2024-01-15T10:02:46Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:03:00Z",level:"info",service:"cache",msg:"Cache hit",key:"user:42"},{ts:"2024-01-15T10:03:30Z",level:"error",service:"db",msg:"Connection timeout",retry:1},{ts:"2024-01-15T10:03:31Z",level:"info",service:"db",msg:"Reconnected to database"},{ts:"2024-01-15T10:04:00Z",level:"info",service:"api",msg:"Request received",method:"PUT",path:"/users/42"},{ts:"2024-01-15T10:04:01Z",level:"debug",service:"db",msg:"Query executed",duration_ms:12},{ts:"2024-01-15T10:04:01Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:05:00Z",level:"info",service:"scheduler",msg:"Running cleanup job"},{ts:"2024-01-15T10:05:02Z",level:"info",service:"cache",msg:"Expired keys removed",count:156},{ts:"2024-01-15T10:05:10Z",level:"info",service:"api",msg:"Request received",method:"DELETE",path:"/sessions/old"},{ts:"2024-01-15T10:05:11Z",level:"info",service:"db",msg:"Rows deleted",count:23},{ts:"2024-01-15T10:05:11Z",level:"info",service:"api",msg:"Res
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:54:35.627Z] jot/logs run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"logs":[{"ts":"2024-01-15T10:00:01Z","level":"info","service":"api","msg":"Server started on port 3000"},{"ts":"2024-01-15T10:00:02Z","level":"info","service":"db","msg":"Connected to database"},{"ts":"2024-01-15T10:00:05Z","level":"debug","service":"auth","msg":"Loading JWT keys"},{"ts":"2024-01-15T10:00:10Z","level":"info","service":"api","msg":"Health check endpoint ready"},{"ts":"2024-01-15T10:01:23Z","level":"info","service":"api","msg":"Request received","method":"GET","path":"/users"},{"ts":"2024-01-15T10:01:24Z","level":"debug","service":"db","msg":"Query executed","duration_ms":45},{"ts":"2024-01-15T10:01:24Z","level":"info","service":"api","msg":"Response sent","status":200},{"ts":"2024-01-15T10:02:15Z","level":"warn","service":"auth","msg":"Invalid token attempt","ip":"192.168.1.100"},{"ts":"2024-01-15T10:02:45Z","level":"info","service":"api","msg":"Request received","method":"POST","path":"/log
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{logs:[{ts:"2024-01-15T10:00:01Z",level:"info",service:"api",msg:"Server started on port 3000"},{ts:"2024-01-15T10:00:02Z",level:"info",service:"db",msg:"Connected to database"},{ts:"2024-01-15T10:00:05Z",level:"debug",service:"auth",msg:"Loading JWT keys"},{ts:"2024-01-15T10:00:10Z",level:"info",service:"api",msg:"Health check endpoint ready"},{ts:"2024-01-15T10:01:23Z",level:"info",service:"api",msg:"Request received",method:"GET",path:"/users"},{ts:"2024-01-15T10:01:24Z",level:"debug",service:"db",msg:"Query executed",duration_ms:45},{ts:"2024-01-15T10:01:24Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:02:15Z",level:"warn",service:"auth",msg:"Invalid token attempt",ip:"192.168.1.100"},{ts:"2024-01-15T10:02:45Z",level:"info",service:"api",msg:"Request received",method:"POST",path:"/login"},{ts:"2024-01-15T10:02:46Z",level:"info",service:"auth",msg:"User authenticated",user_id:42},{ts:"2024-01-15T10:02:46Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:03:00Z",level:"info",service:"cache",msg:"Cache hit",key:"user:42"},{ts:"2024-01-15T10:03:30Z",level:"error",service:"db",msg:"Connection timeout",retry:1},{ts:"2024-01-15T10:03:31Z",level:"info",service:"db",msg:"Reconnected to database"},{ts:"2024-01-15T10:04:00Z",level:"info",service:"api",msg:"Request received",method:"PUT",path:"/users/42"},{ts:"2024-01-15T10:04:01Z",level:"debug",service:"db",msg:"Query executed",duration_ms:12},{ts:"2024-01-15T10:04:01Z",level:"info",service:"api",msg:"Response sent",status:200},{ts:"2024-01-15T10:05:00Z",level:"info",service:"scheduler",msg:"Running cleanup job"},{ts:"2024-01-15T10:05:02Z",level:"info",service:"cache",msg:"Expired keys removed",count:156},{ts:"2024-01-15T10:05:10Z",level:"info",service:"api",msg:"Request received",method:"DELETE",path:"/sessions/old"},{ts:"2024-01-15T10:05:11Z",level:"info",service:"db",msg:"Rows deleted",count:23},{ts:"2024-01-15T10:05:11Z",level:"info",service:"api",msg:"Res
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:54:51.829Z] jot/firewall run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"active":true,"ruleGroups":{"php_attacks":{"active":true,"action":"deny","rules":{"php_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".php"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"jsp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".jsp"}},{"type":"status","value":{"eq":404}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"init","system":true},"asp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".asp"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"cgi_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".cgi"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true}}},"sql_injection":{"active":true,"action":"deny","rules":{"union_select":{"has":[{"type":"query",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:55:06.852Z] jot/firewall run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"active":true,"ruleGroups":{"php_attacks":{"active":true,"action":"deny","rules":{"php_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".php"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"jsp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".jsp"}},{"type":"status","value":{"eq":404}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"init","system":true},"asp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".asp"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"cgi_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".cgi"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true}}},"sql_injection":{"active":true,"action":"deny","rules":{"union_select":{"has":[{"type":"query",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:55:21.882Z] jot/firewall run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"active":true,"ruleGroups":{"php_attacks":{"active":true,"action":"deny","rules":{"php_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".php"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"jsp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".jsp"}},{"type":"status","value":{"eq":404}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"init","system":true},"asp_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".asp"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true},"cgi_suffix":{"has":[{"type":"path","key":null,"value":{"suf":".cgi"}}],"missing":[{"type":"header","key":"x-secret","value":{"eq":"bypass"}}],"phase":"finalize","system":true}}},"sql_injection":{"active":true,"action":"deny","rules":{"union_select":{"has":[{"type":"query",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{active:true,ruleGroups:{php_attacks:{active:true,action:"deny",rules:{php_suffix:{has:[{type:"path",key:null,value:{suf:".php"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},jsp_suffix:{has:[{type:"path",key:null,value:{suf:".jsp"}},{type:"status",value:{eq:404}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"init",system:true},asp_suffix:{has:[{type:"path",key:null,value:{suf:".asp"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true},cgi_suffix:{has:[{type:"path",key:null,value:{suf:".cgi"}}],missing:[{type:"header",key:"x-secret",value:{eq:"bypass"}}],phase:"finalize",system:true}}},sql_injection:{active:true,action:"deny",rules:{union_select:{has:[{type:"query",key:null,value:{contains:"UNION SELECT"}}],phase:"init",system:true},drop_table:{has:[{type:"query",key:null,value:{contains:"DROP TABLE"}}],phase:"init",system:true},or_1_equals_1:{has:[{type:"query",key:null,value:{regex:"OR\\s+1\\s*=\\s*1"}}],phase:"init",system:true}}},rate_limiting:{active:true,action:"ratelimit",rules:{api_endpoints:{has:[{type:"path",key:null,value:{pre:"/api/"}}],rateLimit:{requests:100,window:60,key:"ip"},phase:"init",system:false},auth_endpoints:{has:[{type:"path",key:null,value:{pre:"/auth/"}}],rateLimit:{requests:10,window:60,key:"ip"},phase:"init",system:false},search_endpoint:{has:[{type:"path",key:null,value:{eq:"/search"}}],rateLimit:{requests:30,window:60,key:"ip"},phase:"init",system:false}}},geo_blocking:{active:false,action:"deny",rules:{blocked_countries:{has:[{type:"geo",key:"country",value:{in:["XX","YY","ZZ"]}}],missing:[{type:"header",key:"x-bypass-geo",value:{eq:"allowed"}}],phase:"init",system:false}}},bot_protection:{active:true,action:"challenge",rules:{missing_ua:{missing:[{type:"header",key:"user-agent",value:{exists:true}}],phase:"init",system:true},known_bad_bots:{has:[{type:"header",key:"user-agent",value:{regex:"(BadBot|Scraper|Harvester)"}}],ph
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:55:22.965Z] jot/small run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
+
+🤖 QWEN RESPONSE:
+{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
+
+
+================================================================================
+[2026-01-10T20:55:23.843Z] jot/small run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
+
+🤖 QWEN RESPONSE:
+{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
+
+
+================================================================================
+[2026-01-10T20:55:24.716Z] jot/small run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"config","version":"1.0.0","enabled":true,"maxRetries":3,"timeout":30000,"tags":["production","api","v1"]}
+
+🤖 QWEN RESPONSE:
+{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:["production","api","v1"]}
+
+
+================================================================================
+[2026-01-10T20:55:26.602Z] jot/github-issue run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
+
+🤖 QWEN RESPONSE:
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
+
+
+================================================================================
+[2026-01-10T20:55:28.248Z] jot/github-issue run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
+
+🤖 QWEN RESPONSE:
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
+
+
+================================================================================
+[2026-01-10T20:55:29.893Z] jot/github-issue run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"id":12345,"title":"Bug: Memory leak in worker threads","state":"open","user":{"login":"devuser","id":789},"labels":[{"name":"bug","color":"d73a4a"},{"name":"priority-high","color":"ff0000"}],"body":"When running multiple workers, memory increases continuously without garbage collection."}
+
+🤖 QWEN RESPONSE:
+{id:12345,title:"Bug: Memory leak in worker threads",state:"open",user:{login:"devuser",id:789},labels:[{name:"bug",color:"d73a4a"},{name:"priority-high",color:"ff0000"}],body:"When running multiple workers, memory increases continuously without garbage collection."}
+
+
+================================================================================
+[2026-01-10T20:55:54.537Z] jot/users-50 run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Chen","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false},{"id":4,"name":"Dan Wilson","email":"dan@example.com","role":"moderator","active":true},{"id":5,"name":"Eve Brown","email":"eve@example.com","role":"user","active":true},{"id":6,"name":"Frank Lee","email":"frank@example.com","role":"user","active":true},{"id":7,"name":"Grace Kim","email":"grace@example.com","role":"admin","active":true},{"id":8,"name":"Henry Park","email":"henry@example.com","role":"user","active":false},{"id":9,"name":"Ivy Zhang","email":"ivy@example.com","role":"user","active":true},{"id":10,"name":"Jack Miller","email":"jack@example.com","role":"moderator","active":true},{"id":11,"name":"Kate Johnson","email":"kate@example.com",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Chen",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false},{id:4,name:"Dan Wilson",email:"dan@example.com",role:"moderator",active:true},{id:5,name:"Eve Brown",email:"eve@example.com",role:"user",active:true},{id:6,name:"Frank Lee",email:"frank@example.com",role:"user",active:true},{id:7,name:"Grace Kim",email:"grace@example.com",role:"admin",active:true},{id:8,name:"Henry Park",email:"henry@example.com",role:"user",active:false},{id:9,name:"Ivy Zhang",email:"ivy@example.com",role:"user",active:true},{id:10,name:"Jack Miller",email:"jack@example.com",role:"moderator",active:true},{id:11,name:"Kate Johnson",email:"kate@example.com",role:"user",active:true},{id:12,name:"Leo Garcia",email:"leo@example.com",role:"user",active:true},{id:13,name:"Mia Taylor",email:"mia@example.com",role:"user",active:false},{id:14,name:"Noah White",email:"noah@example.com",role:"user",active:true},{id:15,name:"Olivia Moore",email:"olivia@example.com",role:"admin",active:true},{id:16,name:"Peter Hall",email:"peter@example.com",role:"user",active:true},{id:17,name:"Quinn Adams",email:"quinn@example.com",role:"user",active:true},{id:18,name:"Ruby Scott",email:"ruby@example.com",role:"moderator",active:false},{id:19,name:"Sam Turner",email:"sam@example.com",role:"user",active:true},{id:20,name:"Tina Clark",email:"tina@example.com",role:"user",active:true},{id:21,name:"Uma Patel",email:"uma@example.com",role:"user",active:true},{id:22,name:"Victor Young",email:"victor@example.com",role:"user",active:false},{id:23,name:"Wendy King",email:"wendy@example.com",role:"admin",active:true},{id:24,name:"Xander Cruz",email:"xander@example.com",role:"user",active:true},{id:25,name:"Yuki Tanaka",email:"yuki@example.com",role:"user",active:true},{id:26,name:"Zoe Martin",email:"zoe@example.com",role:"moderator",active:true},{id:27,name:
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:56:17.447Z] jot/users-50 run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Chen","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false},{"id":4,"name":"Dan Wilson","email":"dan@example.com","role":"moderator","active":true},{"id":5,"name":"Eve Brown","email":"eve@example.com","role":"user","active":true},{"id":6,"name":"Frank Lee","email":"frank@example.com","role":"user","active":true},{"id":7,"name":"Grace Kim","email":"grace@example.com","role":"admin","active":true},{"id":8,"name":"Henry Park","email":"henry@example.com","role":"user","active":false},{"id":9,"name":"Ivy Zhang","email":"ivy@example.com","role":"user","active":true},{"id":10,"name":"Jack Miller","email":"jack@example.com","role":"moderator","active":true},{"id":11,"name":"Kate Johnson","email":"kate@example.com",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Chen",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false},{id:4,name:"Dan Wilson",email:"dan@example.com",role:"moderator",active:true},{id:5,name:"Eve Brown",email:"eve@example.com",role:"user",active:true},{id:6,name:"Frank Lee",email:"frank@example.com",role:"user",active:true},{id:7,name:"Grace Kim",email:"grace@example.com",role:"admin",active:true},{id:8,name:"Henry Park",email:"henry@example.com",role:"user",active:false},{id:9,name:"Ivy Zhang",email:"ivy@example.com",role:"user",active:true},{id:10,name:"Jack Miller",email:"jack@example.com",role:"moderator",active:true},{id:11,name:"Kate Johnson",email:"kate@example.com",role:"user",active:true},{id:12,name:"Leo Garcia",email:"leo@example.com",role:"user",active:true},{id:13,name:"Mia Taylor",email:"mia@example.com",role:"user",active:false},{id:14,name:"Noah White",email:"noah@example.com",role:"user",active:true},{id:15,name:"Olivia Moore",email:"olivia@example.com",role:"admin",active:true},{id:16,name:"Peter Hall",email:"peter@example.com",role:"user",active:true},{id:17,name:"Quinn Adams",email:"quinn@example.com",role:"user",active:true},{id:18,name:"Ruby Scott",email:"ruby@example.com",role:"moderator",active:false},{id:19,name:"Sam Turner",email:"sam@example.com",role:"user",active:true},{id:20,name:"Tina Clark",email:"tina@example.com",role:"user",active:true},{id:21,name:"Uma Patel",email:"uma@example.com",role:"user",active:true},{id:22,name:"Victor Young",email:"victor@example.com",role:"user",active:false},{id:23,name:"Wendy King",email:"wendy@example.com",role:"admin",active:true},{id:24,name:"Xander Cruz",email:"xander@example.com",role:"user",active:true},{id:25,name:"Yuki Tanaka",email:"yuki@example.com",role:"user",active:true},{id:26,name:"Zoe Martin",email:"zoe@example.com",role:"moderator",active:true},{id:27,name:
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:56:40.351Z] jot/users-50 run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Chen","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false},{"id":4,"name":"Dan Wilson","email":"dan@example.com","role":"moderator","active":true},{"id":5,"name":"Eve Brown","email":"eve@example.com","role":"user","active":true},{"id":6,"name":"Frank Lee","email":"frank@example.com","role":"user","active":true},{"id":7,"name":"Grace Kim","email":"grace@example.com","role":"admin","active":true},{"id":8,"name":"Henry Park","email":"henry@example.com","role":"user","active":false},{"id":9,"name":"Ivy Zhang","email":"ivy@example.com","role":"user","active":true},{"id":10,"name":"Jack Miller","email":"jack@example.com","role":"moderator","active":true},{"id":11,"name":"Kate Johnson","email":"kate@example.com",
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Chen",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false},{id:4,name:"Dan Wilson",email:"dan@example.com",role:"moderator",active:true},{id:5,name:"Eve Brown",email:"eve@example.com",role:"user",active:true},{id:6,name:"Frank Lee",email:"frank@example.com",role:"user",active:true},{id:7,name:"Grace Kim",email:"grace@example.com",role:"admin",active:true},{id:8,name:"Henry Park",email:"henry@example.com",role:"user",active:false},{id:9,name:"Ivy Zhang",email:"ivy@example.com",role:"user",active:true},{id:10,name:"Jack Miller",email:"jack@example.com",role:"moderator",active:true},{id:11,name:"Kate Johnson",email:"kate@example.com",role:"user",active:true},{id:12,name:"Leo Garcia",email:"leo@example.com",role:"user",active:true},{id:13,name:"Mia Taylor",email:"mia@example.com",role:"user",active:false},{id:14,name:"Noah White",email:"noah@example.com",role:"user",active:true},{id:15,name:"Olivia Moore",email:"olivia@example.com",role:"admin",active:true},{id:16,name:"Peter Hall",email:"peter@example.com",role:"user",active:true},{id:17,name:"Quinn Adams",email:"quinn@example.com",role:"user",active:true},{id:18,name:"Ruby Scott",email:"ruby@example.com",role:"moderator",active:false},{id:19,name:"Sam Turner",email:"sam@example.com",role:"user",active:true},{id:20,name:"Tina Clark",email:"tina@example.com",role:"user",active:true},{id:21,name:"Uma Patel",email:"uma@example.com",role:"user",active:true},{id:22,name:"Victor Young",email:"victor@example.com",role:"user",active:false},{id:23,name:"Wendy King",email:"wendy@example.com",role:"admin",active:true},{id:24,name:"Xander Cruz",email:"xander@example.com",role:"user",active:true},{id:25,name:"Yuki Tanaka",email:"yuki@example.com",role:"user",active:true},{id:26,name:"Zoe Martin",email:"zoe@example.com",role:"moderator",active:true},{id:27,name:
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:56:42.288Z] jot/medium run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Johnson",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false}],metadata:{total:3,page:1,perPage:10}}
+
+
+================================================================================
+[2026-01-10T20:56:43.989Z] jot/medium run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Johnson",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false}],metadata:{total:3,page:1,perPage:10}}
+
+
+================================================================================
+[2026-01-10T20:56:45.680Z] jot/medium run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"users":[{"id":1,"name":"Alice Johnson","email":"alice@example.com","role":"admin","active":true},{"id":2,"name":"Bob Smith","email":"bob@example.com","role":"user","active":true},{"id":3,"name":"Carol Davis","email":"carol@example.com","role":"user","active":false}],"metadata":{"total":3,"page":1,"perPage":10}}
+
+🤖 QWEN RESPONSE:
+{users:[{id:1,name:"Alice Johnson",email:"alice@example.com",role:"admin",active:true},{id:2,name:"Bob Smith",email:"bob@example.com",role:"user",active:true},{id:3,name:"Carol Davis",email:"carol@example.com",role:"user",active:false}],metadata:{total:3,page:1,perPage:10}}
+
+
+================================================================================
+[2026-01-10T20:56:48.749Z] jot/hikes run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
+
+🤖 QWEN RESPONSE:
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:[{id:1,name:"Blue Lake Trail",distanceKm:7.5,elevationGain:320,companion:"ana",wasSunny:true},{id:2,name:"Ridge Overlook",distanceKm:9.2,elevationGain:540,companion:"luis",wasSunny:false},{id:3,name:"Wildflower Loop",distanceKm:5.1,elevationGain:180,companion:"sam",wasSunny:true}]}
+
+
+================================================================================
+[2026-01-10T20:56:51.507Z] jot/hikes run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
+
+🤖 QWEN RESPONSE:
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:[{id:1,name:"Blue Lake Trail",distanceKm:7.5,elevationGain:320,companion:"ana",wasSunny:true},{id:2,name:"Ridge Overlook",distanceKm:9.2,elevationGain:540,companion:"luis",wasSunny:false},{id:3,name:"Wildflower Loop",distanceKm:5.1,elevationGain:180,companion:"sam",wasSunny:true}]}
+
+
+================================================================================
+[2026-01-10T20:56:54.264Z] jot/hikes run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"context":{"task":"Our favorite hikes together","location":"Boulder","season":"spring_2025"},"friends":["ana","luis","sam"],"hikes":[{"id":1,"name":"Blue Lake Trail","distanceKm":7.5,"elevationGain":320,"companion":"ana","wasSunny":true},{"id":2,"name":"Ridge Overlook","distanceKm":9.2,"elevationGain":540,"companion":"luis","wasSunny":false},{"id":3,"name":"Wildflower Loop","distanceKm":5.1,"elevationGain":180,"companion":"sam","wasSunny":true}]}
+
+🤖 QWEN RESPONSE:
+{context:{task:"Our favorite hikes together",location:"Boulder",season:"spring_2025"},friends:["ana","luis","sam"],hikes:[{id:1,name:"Blue Lake Trail",distanceKm:7.5,elevationGain:320,companion:"ana",wasSunny:true},{id:2,name:"Ridge Overlook",distanceKm:9.2,elevationGain:540,companion:"luis",wasSunny:false},{id:3,name:"Wildflower Loop",distanceKm:5.1,elevationGain:180,companion:"sam",wasSunny:true}]}
+
+
+================================================================================
+[2026-01-10T20:56:56.276Z] jot/package run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
+
+🤖 QWEN RESPONSE:
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
+
+
+================================================================================
+[2026-01-10T20:56:58.063Z] jot/package run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
+
+🤖 QWEN RESPONSE:
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
+
+
+================================================================================
+[2026-01-10T20:56:59.856Z] jot/package run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"name":"my-app","version":"1.0.0","scripts":{"dev":"vite","build":"tsc && vite build","test":"vitest"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"typescript":"^5.0.0","vite":"^5.0.0","vitest":"^1.0.0"}}
+
+🤖 QWEN RESPONSE:
+{name:"my-app",version:"1.0.0",scripts:{dev:"vite",build:"tsc && vite build",test:"vitest"},dependencies:{react:"^18.2.0",react-dom:"^18.2.0"},devDependencies:{typescript:"^5.0.0",vite:"^5.0.0",vitest:"^1.0.0"}}
+
+
+================================================================================
+[2026-01-10T20:57:01.203Z] jot/key-folding-basic run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
+
+🤖 QWEN RESPONSE:
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
+
+
+================================================================================
+[2026-01-10T20:57:02.308Z] jot/key-folding-basic run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
+
+🤖 QWEN RESPONSE:
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
+
+
+================================================================================
+[2026-01-10T20:57:03.419Z] jot/key-folding-basic run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"server":{"host":"localhost"},"database":{"connection":{"username":"admin"}},"app":{"info":{"name":"MyApp"}},"release":{"meta":{"version":"1.0.0"}},"cache":{"layer":{"ttlSeconds":300}}}
+
+🤖 QWEN RESPONSE:
+{server:{host:"localhost"},database:{connection:{username:"admin"}},app:{info:{name:"MyApp"}},release:{meta:{version:"1.0.0"}},cache:{layer:{ttlSeconds:300}}}
+
+
+================================================================================
+[2026-01-10T20:57:04.931Z] jot/irregular run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
+
+🤖 QWEN RESPONSE:
+{events:[{type:"click",x:100,y:200},{type:"scroll",offset:450},{type:"keypress",key:"Enter",shift:true},{type:"resize",width:1920,height:1080}]}
+
+
+================================================================================
+[2026-01-10T20:57:06.184Z] jot/irregular run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
+
+🤖 QWEN RESPONSE:
+{events:[{type:"click",x:100,y:200},{type:"scroll",offset:450},{type:"keypress",key:"Enter",shift:true},{type:"resize",width:1920,height:1080}]}
+
+
+================================================================================
+[2026-01-10T20:57:07.434Z] jot/irregular run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"events":[{"type":"click","x":100,"y":200},{"type":"scroll","offset":450},{"type":"keypress","key":"Enter","shift":true},{"type":"resize","width":1920,"height":1080}]}
+
+🤖 QWEN RESPONSE:
+{events:[{type:"click",x:100,y:200},{type:"scroll",offset:450},{type:"keypress",key:"Enter",shift:true},{type:"resize",width:1920,height:1080}]}
+
+
+================================================================================
+[2026-01-10T20:57:08.743Z] jot/key-folding-with-array run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
+
+🤖 QWEN RESPONSE:
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
+
+
+================================================================================
+[2026-01-10T20:57:09.811Z] jot/key-folding-with-array run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
+
+🤖 QWEN RESPONSE:
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
+
+
+================================================================================
+[2026-01-10T20:57:10.887Z] jot/key-folding-with-array run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"api":{"endpoint":{"url":"https://api.example.com"}},"data":{"meta":{"items":["widget","gadget","tool"]}},"stats":{"meta":{"count":3}},"user":{"preferences":{"tags":["productivity","development"]}}}
+
+🤖 QWEN RESPONSE:
+{api:{endpoint:{url:"https://api.example.com"}},data:{meta:{items:["widget","gadget","tool"]}},stats:{meta:{count:3}},user:{preferences:{tags:["productivity","development"]}}}
+
+
+================================================================================
+[2026-01-10T20:57:28.465Z] jot/products run 1
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"catalog":{"version":"2.1","updated":"2024-01-15","currency":"USD"},"categories":[{"id":"electronics","name":"Electronics","parent":null},{"id":"computers","name":"Computers","parent":"electronics"},{"id":"phones","name":"Phones","parent":"electronics"},{"id":"clothing","name":"Clothing","parent":null},{"id":"mens","name":"Men's","parent":"clothing"},{"id":"womens","name":"Women's","parent":"clothing"}],"products":[{"sku":"LAPTOP-001","name":"ProBook 15","category":"computers","price":1299.99,"stock":45,"specs":{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},"tags":["laptop","business","portable"],"rating":4.5,"reviews":234},{"sku":"LAPTOP-002","name":"GameMaster X","category":"computers","price":1899.99,"stock":23,"specs":{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},"tags":["laptop","gaming","high-performance"],"rating":4.8,"reviews":567},{"sku":"PHON
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:[{id:"electronics",name:"Electronics",parent:null},{id:"computers",name:"Computers",parent:"electronics"},{id:"phones",name:"Phones",parent:"electronics"},{id:"clothing",name:"Clothing",parent:null},{id:"mens",name:"Men's",parent:"clothing"},{id:"womens",name:"Women's",parent:"clothing"}],products:[{sku:"LAPTOP-001",name:"ProBook 15",category:"computers",price:1299.99,stock:45,specs:{cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},tags:["laptop","business","portable"],rating:4.5,reviews:234},{sku:"LAPTOP-002",name:"GameMaster X",category:"computers",price:1899.99,stock:23,specs:{cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},tags:["laptop","gaming","high-performance"],rating:4.8,reviews:567},{sku:"PHONE-001",name:"SmartPhone Pro",category:"phones",price:999,stock:150,specs:{screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},tags:["smartphone","flagship","5G"],rating:4.6,reviews:1023},{sku:"PHONE-002",name:"BudgetPhone SE",category:"phones",price:299,stock:500,specs:{screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},tags:["smartphone","budget","value"],rating:4.2,reviews:445},{sku:"SHIRT-001",name:"Classic Oxford Shirt",category:"mens",price:59.99,stock:200,variants:[{size:"S",color:"white",stock:40},{size:"M",color:"white",stock:60},{size:"L",color:"white",stock:50},{size:"M",color:"blue",stock:30},{size:"L",color:"blue",stock:20}],tags:["shirt","formal","cotton"],rating:4.4,reviews:89},{sku:"DRESS-001",name:"Summer Floral Dress",category:"womens",price:79.99,stock:75,variants:[{size:"XS",color:"floral-pink",stock:15},{size:"S",color:"floral-pink",stock:20},{size:"M",color:"floral-pink",stock:25},{size:"L",color:"floral-pink",stock:15}],tags:["dress","casual","summer"],rating:4.7,reviews:156},{sku:"MONITOR-001",name:"UltraWide 34",category:"electronics",price:549.99,stock:67,specs:{size:"34 inch",resolution:"3440x1440",refresh:"144Hz",panel:"IPS"},t
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:57:44.873Z] jot/products run 2
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"catalog":{"version":"2.1","updated":"2024-01-15","currency":"USD"},"categories":[{"id":"electronics","name":"Electronics","parent":null},{"id":"computers","name":"Computers","parent":"electronics"},{"id":"phones","name":"Phones","parent":"electronics"},{"id":"clothing","name":"Clothing","parent":null},{"id":"mens","name":"Men's","parent":"clothing"},{"id":"womens","name":"Women's","parent":"clothing"}],"products":[{"sku":"LAPTOP-001","name":"ProBook 15","category":"computers","price":1299.99,"stock":45,"specs":{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},"tags":["laptop","business","portable"],"rating":4.5,"reviews":234},{"sku":"LAPTOP-002","name":"GameMaster X","category":"computers","price":1899.99,"stock":23,"specs":{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},"tags":["laptop","gaming","high-performance"],"rating":4.8,"reviews":567},{"sku":"PHON
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:[{id:"electronics",name:"Electronics",parent:null},{id:"computers",name:"Computers",parent:"electronics"},{id:"phones",name:"Phones",parent:"electronics"},{id:"clothing",name:"Clothing",parent:null},{id:"mens",name:"Men's",parent:"clothing"},{id:"womens",name:"Women's",parent:"clothing"}],products:[{sku:"LAPTOP-001",name:"ProBook 15",category:"computers",price:1299.99,stock:45,specs:{cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},tags:["laptop","business","portable"],rating:4.5,reviews:234},{sku:"LAPTOP-002",name:"GameMaster X",category:"computers",price:1899.99,stock:23,specs:{cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},tags:["laptop","gaming","high-performance"],rating:4.8,reviews:567},{sku:"PHONE-001",name:"SmartPhone Pro",category:"phones",price:999,stock:150,specs:{screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},tags:["smartphone","flagship","5G"],rating:4.6,reviews:1023},{sku:"PHONE-002",name:"BudgetPhone SE",category:"phones",price:299,stock:500,specs:{screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},tags:["smartphone","budget","value"],rating:4.2,reviews:445},{sku:"SHIRT-001",name:"Classic Oxford Shirt",category:"mens",price:59.99,stock:200,variants:[{size:"S",color:"white",stock:40},{size:"M",color:"white",stock:60},{size:"L",color:"white",stock:50},{size:"M",color:"blue",stock:30},{size:"L",color:"blue",stock:20}],tags:["shirt","formal","cotton"],rating:4.4,reviews:89},{sku:"DRESS-001",name:"Summer Floral Dress",category:"womens",price:79.99,stock:75,variants:[{size:"XS",color:"floral-pink",stock:15},{size:"S",color:"floral-pink",stock:20},{size:"M",color:"floral-pink",stock:25},{size:"L",color:"floral-pink",stock:15}],tags:["dress","casual","summer"],rating:4.7,reviews:156},{sku:"MONITOR-001",name:"UltraWide 34",category:"electronics",price:549.99,stock:67,specs:{size:"34 inch",resolution:"3440x1440",refresh:"144Hz",panel:"IPS"},t
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:58:01.300Z] jot/products run 3
+✅ SEMANTIC MATCH
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"catalog":{"version":"2.1","updated":"2024-01-15","currency":"USD"},"categories":[{"id":"electronics","name":"Electronics","parent":null},{"id":"computers","name":"Computers","parent":"electronics"},{"id":"phones","name":"Phones","parent":"electronics"},{"id":"clothing","name":"Clothing","parent":null},{"id":"mens","name":"Men's","parent":"clothing"},{"id":"womens","name":"Women's","parent":"clothing"}],"products":[{"sku":"LAPTOP-001","name":"ProBook 15","category":"computers","price":1299.99,"stock":45,"specs":{"cpu":"Intel i7","ram":"16GB","storage":"512GB SSD","display":"15.6 inch"},"tags":["laptop","business","portable"],"rating":4.5,"reviews":234},{"sku":"LAPTOP-002","name":"GameMaster X","category":"computers","price":1899.99,"stock":23,"specs":{"cpu":"AMD Ryzen 9","ram":"32GB","storage":"1TB NVMe","gpu":"RTX 4070"},"tags":["laptop","gaming","high-performance"],"rating":4.8,"reviews":567},{"sku":"PHON
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{catalog:{version:"2.1",updated:"2024-01-15",currency:"USD"},categories:[{id:"electronics",name:"Electronics",parent:null},{id:"computers",name:"Computers",parent:"electronics"},{id:"phones",name:"Phones",parent:"electronics"},{id:"clothing",name:"Clothing",parent:null},{id:"mens",name:"Men's",parent:"clothing"},{id:"womens",name:"Women's",parent:"clothing"}],products:[{sku:"LAPTOP-001",name:"ProBook 15",category:"computers",price:1299.99,stock:45,specs:{cpu:"Intel i7",ram:"16GB",storage:"512GB SSD",display:"15.6 inch"},tags:["laptop","business","portable"],rating:4.5,reviews:234},{sku:"LAPTOP-002",name:"GameMaster X",category:"computers",price:1899.99,stock:23,specs:{cpu:"AMD Ryzen 9",ram:"32GB",storage:"1TB NVMe",gpu:"RTX 4070"},tags:["laptop","gaming","high-performance"],rating:4.8,reviews:567},{sku:"PHONE-001",name:"SmartPhone Pro",category:"phones",price:999,stock:150,specs:{screen:"6.7 inch OLED",camera:"108MP",battery:"5000mAh"},tags:["smartphone","flagship","5G"],rating:4.6,reviews:1023},{sku:"PHONE-002",name:"BudgetPhone SE",category:"phones",price:299,stock:500,specs:{screen:"6.1 inch LCD",camera:"48MP",battery:"4000mAh"},tags:["smartphone","budget","value"],rating:4.2,reviews:445},{sku:"SHIRT-001",name:"Classic Oxford Shirt",category:"mens",price:59.99,stock:200,variants:[{size:"S",color:"white",stock:40},{size:"M",color:"white",stock:60},{size:"L",color:"white",stock:50},{size:"M",color:"blue",stock:30},{size:"L",color:"blue",stock:20}],tags:["shirt","formal","cotton"],rating:4.4,reviews:89},{sku:"DRESS-001",name:"Summer Floral Dress",category:"womens",price:79.99,stock:75,variants:[{size:"XS",color:"floral-pink",stock:15},{size:"S",color:"floral-pink",stock:20},{size:"M",color:"floral-pink",stock:25},{size:"L",color:"floral-pink",stock:15}],tags:["dress","casual","summer"],rating:4.7,reviews:156},{sku:"MONITOR-001",name:"UltraWide 34",category:"electronics",price:549.99,stock:67,specs:{size:"34 inch",resolution:"3440x1440",refresh:"144Hz",panel:"IPS"},t
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:58:32.363Z] jot/routes run 1
+❌ FAILED
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"before_filesystem":[{"src":"^/_analytics/script\\.js$","dest":"https://cdn.analytics.io/v1/script.js"},{"src":"^/_analytics/events$","dest":"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{"src":"^/(?:_metrics|perf)/(script\\.js)$","dest":"https://cdn.metrics.io/v1/$1"},{"src":"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$","headers":{"Location":"/$1"},"status":308,"continue":true},{"src":"^/_internal/trace$","dest":"/404","status":404,"continue":true},{"src":"^/404/?$","status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]},{"src":"^/500$","status":500,"continue":true},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"typ
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{before_filesystem:[{src:"^/_analytics/script\\\\.js$",dest:"https://cdn.analytics.io/v1/script.js"},{src:"^/_analytics/events$",dest:"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{src:"^/(?:_metrics|perf)/(script\\\\.js)$",dest:"https://cdn.metrics.io/v1/$1"},{src:"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",headers:{Location:"/$1"},status:308,continue:true},{src:"^/_internal/trace$",dest:"/404",status:404,continue:true},{src:"^/404/?$",status:404,continue:true,missing:[{type:"header",key:"x-prerender"}]},{src:"^/500$",status:500,continue:true},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"a1b2c3d4e5f6"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/submit.ts#submitForm"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"f6e5d4c3b2a1"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#loginUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"1a2b3c4d5e6f"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#logoutUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"6f5e4d3c2b1a"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#fetchItems"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"abcdef123456"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#updateItem"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"654321fedcba"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#deleteItem"}]},{src:"^/(?<path>.+?)(?:/)?$",dest:"/$path.segments/$segmentPath.segment.rsc",has:[{type:"header",key:"rsc",value:"1"},{type:"header",key:"prefetch",value:"1"},{type:"header",key:"segment-prefetch",value:"/(?<segmentPath>.+)"}],continue:true,override:true},{src:"^/?$",dest:"/index.segments/$segmentPath.segment.rsc"
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:59:01.478Z] jot/routes run 2
+❌ FAILED
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"before_filesystem":[{"src":"^/_analytics/script\\.js$","dest":"https://cdn.analytics.io/v1/script.js"},{"src":"^/_analytics/events$","dest":"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{"src":"^/(?:_metrics|perf)/(script\\.js)$","dest":"https://cdn.metrics.io/v1/$1"},{"src":"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$","headers":{"Location":"/$1"},"status":308,"continue":true},{"src":"^/_internal/trace$","dest":"/404","status":404,"continue":true},{"src":"^/404/?$","status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]},{"src":"^/500$","status":500,"continue":true},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"typ
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{before_filesystem:[{src:"^/_analytics/script\\\\.js$",dest:"https://cdn.analytics.io/v1/script.js"},{src:"^/_analytics/events$",dest:"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{src:"^/(?:_metrics|perf)/(script\\\\.js)$",dest:"https://cdn.metrics.io/v1/$1"},{src:"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",headers:{Location:"/$1"},status:308,continue:true},{src:"^/_internal/trace$",dest:"/404",status:404,continue:true},{src:"^/404/?$",status:404,continue:true,missing:[{type:"header",key:"x-prerender"}]},{src:"^/500$",status:500,continue:true},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"a1b2c3d4e5f6"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/submit.ts#submitForm"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"f6e5d4c3b2a1"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#loginUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"1a2b3c4d5e6f"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#logoutUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"6f5e4d3c2b1a"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#fetchItems"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"abcdef123456"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#updateItem"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"654321fedcba"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#deleteItem"}]},{src:"^/(?<path>.+?)(?:/)?$",dest:"/$path.segments/$segmentPath.segment.rsc",has:[{type:"header",key:"rsc",value:"1"},{type:"header",key:"prefetch",value:"1"},{type:"header",key:"segment-prefetch",value:"/(?<segmentPath>.+)"}],continue:true,override:true},{src:"^/?$",dest:"/index.segments/$segmentPath.segment.rsc"
+... (truncated)
+
+
+================================================================================
+[2026-01-10T20:59:30.432Z] jot/routes run 3
+❌ FAILED
+================================================================================
+
+🧪 SYSTEM PROMPT (test harness):
+You are a data format encoder. Given a FORMAT specification and JSON input, output ONLY the encoded result with no explanation, comments, or markdown formatting.
+
+FORMAT SPECIFICATION:
+# Jot Format
+
+Jot is JSON with unquoted keys. Keys don't need quotes unless they contain special characters.
+
+## Example
+
+```json
+{"name":"Alice","age":30,"active":true}
+```
+
+becomes:
+
+```jot
+{name:"Alice",age:30,active:true}
+```
+
+
+📝 USER PROMPT (test harness):
+Encode this JSON to JOT format. Output ONLY the encoded result, nothing else:
+
+{"before_filesystem":[{"src":"^/_analytics/script\\.js$","dest":"https://cdn.analytics.io/v1/script.js"},{"src":"^/_analytics/events$","dest":"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{"src":"^/(?:_metrics|perf)/(script\\.js)$","dest":"https://cdn.metrics.io/v1/$1"},{"src":"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$","headers":{"Location":"/$1"},"status":308,"continue":true},{"src":"^/_internal/trace$","dest":"/404","status":404,"continue":true},{"src":"^/404/?$","status":404,"continue":true,"missing":[{"type":"header","key":"x-prerender"}]},{"src":"^/500$","status":500,"continue":true},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"a1b2c3d4e5f6"}],"transforms":[{"type":"request.headers","op":"append","target":{"key":"x-action-name"},"args":"app/api/submit.ts#submitForm"}]},{"src":"^/(.*)$","has":[{"type":"header","key":"x-action","value":"f6e5d4c3b2a1"}],"transforms":[{"typ
+... (truncated)
+
+🤖 QWEN RESPONSE:
+{before_filesystem:[{src:"^/_analytics/script\\\\.js$",dest:"https://cdn.analytics.io/v1/script.js"},{src:"^/_analytics/events$",dest:"https://events.analytics.io/v1/collect?key=abc123&env=prod"},{src:"^/(?:_metrics|perf)/(script\\\\.js)$",dest:"https://cdn.metrics.io/v1/$1"},{src:"^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$",headers:{Location:"/$1"},status:308,continue:true},{src:"^/_internal/trace$",dest:"/404",status:404,continue:true},{src:"^/404/?$",status:404,continue:true,missing:[{type:"header",key:"x-prerender"}]},{src:"^/500$",status:500,continue:true},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"a1b2c3d4e5f6"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/submit.ts#submitForm"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"f6e5d4c3b2a1"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#loginUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"1a2b3c4d5e6f"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/auth.ts#logoutUser"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"6f5e4d3c2b1a"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#fetchItems"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"abcdef123456"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#updateItem"}]},{src:"^/(.*)$",has:[{type:"header",key:"x-action",value:"654321fedcba"}],transforms:[{type:"request.headers",op:"append",target:{key:"x-action-name"},args:"app/api/data.ts#deleteItem"}]},{src:"^/(?<path>.+?)(?:/)?$",dest:"/$path.segments/$segmentPath.segment.rsc",has:[{type:"header",key:"rsc",value:"1"},{type:"header",key:"prefetch",value:"1"},{type:"header",key:"segment-prefetch",value:"/(?<segmentPath>.+)"}],continue:true,override:true},{src:"^/?$",dest:"/index.segments/$segmentPath.segment.rsc"
 ... (truncated)
 
