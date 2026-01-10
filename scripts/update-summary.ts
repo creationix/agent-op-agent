@@ -155,15 +155,26 @@ function parseClaudeCounts(): Map<string, number> {
   return results
 }
 
-// Compute JSON mini per-file counts using legacy tokenizer (for chart baseline)
-function computeJsonMiniPerFile(): PerFileStats {
+// Compute per-file counts using legacy tokenizer (for consistent chart comparisons)
+function computePerFileLegacyCounts(formatDir: string, ext: string, transform?: (content: string) => string): PerFileStats {
   const results = new Map<string, number>()
   const jsonDir = join(ROOT, "json")
   const sourceFiles = readdirSync(jsonDir).filter((f) => f.endsWith(".json") && !f.includes("smart"))
 
   for (const file of sourceFiles) {
     const baseName = file.replace(".json", "")
-    const content = JSON.stringify(JSON.parse(readFileSync(join(jsonDir, file), "utf-8")))
+    let content: string
+
+    if (formatDir === "json" && transform) {
+      // For JSON, transform the source file
+      content = transform(readFileSync(join(jsonDir, file), "utf-8"))
+    } else {
+      // For other formats, read the converted file
+      const formatPath = join(ROOT, formatDir, `${baseName}.${ext}`)
+      if (!existsSync(formatPath)) continue
+      content = readFileSync(formatPath, "utf-8")
+    }
+
     results.set(baseName, countLegacyTokens(content))
   }
 
@@ -645,10 +656,19 @@ async function main() {
   writeFileSync(SUMMARY_PATH, summary)
 
   // Update TOKEN_COUNTS.md with per-file chart (% savings vs JSON)
+  // Use legacy tokenizer for ALL formats to ensure fair comparison
   if (existsSync(TOKEN_COUNTS_PATH)) {
     let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
-    const jsonMiniPerFile = computeJsonMiniPerFile()
-    const perFileChart = buildPerFileChart(perFileData, jsonMiniPerFile)
+
+    const legacyPerFile = new Map<string, PerFileStats>()
+    legacyPerFile.set("json-mini", computePerFileLegacyCounts("json", "json", (c) => JSON.stringify(JSON.parse(c))))
+    legacyPerFile.set("jot", computePerFileLegacyCounts("jot", "jot"))
+    legacyPerFile.set("lax", computePerFileLegacyCounts("lax", "lax"))
+    legacyPerFile.set("yaml", computePerFileLegacyCounts("yaml", "yaml"))
+    legacyPerFile.set("toon", computePerFileLegacyCounts("toon", "toon"))
+
+    const jsonMiniPerFile = legacyPerFile.get("json-mini")!
+    const perFileChart = buildPerFileChart(legacyPerFile, jsonMiniPerFile)
     tokenCounts = updateChart(tokenCounts, perFileChart)
     writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
     console.log("Updated TOKEN_COUNTS.md")
