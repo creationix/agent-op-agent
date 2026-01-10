@@ -6,8 +6,6 @@ Token counts for 18 test documents across three tokenizers. For LLM systems, **t
 
 **Use Jot** for LLM contexts — saves 16-17% tokens vs JSON.
 
-Note: Small models (e.g., Qwen3-30b) may struggle to encode large Jot documents accurately due to the format's advanced features like tables and key folding.
-
 ## Token Efficiency
 
 <!-- CHART_START -->
@@ -106,6 +104,22 @@ Formats like JSONito achieve excellent byte compression (-39%) but:
 - Token savings are inconsistent (small docs often cost more than JSON)
 - Deduplication preambles add overhead that doesn't scale down
 - LLMs cannot reliably generate formats requiring state tracking
+
+## LLM Encoding Ability
+
+Tested Qwen3-30b's ability to encode JSON → Jot (3 runs per document, 17 docs):
+
+| Document Type                                | Semantic Accuracy |
+|----------------------------------------------|------------------:|
+| Simple configs (small, metrics, package)     |              100% |
+| Key folding test cases                       |              100% |
+| Table-friendly (users-50)                    |              100% |
+| Text-heavy (chat)                            |              100% |
+| Complex/nested (large, firewall, routes)     |                0% |
+| Irregular schemas (medium, hikes, irregular) |                0% |
+| **Overall**                                  |           **47%** |
+
+Small models struggle with Jot's advanced features on complex documents. For LLM-generated output, consider using simpler Jot (unquoted strings only) or providing FORMAT.md as context.
 
 ## Tokenizers
 
