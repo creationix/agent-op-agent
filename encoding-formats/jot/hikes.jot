@@ -1,1 +1,1 @@
-{context:{task:Our favorite hikes together,location:Boulder,season:spring_2025},friends:[ana,luis,sam],hikes:(id,name,distanceKm,elevationGain,companion,wasSunny|1,Blue Lake Trail,7.5,320,ana,true|2,Ridge Overlook,9.2,540,luis,false|3,Wildflower Loop,5.1,180,sam,true)}
+{context:{task:Our favorite hikes together,location:Boulder,season:spring_2025},friends:[ana,luis,sam],hikes:{{id,name,distanceKm,elevationGain,companion,wasSunny;1,Blue Lake Trail,7.5,320,ana,true;2,Ridge Overlook,9.2,540,luis,false;3,Wildflower Loop,5.1,180,sam,true}}}

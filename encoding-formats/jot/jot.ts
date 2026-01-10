@@ -9,21 +9,20 @@
  *    {a:{b:{c:1}}} => {a.b.c:1}
  *    Use quoted keys for literal dots: {"a.b":1}
  *
- * 3. Tables - object arrays with schema rows
- *    [{a:1},{a:2}] => [:a|1|2]
- *    [{a:1},{b:2}] => [:a|1|:b|2]
- *    Schema rows start with `:`, active until next `:` row
+ * 3. Tables - object arrays with {{schema;row;row}} syntax
+ *    [{a:1},{a:2}] => {{a;1;2}}
+ *    Different schemas use regular array: [{a:1},{b:2}]
  *
  * Quoting rules - quote string values only if:
  *   - Parses as a number ("123", "1.0" - not "api5", "v2")
- *   - Contains unsafe chars: : , { } [ ] " |
+ *   - Contains unsafe chars: : , { } [ ] " ;
  *   - Equals true, false, or null
  *   - Has leading/trailing whitespace or is empty
  *   - Contains control characters (codepoint < 32)
  */
 
 const UNSAFE_STRINGS = new Set(["true", "false", "null"])
-const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '(', ')', '"', '|']
+const UNSAFE_CHARS = [':', ',', '{', '}', '[', ']', '"', ';', '\\']
 
 function needsQuoting(str: string): boolean {
   if (str === "") return true
@@ -115,21 +114,16 @@ function hasComplexItems(arr: unknown[]): boolean {
   return arr.some(item => item !== null && typeof item === "object")
 }
 
-// Check if object array has any schema reuse (worth using table format)
-function hasSchemaReuse(arr: Record<string, unknown>[]): boolean {
+// Check if ALL objects have identical keys (for table format)
+function hasUniformSchema(arr: Record<string, unknown>[]): boolean {
   if (arr.length < 2) return false
-  const schemas = new Set<string>()
-  for (const obj of arr) {
-    const schema = getSchemaKey(obj)
-    if (schemas.has(schema)) return true
-    schemas.add(schema)
-  }
-  return false
+  const firstKeys = getObjectKeys(arr[0]).sort().join(",")
+  return arr.every(obj => getObjectKeys(obj).sort().join(",") === firstKeys)
 }
 
 function stringifyArray(arr: unknown[]): string {
-  // Object arrays with schema reuse use table format
-  if (isObjectArray(arr) && hasSchemaReuse(arr as Record<string, unknown>[])) {
+  // Object arrays with uniform schemas use table format
+  if (isObjectArray(arr) && hasUniformSchema(arr as Record<string, unknown>[])) {
     return stringifyTable(arr as Record<string, unknown>[])
   }
 
@@ -162,38 +156,31 @@ function stringifyArray(arr: unknown[]): string {
 }
 
 function stringifyTable(arr: Record<string, unknown>[]): string {
+  // All objects have uniform schema
+  const keys = getObjectKeys(arr[0])
   const parts: string[] = []
-  let currentSchema: string | null = null
 
+  // First row is schema
+  const sep = currentOptions.pretty ? ", " : ","
+  parts.push(keys.join(sep))
+
+  // Data rows
   for (const obj of arr) {
-    const keys = getObjectKeys(obj)
-    const schemaKey = getSchemaKey(obj)
-
-    // Emit schema row if schema changed
-    if (schemaKey !== currentSchema) {
-      const sep = currentOptions.pretty ? ", " : ","
-      parts.push(keys.join(sep))
-      currentSchema = schemaKey
-    }
-
-    // Emit data row (increment depth for nested structures)
-    const sep = currentOptions.pretty ? ", " : ","
     if (currentOptions.pretty) depth++
     parts.push(keys.map(k => stringifyValue(obj[k])).join(sep))
     if (currentOptions.pretty) depth--
   }
 
   if (currentOptions.pretty) {
-    // Schema rows indent one char less than data rows
+    // Schema row indents one char less than data rows
     depth++
     const dataInd = ind()
     const schemaInd = dataInd.slice(1)  // One char less
-    // First row is schema, rest alternate between schema and data
     const rows = parts.map((p, i) => (i === 0 ? schemaInd + p : dataInd + p)).join("\n")
     depth--
-    return `(\n${rows}\n${ind()})`
+    return `{{\n${rows}\n${ind()}}}`
   }
-  return `(${parts.join("|")})`
+  return `{{${parts.join(";")}}}`
 }
 
 function stringifyObject(obj: Record<string, unknown>): string {
@@ -284,9 +271,12 @@ class JotParser {
     this.skipWhitespace()
     const ch = this.peek()
 
-    if (ch === "{") return this.parseObject()
+    if (ch === "{") {
+      // Check if it's {{ (table) or { (object)
+      if (this.input[this.pos + 1] === "{") return this.parseTable()
+      return this.parseObject()
+    }
     if (ch === "[") return this.parseArray()
-    if (ch === "(") return this.parseTable()
     if (ch === '"') return this.parseQuotedString()
 
     // Unquoted value - read until terminator
@@ -399,20 +389,25 @@ class JotParser {
     const ch = this.peek()
 
     if (ch === '"') return this.parseQuotedString()
-    if (ch === "{") return this.parseObject()
+    if (ch === "{") {
+      // Check for {{ (table) vs { (object)
+      if (this.input[this.pos + 1] === "{") return this.parseTable()
+      return this.parseObject()
+    }
     if (ch === "[") return this.parseArray()
-    if (ch === "(") return this.parseTable()
 
-    // Read until terminator
+    // Read until terminator, but check for }} specially
     const start = this.pos
     while (this.pos < this.input.length) {
       const c = this.input[this.pos]
+      // Check for }} table end
+      if (c === "}" && this.input[this.pos + 1] === "}") break
       if (terminators.includes(c)) break
       this.pos++
     }
 
     let token = this.input.slice(start, this.pos).trim()
-    if (token === "") return null // empty cell
+    if (token === "") return "" // empty cell (for sparse tables)
 
     // Keywords
     if (token === "null") return null
@@ -452,46 +447,58 @@ class JotParser {
     return result
   }
 
-  // Parse table: (schema|row|row|...)
-  // First row is schema, all following rows are data (no schema changes with () syntax)
+  // Parse table: {{schema|row|row|...}}
+  // First row is schema, all following rows are data
   private parseTable(): unknown[] {
-    if (this.peek() !== "(") {
-      throw new Error(`Expected '(' at position ${this.pos}`)
+    if (this.input.slice(this.pos, this.pos + 2) !== "{{") {
+      throw new Error(`Expected '{{' at position ${this.pos}`)
     }
-    this.pos++ // skip (
+    this.pos += 2 // skip {{
 
     const result: Record<string, unknown>[] = []
     this.skipWhitespace()
 
     // First row is always schema
     const schema = this.parseSchemaRow()
+    if (schema.length === 0) {
+      throw new Error(`Empty schema in table at position ${this.pos}`)
+    }
     this.skipWhitespace()
-    if (this.peek() === "|") {
+    if (this.peek() === ";") {
       this.pos++
       this.skipWhitespace()
     }
 
-    // Remaining rows are data
-    while (this.peek() !== ")") {
+    // Remaining rows are data - look for }}
+    let lastPos = -1
+    while (this.input.slice(this.pos, this.pos + 2) !== "}}") {
       if (this.pos >= this.input.length) {
         throw new Error("Unterminated table")
       }
+      // Safety check: ensure we're making progress
+      if (this.pos === lastPos) {
+        throw new Error(`Parser stuck at position ${this.pos}`)
+      }
+      lastPos = this.pos
 
       const values = this.parseDataRow(schema.length)
       const obj: Record<string, unknown> = {}
       for (let i = 0; i < schema.length; i++) {
-        obj[schema[i]] = values[i] ?? null
+        // Sparse tables: skip keys with empty/missing values
+        if (values[i] !== "" && values[i] !== undefined) {
+          obj[schema[i]] = values[i]
+        }
       }
       result.push(obj)
 
       this.skipWhitespace()
-      if (this.peek() === "|") {
+      if (this.peek() === ";") {
         this.pos++
         this.skipWhitespace()
       }
     }
 
-    this.pos++ // skip )
+    this.pos += 2 // skip }}
     return result
   }
 
@@ -501,7 +508,12 @@ class JotParser {
 
     while (this.pos < this.input.length) {
       const ch = this.input[this.pos]
-      if (ch === "|" || ch === ")" || ch === "]" || ch === "\n") {
+      // Check for }} table end
+      if (ch === "}" && this.input[this.pos + 1] === "}") {
+        if (col.trim()) cols.push(col.trim())
+        break
+      }
+      if (ch === ";" || ch === "]" || ch === "\n") {
         if (col.trim()) cols.push(col.trim())
         break
       }
@@ -523,7 +535,8 @@ class JotParser {
 
     for (let i = 0; i < colCount; i++) {
       this.skipWhitespace()
-      const terminators = i < colCount - 1 ? ",|)]\n" : "|)]\n"
+      // Use }} as table terminator, ; as row separator
+      const terminators = i < colCount - 1 ? ",;]\n" : ";]\n"
       const value = this.parseTableValue(terminators)
       values.push(value)
       this.skipWhitespace()
@@ -671,7 +684,7 @@ if ((import.meta as { main?: boolean }).main) {
     ["reserved null", "null", '"null"'],
     ["contains colon", "a:b", '"a:b"'],
     ["contains comma", "a,b", '"a,b"'],
-    ["contains pipe", "a|b", '"a|b"'],
+    ["contains semicolon", "a;b", '"a;b"'],
     ["leading space", " hi", '" hi"'],
     ["trailing space", "hi ", '"hi "'],
 
@@ -691,14 +704,15 @@ if ((import.meta as { main?: boolean }).main) {
     ["fold in multi-key", { a: { b: 1 }, c: { d: 2 } }, "{a.b:1,c.d:2}"],
     ["no fold multi-key value", { a: { b: 1, c: 2 } }, "{a:{b:1,c:2}}"],
 
-    // Tables (object arrays with schema reuse)
-    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "[:a,b|1,2|3,4]"],
-    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "[:x|1|2|3]"],
-    ["schema runs", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }], "[:a|1|2|:b|3|4]"],
+    // Tables (uniform schema object arrays)
+    ["uniform table", [{ a: 1, b: 2 }, { a: 3, b: 4 }], "{{a,b;1,2;3,4}}"],
+    ["3-row table", [{ x: 1 }, { x: 2 }, { x: 3 }], "{{x;1;2;3}}"],
+    // Different keys use regular array
+    ["different keys", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
+    ["mixed keys", [{ a: 1, b: 2 }, { a: 3, c: 4 }], "[{a:1,b:2},{a:3,c:4}]"],
 
-    // Object arrays without schema reuse (no table format)
+    // Single object arrays stay as arrays
     ["single obj array", [{ a: 1 }], "[{a:1}]"],
-    ["no schema reuse", [{ a: 1 }, { b: 2 }], "[{a:1},{b:2}]"],
 
     // Single-item arrays
     ["single item", [42], "[42]"],
@@ -712,10 +726,10 @@ if ((import.meta as { main?: boolean }).main) {
   const prettyTests: [string, unknown, string][] = [
     ["pretty object", { a: 1, b: 2 }, "{\n  a: 1,\n  b: 2\n}"],
     ["pretty array inline", [1, 2, 3], "[ 1, 2, 3 ]"],
-    ["pretty table", [{ x: 1 }, { x: 2 }], "[\n :x\n  1\n  2\n]"],
+    ["pretty table", [{ x: 1 }, { x: 2 }], "{{\n x\n  1\n  2\n}}"],
     ["pretty fold", { a: { b: 1 }, c: { d: 2 } }, "{\n  a.b: 1,\n  c.d: 2\n}"],
     ["pretty array value", { items: [1, 2] }, "{ items: [ 1, 2 ] }"],
-    ["pretty table value", { labels: [{ name: "bug" }, { name: "fix" }] }, "{ labels: [\n :name\n  bug\n  fix\n] }"],
+    ["pretty table value", { labels: [{ name: "bug" }, { name: "fix" }] }, "{ labels: {{\n name\n  bug\n  fix\n}} }"],
   ]
 
   let passed = 0
@@ -792,9 +806,9 @@ if ((import.meta as { main?: boolean }).main) {
     ["parse quoted key literal", '{"a.b":1}', { "a.b": 1 }],
 
     // Tables
-    ["parse uniform table", "[:a,b|1,2|3,4]", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
-    ["parse 3-row table", "[:x|1|2|3]", [{ x: 1 }, { x: 2 }, { x: 3 }]],
-    ["parse schema change", "[:a|1|2|:b|3|4]", [{ a: 1 }, { a: 2 }, { b: 3 }, { b: 4 }]],
+    ["parse uniform table", "{{a,b;1,2;3,4}}", [{ a: 1, b: 2 }, { a: 3, b: 4 }]],
+    ["parse 3-row table", "{{x;1;2;3}}", [{ x: 1 }, { x: 2 }, { x: 3 }]],
+    ["parse multi-schema", "{{a;1;2}}", [{ a: 1 }, { a: 2 }]],
 
     // Complex nested
     ["parse nested array obj", "{users:[{id:1,name:Alice}]}", { users: [{ id: 1, name: "Alice" }] }],

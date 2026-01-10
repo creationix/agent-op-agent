@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-01-10T18:36:14.972Z",
+  "timestamp": "2026-01-10T18:43:55.517Z",
   "runsPerDoc": 1,
   "summary": [
     {
       "format": "jot",
       "exactRate": 0,
-      "semanticRate": 0.7058823529411765,
+      "semanticRate": 0.6470588235294118,
       "totalRuns": 17,
       "exactPasses": 0,
-      "semanticPasses": 12
+      "semanticPasses": 11
     }
   ],
   "details": [
@@ -74,7 +74,7 @@
               "run": 1,
               "exactMatch": false,
               "semantic": false,
-              "actual": "{\n  logs: {{\n    ts,level,service,msg,method,path,duration_ms,status,user_id,error,count,client,endpoint,query,ttl,used_mb,max_mb,event,deprecated;\n    \"2024-01-15T10:00:01Z\",\"info\",\"api\",\"Server started on port 3000\",,,;\n    \"2024-01-15T10:00:02Z\",\"info\",\"db\",\"Connected to database\",,,;\n    \"2024-0"
+              "actual": "{\n  logs: {{\n    ts,level,service,msg,method,path,duration_ms,status,user_id,ip,retry,key,count,endpoint,error,used_mb,max_mb,query,event,client;\n    \"2024-01-15T10:00:01Z\",\"info\",\"api\",\"Server started on port 3000\";\n    \"2024-01-15T10:00:02Z\",\"info\",\"db\",\"Connected to database\";\n    \"2024-01-15T10:"
             }
           ],
           "exactRate": 0,
@@ -87,7 +87,7 @@
               "run": 1,
               "exactMatch": false,
               "semantic": true,
-              "actual": "{\n  active: true,\n  ruleGroups.php_attacks: {\n    active: true,\n    action: \"deny\",\n    rules: {\n      php_suffix: {\n        has: [{type: \"path\", key: null, value: {suf: \".php\"}}],\n        missing: [{type: \"header\", key: \"x-secret\", value: {eq: \"bypass\"}}],\n        phase: \"finalize\",\n        system:"
+              "actual": "{\n  active: true,\n  ruleGroups.php_attacks: {\n    active: true,\n    action: \"deny\",\n    rules: {\n      php_suffix: {\n        has: [{type:\"path\",key:null,value:{suf:\".php\"}}],\n        missing: [{type:\"header\",key:\"x-secret\",value:{eq:\"bypass\"}}],\n        phase: \"finalize\",\n        system: true\n      "
             }
           ],
           "exactRate": 0,
@@ -164,12 +164,12 @@
             {
               "run": 1,
               "exactMatch": false,
-              "semantic": true,
-              "actual": "{\n  name: \"my-app\",\n  version: \"1.0.0\",\n  scripts: {\n    dev: \"vite\",\n    build: \"tsc && vite build\",\n    test: \"vitest\"\n  },\n  dependencies: {\n    react: \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\"\n  },\n  devDependencies: {\n    typescript: \"^5.0.0\",\n    vite: \"^5.0.0\",\n    vitest: \"^1.0.0\"\n  }\n}"
+              "semantic": false,
+              "actual": "{\n  name: \"my-app\",\n  version: \"1.0.0\",\n  scripts.dev: \"vite\",\n  scripts.build: \"tsc && vite build\",\n  scripts.test: \"vitest\",\n  dependencies.react: \"^18.2.0\",\n  dependencies.\"react-dom\": \"^18.2.0\",\n  devDependencies.typescript: \"^5.0.0\",\n  devDependencies.vite: \"^5.0.0\",\n  devDependencies.vitest: \""
             }
           ],
           "exactRate": 0,
-          "semanticRate": 1
+          "semanticRate": 0
         },
         {
           "doc": "key-folding-basic",
@@ -191,7 +191,7 @@
               "run": 1,
               "exactMatch": false,
               "semantic": false,
-              "actual": "{\n  events: {{\n    type,x,y,offset,key,shift,width,height;\n    \"click\",100,200,,,,\n    \"scroll\",,,450,,,,\n    \"keypress\",,,,,\"Enter\",true,\n    \"resize\",,,,,1920,1080\n  }}\n}"
+              "actual": "{\n  events: {{\n    type,x,y,offset,key,shift,width,height;\n    \"click\",100,200,,,\"\",,,;\n    \"scroll\",,,450,,,,\"\",;\n    \"keypress\",,,,,\"Enter\",true,,;\n    \"resize\",,,,,,,1920,1080\n  }}\n}"
             }
           ],
           "exactRate": 0,
@@ -217,7 +217,7 @@
               "run": 1,
               "exactMatch": false,
               "semantic": false,
-              "actual": "{\n  catalog: {\n    version: \"2.1\",\n    updated: \"2024-01-15\",\n    currency: \"USD\"\n  },\n  categories: {{\n    id,name,parent;\n    \"electronics\",\"Electronics\",;\n    \"computers\",\"Computers\",\"electronics\";\n    \"phones\",\"Phones\",\"electronics\";\n    \"clothing\",\"Clothing\",;\n    \"mens\",\"Men's\",\"clothing\";\n   "
+              "actual": "{\n  catalog: {\n    version: \"2.1\",\n    updated: \"2024-01-15\",\n    currency: \"USD\"\n  },\n  categories: {{\n    id,name,parent;\n    \"electronics\",\"Electronics\",null;\n    \"computers\",\"Computers\",\"electronics\";\n    \"phones\",\"Phones\",\"electronics\";\n    \"clothing\",\"Clothing\",null;\n    \"mens\",\"Men's\",\"clothi"
             }
           ],
           "exactRate": 0,
@@ -230,7 +230,7 @@
               "run": 1,
               "exactMatch": false,
               "semantic": false,
-              "actual": "{\n  before_filesystem: {{\n    src,dest,headers,status,continue,missing,has,transforms,check,override,segments,segmentPath,segment,rsc,prefetch,segment-prefetch,vary,action-name;\n    \"^/_analytics/script\\\\\\\\.js$\",\"https://cdn.analytics.io/v1/script.js\",,,;\n    \"^/_analytics/events$\",\"https://events.a"
+              "actual": "{\n  before_filesystem: {{\n    src,dest;\n    \"^/_analytics/script\\\\\\\\.js$\",\"https://cdn.analytics.io/v1/script.js\";\n    \"^/_analytics/events$\",\"https://events.analytics.io/v1/collect?key=abc123&env=prod\";\n    \"^/(?:_metrics|perf)/(script\\\\\\\\.js)$\",\"https://cdn.metrics.io/v1/$1\";\n    \"^/(?:/((?:[^/]+?"
             }
           ],
           "exactRate": 0,
@@ -238,10 +238,10 @@
         }
       ],
       "overallExactRate": 0,
-      "overallSemanticRate": 0.7058823529411765,
+      "overallSemanticRate": 0.6470588235294118,
       "totalRuns": 17,
       "exactPasses": 0,
-      "semanticPasses": 12
+      "semanticPasses": 11
     }
   ]
 }

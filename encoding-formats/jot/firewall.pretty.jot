@@ -50,7 +50,7 @@
           system: true },
         or_1_equals_1: { has: [{ type: query,
             key: null,
-            value.regex: OR\s+1\s*=\s*1 }],
+            value.regex: "OR\\s+1\\s*=\\s*1" }],
           phase: init,
           system: true } } },
     rate_limiting: { active: true,
@@ -98,14 +98,14 @@
           system: true },
         known_bad_bots: { has: [{ type: header,
             key: user-agent,
-            value.regex: "(BadBot|Scraper|Harvester)" }],
+            value.regex: (BadBot|Scraper|Harvester) }],
           phase: init,
           system: true },
-        suspicious_rate: { has: (
+        suspicious_rate: { has: {{
            type, key, value
             rate, ip, { gt: 50 }
             header, user-agent, { regex: ^Mozilla }
-          ),
+          }},
           phase: finalize,
           system: false } } },
     custom_rules: { active: true,
