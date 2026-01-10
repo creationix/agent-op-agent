@@ -61,6 +61,7 @@ const COMPACT_FORMATS = ["jot", "jsonito", "lax", "d2", "json-mini"]
 const PRETTY_FORMATS = ["jot-pretty", "json-smart", "yaml", "toml", "toon", "json-pretty"]
 
 type FormatStats = { tokens: number; bytes: number; claudeTokens?: number; legacyTokens?: number }
+type PerFileStats = Map<string, number> // fileName -> tokens
 
 function parseCountsFile(content: string): Map<string, FormatStats> {
   const results = new Map<string, FormatStats>()
@@ -79,6 +80,45 @@ function parseCountsFile(content: string): Map<string, FormatStats> {
         tokens: parseInt(totalMatch[1]),
         bytes: parseInt(totalMatch[2]),
       })
+    }
+  }
+
+  return results
+}
+
+// Parse per-file token counts from counts.txt (for the first extension only)
+function parsePerFileCountsFile(content: string, targetExt?: string): PerFileStats {
+  const results = new Map<string, number>()
+  let currentExt = ""
+  let foundTarget = false
+
+  for (const line of content.split("\n")) {
+    const sectionMatch = line.match(/^=== \.(.+) files ===$/)
+    if (sectionMatch) {
+      currentExt = sectionMatch[1]
+      // If we have a target extension, only parse that section
+      if (targetExt) {
+        foundTarget = currentExt === targetExt
+      } else {
+        // Otherwise, only parse the first section
+        foundTarget = results.size === 0
+      }
+      continue
+    }
+
+    if (!foundTarget) continue
+
+    // Match lines like: "chat.jot                       67 tokens     235 bytes"
+    const fileMatch = line.match(/^(\S+)\.\S+\s+(\d+)\s+tokens/)
+    if (fileMatch && currentExt) {
+      const fileName = fileMatch[1]
+      const tokens = parseInt(fileMatch[2])
+      results.set(fileName, tokens)
+    }
+
+    // Stop when we hit total line
+    if (line.match(/^Total\s+\d+\s+tokens/)) {
+      if (!targetExt) break // Only break early if not targeting specific extension
     }
   }
 
@@ -352,6 +392,73 @@ ${lines}
 \`\`\``
 }
 
+// Per-file chart labels (shorter names for x-axis)
+const FILE_LABELS: Record<string, string> = {
+  chat: "Chat",
+  metrics: "Metrics",
+  large: "Large",
+  "key-folding-mixed": "KF-mix",
+  logs: "Logs",
+  firewall: "Firewall",
+  small: "Small",
+  "github-issue": "Issue",
+  "users-50": "Users50",
+  medium: "Medium",
+  hikes: "Hikes",
+  package: "Package",
+  "key-folding-basic": "KF-basic",
+  irregular: "Irregular",
+  "key-folding-with-array": "KF-arr",
+  products: "Products",
+  routes: "Routes",
+}
+
+// Build chart showing per-file token counts for different formats
+function buildPerFileChart(perFileData: Map<string, PerFileStats>): string {
+  // Get all file names from the first format
+  const firstFormat = perFileData.values().next().value
+  if (!firstFormat) return ""
+
+  const fileNames = Array.from(firstFormat.keys())
+    .filter((f) => FILE_LABELS[f])
+    .sort((a, b) => (firstFormat.get(a) ?? 0) - (firstFormat.get(b) ?? 0))
+
+  const labels = fileNames.map((f) => FILE_LABELS[f] || f)
+
+  // Build lines for each format
+  const formatLines: string[] = []
+  let maxVal = 0
+
+  // Order formats by total tokens (ascending)
+  const formatOrder = Array.from(perFileData.entries())
+    .map(([key, stats]) => ({
+      key,
+      total: Array.from(stats.values()).reduce((a, b) => a + b, 0),
+    }))
+    .sort((a, b) => a.total - b.total)
+    .map((f) => f.key)
+
+  for (const formatKey of formatOrder) {
+    const stats = perFileData.get(formatKey)
+    if (!stats) continue
+
+    const label = CHART_LABELS[formatKey] || formatKey
+    const values = fileNames.map((f) => stats.get(f) ?? 0)
+    maxVal = Math.max(maxVal, ...values)
+    formatLines.push(`    line "${label}" [${values.join(", ")}]`)
+  }
+
+  const yMax = Math.ceil(maxVal / 500) * 500 + 500
+
+  return `\`\`\`mermaid
+xychart-beta
+    title "Token Counts by File"
+    x-axis [${labels.map((l) => `"${l}"`).join(", ")}]
+    y-axis "Tokens" 0 --> ${yMax}
+${formatLines.join("\n")}
+\`\`\``
+}
+
 function updateChart(content: string, chart: string): string {
   const startMarker = "<!-- CHART_START -->"
   const endMarker = "<!-- CHART_END -->"
@@ -394,6 +501,7 @@ function saveJsonCountsCache(cache: JsonCountsCache) {
 
 async function main() {
   const allStats: Map<string, FormatStats> = new Map()
+  const perFileData: Map<string, PerFileStats> = new Map() // for per-file chart
   const claudeCounts = parseClaudeCounts()
   const hasClaude = claudeCounts.size > 0
 
@@ -424,6 +532,8 @@ async function main() {
       const prettyStats = stats.get("pretty.jot")
       if (jotStats) allStats.set("jot", jotStats)
       if (prettyStats) allStats.set("jot-pretty", prettyStats)
+      // Collect per-file data for jot (compact format only)
+      perFileData.set("jot", parsePerFileCountsFile(content, "jot"))
     } else if (dir.name === "json") {
       // Get smart JSON stats from counts.txt
       const smartStats = stats.get("smart.json")
@@ -475,6 +585,8 @@ async function main() {
       const ext = Array.from(stats.keys())[0]
       if (ext) {
         allStats.set(dir.name, stats.get(ext)!)
+        // Collect per-file data for this format
+        perFileData.set(dir.name, parsePerFileCountsFile(content))
       }
     }
   }
@@ -501,10 +613,11 @@ async function main() {
   summary = updateSection(summary, "<!-- PRETTY_START -->", "<!-- PRETTY_END -->", prettyTable, hasLegacy, hasClaude)
   writeFileSync(SUMMARY_PATH, summary)
 
-  // Update TOKEN_COUNTS.md chart
+  // Update TOKEN_COUNTS.md with per-file chart
   if (existsSync(TOKEN_COUNTS_PATH)) {
     let tokenCounts = readFileSync(TOKEN_COUNTS_PATH, "utf-8")
-    tokenCounts = updateChart(tokenCounts, chart)
+    const perFileChart = buildPerFileChart(perFileData)
+    tokenCounts = updateChart(tokenCounts, perFileChart)
     writeFileSync(TOKEN_COUNTS_PATH, tokenCounts)
     console.log("Updated TOKEN_COUNTS.md")
   }
