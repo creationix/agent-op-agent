@@ -64,6 +64,19 @@ JSON with three optimizations:
 {config.host:localhost,users:{{:id,name;1,Alice;2,Bob}}}
 ```
 
+It also has a pretty-printed variant that adds indentation and newlines for readability.
+
+```jot
+{
+  config.host: localhost,
+  users: {{
+    :id, name;
+      1, Alice;
+      2, Bob
+  }}
+}
+```
+
 ### [TOON](toon/)
 
 YAML-like indentation with optional table syntax and count guards.
@@ -77,6 +90,10 @@ users[2]{id,name}:
 ### [JSONito](https://github.com/creationix/jsonito)
 
 Byte-optimized JSON with string deduplication via preamble dictionary.
+
+```jito
+{name'config'version'5~1.0.0enabled'!a~maxRetries6.timeout'eFw.tags'[a~productionapi'v1']}
+```
 
 ### [D2](https://github.com/creationix/d2)
 
