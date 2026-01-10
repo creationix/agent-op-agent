@@ -89,6 +89,19 @@ Reads counts from:
 
 Caches slow LM Studio JSON mini/pretty counts for 24 hours.
 
+### Testing LLM Accuracy
+
+```bash
+bun scripts/test-llm-accuracy.ts [format|all] [--encode|--decode|--both]
+```
+
+Tests Qwen's ability to encode/decode formats using FORMAT.md as reference. Requires LM Studio.
+
+- **Exact match**: Output matches reference encoder exactly
+- **Semantic**: Output parses back to correct JSON (allows formatting differences)
+
+Results saved to `encoding-formats/llm-accuracy-<date>.json`.
+
 ### Full Workflow
 
 1. Edit source JSON files in `encoding-formats/json/`
@@ -99,13 +112,14 @@ Caches slow LM Studio JSON mini/pretty counts for 24 hours.
 
 ## Next Steps
 
-1. **LLM read/write testing** - measure model accuracy generating these formats
-2. **Optimize tokenization** - investigate why certain patterns tokenize poorly
+1. **Optimize tokenization** - investigate why certain patterns tokenize poorly
 
 ## Key Files
 
 - `encoding-formats/SUMMARY.md` - token comparison results
 - `encoding-formats/gen.ts` - unified generator for all formats
 - `encoding-formats/jot/jot.ts` - Jot encoder/decoder
+- `encoding-formats/*/FORMAT.md` - format specifications for LLM prompts (jot, lax, toon)
 - `encoding-formats/json/*.json` - 17 source test documents
 - `encoding-formats/json/smart-json.ts` - smart JSON formatter
+- `scripts/test-llm-accuracy.ts` - LLM encode/decode accuracy testing

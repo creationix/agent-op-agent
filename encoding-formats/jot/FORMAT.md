@@ -22,12 +22,27 @@ Keys follow the same rules, plus: quote keys containing `.` to prevent unfolding
 
 ## Key Folding
 
-Dotted keys unfold into nested objects:
+Key folding ONLY applies to chains of single-key objects ending in a primitive value:
 
 ```jot
 {a:{b:{c:1}}}  =>  {a.b.c:1}
 {x:{a:1},y:{b:2}}  =>  {x.a:1,y.b:2}
 ```
+
+**DO NOT fold** when:
+
+- Value is an array: `{users:[...]}` stays as `{users:[...]}`
+- Value is a table: `{users:[:id|1|2]}` stays as `{users:[:id|1|2]}`
+- Object has multiple keys: `{a:{x:1,y:2}}` stays as `{a:{x:1,y:2}}`
+
+```jot
+{data:[1,2,3]}        =>  {data:[1,2,3]}       (array - NO fold)
+{users:[:id|1|2]}     =>  {users:[:id|1|2]}    (table - NO fold)
+{obj:{a:1,b:2}}       =>  {obj:{a:1,b:2}}      (multi-key - NO fold)
+{deep:{x:{y:1}}}      =>  {deep.x.y:1}         (single-key chain - fold OK)
+```
+
+**Key rule:** Only use `.` when ALL intermediate objects have exactly ONE key AND the final value is a primitive (not array/table).
 
 For literal dots in keys, use quotes:
 
@@ -60,6 +75,22 @@ Schema changes mid-table with new `:` row:
 | `[{"x":1},{"x":2}]`         | `[:x\|1\|2]`          |
 | `"hello world"`             | `hello world`         |
 | `"123"`                     | `"123"`               |
+
+### Complete Example
+
+JSON input:
+
+```json
+{"users":[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}],"meta":{"count":2}}
+```
+
+Jot output:
+
+```jot
+{users:[:id,name|1,Alice|2,Bob],meta:{count:2}}
+```
+
+Note: The outer `{...}` wraps the whole object. `users:` has a table value, `meta:` has an object value.
 
 ## Decoding
 

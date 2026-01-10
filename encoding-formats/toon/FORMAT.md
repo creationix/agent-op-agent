@@ -85,6 +85,7 @@ Equivalent JSON: `{"tags":["production","api","v1"]}`
 3. `key[N]:` followed by comma-separated values is a primitive array
 4. Increased indentation indicates nesting
 5. Unquoted values: parse as number/bool/null, else string
+6. **Preserve values exactly** - `name: my-app` → `{"name":"my-app"}` (keep the full value)
 
 ## Reference
 

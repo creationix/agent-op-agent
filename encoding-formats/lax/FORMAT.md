@@ -15,9 +15,15 @@ Lax is relaxed JSON syntax optimized for readability and simpler tokenization.
 
 ## Quoting Rules
 
-**Keys:** Never quoted. Keys are bare identifiers.
+**Keys:** NEVER quoted. Keys are bare identifiers that can contain letters, numbers, hyphens, underscores, etc. Only `:`, `{`, `}`, `[`, `]`, and whitespace end a key.
+
+```lax
+{react-dom:"^18.2.0"}     ✓ correct (hyphen in key is fine)
+{"react-dom":"^18.2.0"}   ✗ wrong (never quote keys)
+```
 
 **Values:**
+
 - Strings: Always quoted (`"hello"`, `"hello world"`)
 - Numbers: Unquoted (`42`, `3.14`, `-17`)
 - Booleans: Unquoted (`true`, `false`)

@@ -1,0 +1,181 @@
+{
+  "timestamp": "2026-01-10T05:53:49.941Z",
+  "testFiles": [
+    "small",
+    "medium",
+    "package"
+  ],
+  "results": [
+    {
+      "format": "jot",
+      "encodeAccuracy": 1,
+      "decodeAccuracy": 1,
+      "encodeSemanticAccuracy": 1,
+      "decodeSemanticAccuracy": 1,
+      "results": [
+        {
+          "file": "small",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[production,api,v1]}",
+          "actual": "{name:config,version:1.0.0,enabled:true,maxRetries:3,timeout:30000,tags:[production,api,v1]}"
+        },
+        {
+          "file": "small",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"config\",\"version\":\"1.0.0\",\"enabled\":true,\"maxRetries\":3,\"timeout\":30000,\"tags\":[\"production\",\"api\",\"v1\"]}",
+          "actual": "{\n  \"name\": \"config\",\n  \"version\": \"1.0.0\",\n  \"enabled\": true,\n  \"maxRetries\": 3,\n  \"timeout\": 30000,\n  \"tags\": [\n    \"production\",\n    \"api\",\n    \"v1\"\n  ]\n}"
+        },
+        {
+          "file": "medium",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{users:[:id,name,email,role,active|1,Alice Johnson,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false],metadata:{total:3,page:1,perPage:10}}",
+          "actual": "{users:[:id,name,email,role,active|1,Alice Johnson,alice@example.com,admin,true|2,Bob Smith,bob@example.com,user,true|3,Carol Davis,carol@example.com,user,false],metadata:{total:3,page:1,perPage:10}}"
+        },
+        {
+          "file": "medium",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"users\":[{\"id\":1,\"name\":\"Alice Johnson\",\"email\":\"alice@example.com\",\"role\":\"admin\",\"active\":true},{\"id\":2,\"name\":\"Bob Smith\",\"email\":\"bob@example.com\",\"role\":\"user\",\"active\":true},{\"id\":3,\"name\":\"Car",
+          "actual": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"Alice Johnson\",\n      \"email\": \"alice@example.com\",\n      \"role\": \"admin\",\n      \"active\": true\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Bob Smith\""
+        },
+        {
+          "file": "package",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{name:my-app,version:1.0.0,scripts:{dev:vite,build:tsc && vite build,test:vitest},dependencies:{react:^18.2.0,react-dom:^18.2.0},devDependencies:{typescript:^5.0.0,vite:^5.0.0,vitest:^1.0.0}}",
+          "actual": "{name:my-app,version:1.0.0,scripts:{dev:vite,build:tsc && vite build,test:vitest},dependencies:{react:^18.2.0,react-dom:^18.2.0},devDependencies:{typescript:^5.0.0,vite:^5.0.0,vitest:^1.0.0}}"
+        },
+        {
+          "file": "package",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"my-app\",\"version\":\"1.0.0\",\"scripts\":{\"dev\":\"vite\",\"build\":\"tsc && vite build\",\"test\":\"vitest\"},\"dependencies\":{\"react\":\"^18.2.0\",\"react-dom\":\"^18.2.0\"},\"devDependencies\":{\"typescript\":\"^5.0.0",
+          "actual": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc && vite build\",\n    \"test\": \"vitest\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \""
+        }
+      ]
+    },
+    {
+      "format": "lax",
+      "encodeAccuracy": 1,
+      "decodeAccuracy": 1,
+      "encodeSemanticAccuracy": 1,
+      "decodeSemanticAccuracy": 1,
+      "results": [
+        {
+          "file": "small",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{name:\"config\" version:\"1.0.0\" enabled:true maxRetries:3 timeout:30000 tags:[\"production\" \"api\" \"v1\"]}",
+          "actual": "{name:\"config\" version:\"1.0.0\" enabled:true maxRetries:3 timeout:30000 tags:[\"production\" \"api\" \"v1\"]}"
+        },
+        {
+          "file": "small",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"config\",\"version\":\"1.0.0\",\"enabled\":true,\"maxRetries\":3,\"timeout\":30000,\"tags\":[\"production\",\"api\",\"v1\"]}",
+          "actual": "{\"name\":\"config\",\"version\":\"1.0.0\",\"enabled\":true,\"maxRetries\":3,\"timeout\":30000,\"tags\":[\"production\",\"api\",\"v1\"]}"
+        },
+        {
+          "file": "medium",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{users:[{id:1 name:\"Alice Johnson\" email:\"alice@example.com\" role:\"admin\" active:true} {id:2 name:\"Bob Smith\" email:\"bob@example.com\" role:\"user\" active:true} {id:3 name:\"Carol Davis\" email:\"carol@exa",
+          "actual": "{users:[{id:1 name:\"Alice Johnson\" email:\"alice@example.com\" role:\"admin\" active:true} {id:2 name:\"Bob Smith\" email:\"bob@example.com\" role:\"user\" active:true} {id:3 name:\"Carol Davis\" email:\"carol@exa"
+        },
+        {
+          "file": "medium",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"users\":[{\"id\":1,\"name\":\"Alice Johnson\",\"email\":\"alice@example.com\",\"role\":\"admin\",\"active\":true},{\"id\":2,\"name\":\"Bob Smith\",\"email\":\"bob@example.com\",\"role\":\"user\",\"active\":true},{\"id\":3,\"name\":\"Car",
+          "actual": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"Alice Johnson\",\n      \"email\": \"alice@example.com\",\n      \"role\": \"admin\",\n      \"active\": true\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Bob Smith\""
+        },
+        {
+          "file": "package",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "{name:\"my-app\" version:\"1.0.0\" scripts:{dev:\"vite\" build:\"tsc && vite build\" test:\"vitest\"} dependencies:{react:\"^18.2.0\" react-dom:\"^18.2.0\"} devDependencies:{typescript:\"^5.0.0\" vite:\"^5.0.0\" vitest",
+          "actual": "{name:\"my-app\" version:\"1.0.0\" scripts:{dev:\"vite\" build:\"tsc && vite build\" test:\"vitest\"} dependencies:{react:\"^18.2.0\" react-dom:\"^18.2.0\"} devDependencies:{typescript:\"^5.0.0\" vite:\"^5.0.0\" vitest"
+        },
+        {
+          "file": "package",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"my-app\",\"version\":\"1.0.0\",\"scripts\":{\"dev\":\"vite\",\"build\":\"tsc && vite build\",\"test\":\"vitest\"},\"dependencies\":{\"react\":\"^18.2.0\",\"react-dom\":\"^18.2.0\"},\"devDependencies\":{\"typescript\":\"^5.0.0",
+          "actual": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc && vite build\",\n    \"test\": \"vitest\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \""
+        }
+      ]
+    },
+    {
+      "format": "toon",
+      "encodeAccuracy": 1,
+      "decodeAccuracy": 1,
+      "encodeSemanticAccuracy": 1,
+      "decodeSemanticAccuracy": 1,
+      "results": [
+        {
+          "file": "small",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "name: config\nversion: 1.0.0\nenabled: true\nmaxRetries: 3\ntimeout: 30000\ntags[3]: production,api,v1",
+          "actual": "name: config\nversion: 1.0.0\nenabled: true\nmaxRetries: 3\ntimeout: 30000\ntags[3]: production,api,v1"
+        },
+        {
+          "file": "small",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"config\",\"version\":\"1.0.0\",\"enabled\":true,\"maxRetries\":3,\"timeout\":30000,\"tags\":[\"production\",\"api\",\"v1\"]}",
+          "actual": "{\n  \"name\": \"config\",\n  \"version\": \"1.0.0\",\n  \"enabled\": true,\n  \"maxRetries\": 3,\n  \"timeout\": 30000,\n  \"tags\": [\n    \"production\",\n    \"api\",\n    \"v1\"\n  ]\n}"
+        },
+        {
+          "file": "medium",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "users[3]{id,name,email,role,active}:\n  1,Alice Johnson,alice@example.com,admin,true\n  2,Bob Smith,bob@example.com,user,true\n  3,Carol Davis,carol@example.com,user,false\nmetadata:\n  total: 3\n  page: 1\n",
+          "actual": "users[3]{id,name,email,role,active}:\n  1,Alice Johnson,alice@example.com,admin,true\n  2,Bob Smith,bob@example.com,user,true\n  3,Carol Davis,carol@example.com,user,false\nmetadata:\n  total: 3\n  page: 1\n"
+        },
+        {
+          "file": "medium",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"users\":[{\"id\":1,\"name\":\"Alice Johnson\",\"email\":\"alice@example.com\",\"role\":\"admin\",\"active\":true},{\"id\":2,\"name\":\"Bob Smith\",\"email\":\"bob@example.com\",\"role\":\"user\",\"active\":true},{\"id\":3,\"name\":\"Car",
+          "actual": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"Alice Johnson\",\n      \"email\": \"alice@example.com\",\n      \"role\": \"admin\",\n      \"active\": true\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Bob Smith\""
+        },
+        {
+          "file": "package",
+          "type": "encode",
+          "success": true,
+          "semantic": true,
+          "expected": "name: my-app\nversion: 1.0.0\nscripts:\n  dev: vite\n  build: tsc && vite build\n  test: vitest\ndependencies:\n  react: ^18.2.0\n  \"react-dom\": ^18.2.0\ndevDependencies:\n  typescript: ^5.0.0\n  vite: ^5.0.0\n  ",
+          "actual": "name: my-app\nversion: 1.0.0\nscripts:\n  dev: vite\n  build: tsc && vite build\n  test: vitest\ndependencies:\n  react: ^18.2.0\n  \"react-dom\": ^18.2.0\ndevDependencies:\n  typescript: ^5.0.0\n  vite: ^5.0.0\n  "
+        },
+        {
+          "file": "package",
+          "type": "decode",
+          "success": true,
+          "semantic": true,
+          "expected": "{\"name\":\"my-app\",\"version\":\"1.0.0\",\"scripts\":{\"dev\":\"vite\",\"build\":\"tsc && vite build\",\"test\":\"vitest\"},\"dependencies\":{\"react\":\"^18.2.0\",\"react-dom\":\"^18.2.0\"},\"devDependencies\":{\"typescript\":\"^5.0.0",
+          "actual": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc && vite build\",\n    \"test\": \"vitest\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \""
+        }
+      ]
+    }
+  ]
+}
