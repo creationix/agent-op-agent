@@ -210,8 +210,21 @@ const TOOLS = [
       type: "object",
       properties: {
         port: { type: "number", description: "Port to listen on (0 for auto-assign, default 3456)" },
-        open: { type: "string", description: "Path to open in default browser (e.g., 'refs/work/HEAD/')" }
+        inject: { type: "boolean", description: "Inject eval-client.js into all HTML pages for remote debugging (default false)" }
       }
+    }
+  },
+
+  // Open in browser
+  {
+    name: "gitfs_open",
+    description: "Open a URL in the user's default browser. Useful for opening gitfs pages for the user to view.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: { type: "string", description: "Full URL to open (e.g., 'http://localhost:3456/refs/work/HEAD/')" }
+      },
+      required: ["url"]
     }
   },
 
@@ -228,6 +241,32 @@ const TOOLS = [
         fullPage: { type: "boolean", description: "Capture full scrollable page (default false)" }
       },
       required: ["url"]
+    }
+  },
+
+  // Browser eval
+  {
+    name: "gitfs_eval",
+    description: "Execute JavaScript in a connected browser. Requires the browser to have eval-client.js loaded. Returns the result of the evaluated expression. Use for clicking buttons, reading DOM state, debugging, or any browser interaction.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        code: { type: "string", description: "JavaScript code to evaluate. Supports async/await. Examples: `document.querySelector('#btn').click()`, `document.title`, `await fetch('/api').then(r => r.json())`" },
+        timeout: { type: "number", description: "Timeout in milliseconds (default 30000)" }
+      },
+      required: ["code"]
+    }
+  },
+
+  // Browser console
+  {
+    name: "gitfs_console",
+    description: "Get console logs and errors from the connected browser. Useful for debugging JavaScript issues.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        clear: { type: "boolean", description: "Clear the console buffer after reading (default false)" }
+      }
     }
   }
 ]
@@ -348,14 +387,26 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "gitfs_serve": {
-        const { port = 3456, open } = args as { port?: number; open?: string }
-        const url = gitfs.startServer(port)
-        if (open) {
-          const fullUrl = `${url}/${open}`.replace(/([^:])\/\//g, "$1/")
-          openBrowser(fullUrl)
-        }
+        const { port = 3456, inject = false } = args as { port?: number; inject?: boolean }
+        const url = gitfs.startServer(port, inject)
         return {
           content: [{ type: "text", text: url }]
+        }
+      }
+
+      case "gitfs_open": {
+        const { url } = args as { url: string }
+        // If browser connected, navigate it; otherwise open new tab
+        if (gitfs.getConnectedBrowsers() > 0) {
+          await gitfs.evalInBrowser(`window.location = ${JSON.stringify(url)}`)
+          return {
+            content: [{ type: "text", text: `Navigated to ${url}` }]
+          }
+        } else {
+          openBrowser(url)
+          return {
+            content: [{ type: "text", text: `Opened ${url}` }]
+          }
         }
       }
 
@@ -403,6 +454,55 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           }
         } finally {
           await context.close()
+        }
+      }
+
+      case "gitfs_eval": {
+        const { code, timeout = 30000 } = args as { code: string; timeout?: number }
+        const connectedBrowsers = gitfs.getConnectedBrowsers()
+        if (connectedBrowsers === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No browser connected.\n\nTo use gitfs_eval:\n1. Add <script src=\"/eval-client.js\"></script> to your HTML\n2. Open the page in a browser\n3. The browser will connect via WebSocket automatically"
+            }],
+            isError: true
+          }
+        }
+
+        const result = await gitfs.evalInBrowser(code, timeout)
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }]
+        }
+      }
+
+      case "gitfs_console": {
+        const { clear = false } = args as { clear?: boolean }
+        const connectedBrowsers = gitfs.getConnectedBrowsers()
+        if (connectedBrowsers === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No browser connected.\n\nTo use gitfs_console:\n1. Add <script src=\"/eval-client.js\"></script> to your HTML\n2. Open the page in a browser"
+            }],
+            isError: true
+          }
+        }
+
+        // Get console data via eval
+        const code = clear
+          ? `const data = {...window.__gitfs_console, errors: [...window.__gitfs_errors]}; window.__gitfs_console.logs = []; window.__gitfs_console.errors = []; window.__gitfs_console.warns = []; window.__gitfs_errors = []; return data`
+          : `return {...window.__gitfs_console, errors: [...window.__gitfs_errors]}`
+
+        const result = await gitfs.evalInBrowser(code)
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }]
         }
       }
 

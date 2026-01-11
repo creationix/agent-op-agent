@@ -46,6 +46,27 @@ export interface OpenResult {
   meta: number | string // tree=count, text=lines, bytes=size, symlink=target
 }
 
+// WebSocket message types
+interface EvalRequest {
+  type: "eval"
+  id: string
+  code: string
+}
+
+interface EvalResponse {
+  type: "result"
+  id: string
+  success: boolean
+  result?: unknown
+  error?: string
+}
+
+interface PendingEval {
+  resolve: (result: unknown) => void
+  reject: (error: Error) => void
+  timeout: ReturnType<typeof setTimeout>
+}
+
 export class GitFS {
   // In-memory cache
   private objectCache = new Map<string, StoredObject>()
@@ -54,6 +75,11 @@ export class GitFS {
 
   // SSE subscribers: ref -> Set of controllers
   private sseSubscribers = new Map<string, Set<ReadableStreamDefaultController>>()
+
+  // WebSocket eval support
+  private wsClients = new Set<WebSocket>()
+  private pendingEvals = new Map<string, PendingEval>()
+  private evalIdCounter = 0
 
   // Database path
   private dbPath: string
@@ -505,16 +531,59 @@ export class GitFS {
   // Web server
   private server: { stop(): void; port: number } | null = null
   private serverPort: number = 0
+  private injectEvalClient: boolean = false
 
-  startServer(port: number): string {
+  startServer(port: number, inject: boolean = false): string {
     if (this.server) {
       this.server.stop()
     }
+    this.injectEvalClient = inject
+
+    const self = this
 
     // @ts-ignore - Bun global
     const srv = Bun.serve({
       port,
-      fetch: (req: Request) => this.handleRequest(req)
+      fetch(req: Request, server: { upgrade: (req: Request) => boolean }) {
+        const url = new URL(req.url)
+
+        // Handle WebSocket upgrade for /ws/eval
+        if (url.pathname === "/ws/eval") {
+          const success = server.upgrade(req)
+          if (success) return undefined
+          return new Response("WebSocket upgrade failed", { status: 500 })
+        }
+
+        return self.handleRequest(req)
+      },
+      websocket: {
+        open(ws: WebSocket) {
+          self.wsClients.add(ws)
+          ws.send(JSON.stringify({ type: "connected", clients: self.wsClients.size }))
+        },
+        message(ws: WebSocket, message: string | Buffer) {
+          try {
+            const data = JSON.parse(message.toString()) as EvalResponse
+            if (data.type === "result" && data.id) {
+              const pending = self.pendingEvals.get(data.id)
+              if (pending) {
+                clearTimeout(pending.timeout)
+                self.pendingEvals.delete(data.id)
+                if (data.success) {
+                  pending.resolve(data.result)
+                } else {
+                  pending.reject(new Error(data.error || "Unknown error"))
+                }
+              }
+            }
+          } catch {
+            // Ignore malformed messages
+          }
+        },
+        close(ws: WebSocket) {
+          self.wsClients.delete(ws)
+        }
+      }
     })
     this.server = srv
     this.serverPort = srv.port
@@ -531,6 +600,50 @@ export class GitFS {
 
   getServerUrl(): string | null {
     return this.server ? `http://localhost:${this.serverPort}` : null
+  }
+
+  // Inject eval-client.js into HTML content (if enabled)
+  private maybeInjectEvalClient(html: string): string {
+    if (!this.injectEvalClient) return html
+    const script = '<script src="/eval-client.js"></script>'
+    if (html.includes('</body>')) {
+      return html.replace('</body>', `${script}</body>`)
+    }
+    return html + script
+  }
+
+  // Evaluate JavaScript in connected browser
+  async evalInBrowser(code: string, timeoutMs: number = 30000): Promise<unknown> {
+    if (this.wsClients.size === 0) {
+      throw new Error("No browser connected. Include eval-client.js in your page and open it in a browser.")
+    }
+
+    const id = `eval-${++this.evalIdCounter}`
+    const request: EvalRequest = { type: "eval", id, code }
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        this.pendingEvals.delete(id)
+        reject(new Error(`Eval timed out after ${timeoutMs}ms`))
+      }, timeoutMs)
+
+      this.pendingEvals.set(id, { resolve, reject, timeout })
+
+      // Send to all connected clients (first one to respond wins)
+      const message = JSON.stringify(request)
+      for (const ws of this.wsClients) {
+        try {
+          ws.send(message)
+        } catch {
+          // Client might have disconnected
+        }
+      }
+    })
+  }
+
+  // Get connected browser count
+  getConnectedBrowsers(): number {
+    return this.wsClients.size
   }
 
   private handleSSE(ref: string): Response {
@@ -600,11 +713,36 @@ export class GitFS {
       return this.handleSSE(ref)
     }
 
+    // Serve eval-client.js from the package directory
+    if (pathname === "eval-client.js") {
+      try {
+        const clientScript = readFileSync(join(import.meta.dir, "eval-client.js"), "utf-8")
+        return new Response(clientScript, {
+          headers: { "Content-Type": "text/javascript; charset=utf-8" }
+        })
+      } catch {
+        return new Response("eval-client.js not found", { status: 404 })
+      }
+    }
+
     // Empty path - show available refs
     if (!pathname) {
       const refs = this.listRefs()
-      const html = `<!DOCTYPE html>
-<html><head><title>Git-FS</title><style>body{font-family:system-ui;padding:2rem}table{border-collapse:collapse}td,th{padding:0.5rem 1rem;text-align:left}tr:hover{background:#f5f5f5}</style></head>
+      const html = this.maybeInjectEvalClient(`<!DOCTYPE html>
+<html><head><title>Git-FS</title><style>
+body{font-family:system-ui;padding:2rem;background:#fff;color:#111}
+table{border-collapse:collapse}
+td,th{padding:0.5rem 1rem;text-align:left}
+tr:hover{background:#f5f5f5}
+a{color:#0066cc}
+code{background:#f0f0f0;padding:0.2rem 0.4rem;border-radius:3px}
+@media(prefers-color-scheme:dark){
+  body{background:#1a1a1a;color:#e0e0e0}
+  tr:hover{background:#2a2a2a}
+  a{color:#6db3f2}
+  code{background:#2a2a2a}
+}
+</style></head>
 <body>
 <h1>Git-FS Server</h1>
 <h2>Available Refs</h2>
@@ -612,7 +750,7 @@ export class GitFS {
 <tr><th>Ref</th><th>Hash</th><th>Updated</th></tr>
 ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.hash.slice(0, 8)}</code></td><td>${r.mtime ? new Date(r.mtime).toLocaleString() : '-'}</td></tr>`).join("\n")}
 </table>
-</body></html>`
+</body></html>`)
       return new Response(html, { headers: { "Content-Type": "text/html" } })
     }
 
@@ -622,8 +760,9 @@ ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.has
     let filePath = ""
     let lastModified: string | null = null
 
-    // Check if it's a hash (64 hex chars at start)
+    // Check if it's a hash (64 hex chars at start) - these are immutable
     const hashMatch = pathname.match(/^([a-f0-9]{64})(?:\/(.*))?$/)
+    const isImmutable = !!hashMatch
     if (hashMatch) {
       root = hashMatch[1]
       filePath = hashMatch[2] || ""
@@ -656,12 +795,14 @@ ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.has
     if (ifNoneMatch === etag) {
       const headers: Record<string, string> = { ETag: etag }
       if (lastModified) headers["Last-Modified"] = lastModified
+      if (isImmutable) headers["Cache-Control"] = "public, max-age=31536000, immutable"
       return new Response(null, { status: 304, headers })
     }
 
-    // Helper to build headers with optional Last-Modified
+    // Helper to build headers with optional Last-Modified and immutable caching
     const buildHeaders = (base: Record<string, string>) => {
       if (lastModified) base["Last-Modified"] = lastModified
+      if (isImmutable) base["Cache-Control"] = "public, max-age=31536000, immutable"
       return base
     }
 
@@ -675,7 +816,8 @@ ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.has
           return new Response(null, { status: 304, headers: buildHeaders({ ETag: indexEtag }) })
         }
         const obj = this.loadObject(indexOpened.hash) as TextObject
-        return new Response(obj.lines.join("\n"), {
+        const content = this.maybeInjectEvalClient(obj.lines.join("\n"))
+        return new Response(content, {
           headers: buildHeaders({
             "Content-Type": "text/html; charset=utf-8",
             ETag: indexEtag
@@ -685,8 +827,18 @@ ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.has
 
       // Otherwise show directory listing (no ETag for dynamic content)
       const tree = this.loadObject(opened.hash) as TreeObject
-      const html = `<!DOCTYPE html>
-<html><head><title>Index of /${root}/${filePath}</title></head>
+      const html = this.maybeInjectEvalClient(`<!DOCTYPE html>
+<html><head><title>Index of /${root}/${filePath}</title><style>
+body{font-family:system-ui;padding:2rem;background:#fff;color:#111}
+ul{list-style:none;padding:0}
+li{padding:0.3rem 0}
+a{color:#0066cc;text-decoration:none}
+a:hover{text-decoration:underline}
+@media(prefers-color-scheme:dark){
+  body{background:#1a1a1a;color:#e0e0e0}
+  a{color:#6db3f2}
+}
+</style></head>
 <body>
 <h1>Index of /${root}/${filePath}</h1>
 <ul>
@@ -696,14 +848,18 @@ ${tree.entries.map(e => {
   return `<li><a href="${e.name}${slash}">${e.name}${slash}</a></li>`
 }).join("\n")}
 </ul>
-</body></html>`
+</body></html>`)
       return new Response(html, { headers: { "Content-Type": "text/html" } })
     }
 
     if (opened.type === "text") {
       const obj = this.loadObject(opened.hash) as TextObject
-      const content = obj.lines.join("\n")
+      let content = obj.lines.join("\n")
       const mimeType = this.getMimeType(filePath)
+      // Inject eval client into HTML pages
+      if (mimeType === "text/html") {
+        content = this.maybeInjectEvalClient(content)
+      }
       return new Response(content, {
         headers: buildHeaders({
           "Content-Type": `${mimeType}; charset=utf-8`,

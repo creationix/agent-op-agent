@@ -7,7 +7,6 @@ A persistent, content-addressable filesystem for LLM agents with immutable snaps
 - **Persistent storage**: Objects stored in `db/obj/xx/xxx...`, refs in `db/refs/`
 - **Immutable snapshots**: Every write creates a new root hash
 - **Time travel**: Access any historical state by its root hash
-- **Live reload**: SSE endpoint for real-time updates when refs change
 - **Web server**: Preview content at `http://localhost:PORT/ref/path`
 - **Screenshot tool**: Visual feedback loop - see what users see
 - **HTTP caching**: ETag (content hash) and Last-Modified headers
@@ -16,16 +15,22 @@ A persistent, content-addressable filesystem for LLM agents with immutable snaps
 
 ### The Development Loop
 
-The most powerful pattern is the visual feedback loop:
+The most powerful pattern combines visual feedback with browser interaction:
 
 ```
-1. gitfs_serve(port=3456)           # Start web server
-2. gitfs_write_at(...)              # Write/update files
-3. gitfs_screenshot(url)            # See the result
-4. Iterate based on what you see
+1. gitfs_serve(port=0, inject=true)  # Start server with eval injection
+2. gitfs_open(url)                   # Open in user's browser
+3. gitfs_write_at(...)               # Write/update files
+4. gitfs_screenshot(url)             # See the result (headless)
+5. gitfs_eval(code)                  # Interact with live page
+6. gitfs_console()                   # Check for errors
+7. Iterate based on feedback
 ```
 
-This lets you build and refine web apps with direct visual feedback.
+**Two feedback channels:**
+
+- `gitfs_screenshot` - headless Chrome, see rendered output
+- `gitfs_eval/console` - user's actual browser, full interaction
 
 ### Working with refs/work/HEAD
 
@@ -52,53 +57,32 @@ gitfs_screenshot(url="...", width=375, height=667)  # Mobile
 ```
 
 The screenshot tool returns:
+
 - Response headers (ETag, Last-Modified, Content-Type)
 - PNG image of the rendered page
 
 ### Building Web Apps
 
-1. Write your HTML, CSS, JS files:
+Write your files, start the server, and iterate:
+
 ```
+# Write files
 gitfs_write_at("refs/work/HEAD", "index.html", "<!DOCTYPE html>...")
 gitfs_write_at("refs/work/HEAD", "style.css", "body { ... }")
 gitfs_write_at("refs/work/HEAD", "app.js", "console.log('hello')")
-```
 
-2. Add auto-reload for live updates:
-```
-gitfs_write_at("refs/work/HEAD", "auto-reload.js", `
-(function() {
-  const match = location.pathname.match(/^\\/(refs\\/[^/]+\\/[^/]+)/);
-  if (!match) return;
-  const ref = match[1];
-  let currentHash = null;
+# Start server and open browser
+gitfs_serve(port=0, inject=true)  # Auto-injects eval-client.js
+gitfs_open(url)                   # Opens in user's browser
 
-  function connect() {
-    const es = new EventSource('/sse/' + ref);
-    es.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (currentHash && currentHash !== data.hash) {
-        location.reload();
-      }
-      currentHash = data.hash;
-    };
-    es.onerror = () => {
-      es.close();
-      setTimeout(connect, 1000);
-    };
-  }
-  connect();
-})();
-`)
-```
+# Make changes and reload on-demand
+gitfs_write_at("refs/work/HEAD", "app.js", "// updated code...")
+gitfs_eval("location.reload()")   # Reload when ready
 
-3. Start the server and take a screenshot:
+# Verify
+gitfs_screenshot(url)  # Visual verification (headless)
+gitfs_console()        # Check for errors
 ```
-gitfs_serve(port=3456)
-gitfs_screenshot(url="http://localhost:3456/refs/work/HEAD/")
-```
-
-4. Iterate based on what you see!
 
 ### Writing Binary Files
 
@@ -152,6 +136,61 @@ gitfs_export(root="refs/work/HEAD", outputDir="/path/to/desktop")
 # Returns: /path/to/desktop/refs-work-HEAD-abc12345.zip
 ```
 
+### Browser Interaction (gitfs_eval)
+
+Execute JavaScript directly in the user's browser. With `inject=true`, eval-client.js is automatically added to all HTML pages.
+
+**Navigation:**
+
+```
+gitfs_eval("location.href = '/other-page/'")      # Navigate to path
+gitfs_eval("history.back()")                       # Go back
+gitfs_eval("location.reload()")                    # Reload current page
+```
+
+**Clicking and typing:**
+
+```
+gitfs_eval("document.querySelector('#btn').click()")
+gitfs_eval(`
+  const input = document.querySelector('#search');
+  input.value = 'hello';
+  input.dispatchEvent(new Event('input'));
+`)
+```
+
+**Reading state:**
+
+```
+gitfs_eval("return document.title")
+gitfs_eval("return document.querySelector('.result').textContent")
+gitfs_eval("return Array.from(document.querySelectorAll('li')).map(el => el.textContent)")
+```
+
+**Async operations:**
+
+```
+gitfs_eval(`
+  document.querySelector('#load-more').click();
+  await new Promise(r => setTimeout(r, 500));
+  return document.querySelectorAll('.item').length;
+`)
+```
+
+**Console monitoring:**
+
+```
+gitfs_console()           # Get all logs/errors
+gitfs_console(clear=true) # Get and clear the buffer
+```
+
+**Why this is powerful:**
+
+- Runs in the user's actual browser (same context they're viewing)
+- User sees interactions happen in real-time
+- On-demand reload gives you control (no auto-reload surprises)
+- Great for testing multi-page apps and user flows
+
 ## Tools Reference
 
 | Tool | Description |
@@ -170,7 +209,10 @@ gitfs_export(root="refs/work/HEAD", outputDir="/path/to/desktop")
 | `gitfs_delete_at` | Delete at path, rebuild tree |
 | `gitfs_export` | Export tree to zip file |
 | `gitfs_serve` | Start web server |
+| `gitfs_open` | Open URL (navigates if browser connected) |
 | `gitfs_screenshot` | Take screenshot of URL |
+| `gitfs_eval` | Execute JavaScript in browser |
+| `gitfs_console` | Get console logs from browser |
 
 ## Storage Layout
 
@@ -220,7 +262,11 @@ Clients can reload when the hash changes for instant updates.
 
 1. **Always start with `gitfs_serve`** before taking screenshots
 2. **Use port 0** for auto-assignment if the default port is busy
-3. **Screenshot after writes** to verify changes visually
-4. **Check response headers** in screenshot output to verify caching works
-5. **The server must be restarted** after MCP server restarts to pick up changes
-6. **refs/work/* refs auto-update** - other refs require manual `set_ref`
+3. **Use `inject=true`** to auto-inject eval-client.js into all HTML pages
+4. **Screenshot after writes** to verify changes visually
+5. **Use `gitfs_eval` with `return`** - code runs in async function, so `return document.title` not just `document.title`
+6. **`gitfs_open` is smart** - navigates existing browser if connected, opens new tab if not
+7. **Check response headers** in screenshot output to verify caching works
+8. **The server must be restarted** after MCP server restarts to pick up changes
+9. **refs/work/* refs auto-update** - other refs require manual `set_ref`
+10. **Hash URLs are immutable** - get `Cache-Control: immutable` header for permanent caching
