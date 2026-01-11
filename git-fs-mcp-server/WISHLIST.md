@@ -33,6 +33,14 @@ When starting server with `gitfs_serve(inject=true)`, automatically injects eval
 ### `gitfs_dom` - Get DOM Snapshot
 Returns simplified DOM tree with tag names, key attributes (id, class, href), and text content. Great for understanding page structure.
 
+### `gitfs_read_at` Returns Total Size
+
+When reading partial content (e.g., first 50 lines), response now includes `total` field showing full size. Know if you're seeing everything or just a slice.
+
+```json
+{"type":"text", "hash":"...", "content":[...50 lines...], "total":956}
+```
+
 ### `gitfs_capture` + Chrome Extension
 
 Screenshot from user's actual browser. Two modes:
@@ -45,6 +53,68 @@ Extension: `chrome-extension/` folder - uses content script to detect port, back
 ---
 
 ## High Priority
+
+### `gitfs_edit_at` - Line-based Editing
+
+**Problem**: Editing a 500-line file requires reading all 500 lines, modifying, and rewriting all 500 lines. Huge token overhead.
+
+**Proposed API**:
+```
+gitfs_edit_at(root, path, {
+  start: 10,      // line 10 (0-indexed)
+  end: 15,        // through line 14 (exclusive)
+  content: "new lines\nhere"
+})
+```
+
+**Operations**:
+- Replace lines 10-14: `{start: 10, end: 15, content: "..."}`
+- Insert at line 10: `{start: 10, end: 10, content: "new line"}`
+- Delete lines 10-14: `{start: 10, end: 15, content: ""}`
+
+**Why essential**: Makes editing O(change size) instead of O(file size). Matches how the Claude Code Edit tool works.
+
+---
+
+### `gitfs_grep` - Search Content
+
+**Problem**: To find where something is defined, must read every file manually.
+
+**Proposed API**:
+```
+gitfs_grep(root, pattern, {
+  glob: "**/*.js",    // optional file filter
+  max_results: 50,
+  context_lines: 2
+})
+```
+
+**Returns**:
+```json
+[
+  {"path": "src/app.js", "line": 42, "content": "function foo() {", "context": [...]}
+]
+```
+
+**Why essential**: Can't efficiently navigate unfamiliar code without search.
+
+---
+
+### `gitfs_glob` - Find Files by Pattern
+
+**Problem**: To find all test files, must traverse tree manually.
+
+**Proposed API**:
+```
+gitfs_glob(root, "**/*.test.js")
+gitfs_glob(root, "src/**/*.{ts,tsx}")
+```
+
+**Returns**: Array of matching paths.
+
+**Why essential**: Basic file discovery for any non-trivial project.
+
+---
 
 ### `gitfs_import` - Import from Local Filesystem
 

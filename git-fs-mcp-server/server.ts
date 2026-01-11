@@ -102,7 +102,7 @@ const TOOLS = [
   },
   {
     name: "gitfs_read_at",
-    description: "Open path and read content in one call. Combines open_at + read.",
+    description: "Open path and read content in one call. Combines open_at + read. Returns {type, hash, content, total} where total is the full size (lines for text, entries for tree, bytes for bytes) - useful to know if you're seeing partial content.",
     inputSchema: {
       type: "object",
       properties: {
@@ -112,6 +112,50 @@ const TOOLS = [
         end: { type: "number", description: "End index (exclusive)" }
       },
       required: ["root", "path"]
+    }
+  },
+
+  // Search and discovery
+  {
+    name: "gitfs_glob",
+    description: "Find files matching a glob pattern. Supports ** (any path), * (segment), ? (char), {a,b} (alternation).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        root: { type: "string", description: "Root hash or ref name" },
+        pattern: { type: "string", description: "Glob pattern (e.g., '**/*.js', 'src/**/*.{ts,tsx}')" }
+      },
+      required: ["root", "pattern"]
+    }
+  },
+  {
+    name: "gitfs_grep",
+    description: "Search for content matching a regex pattern. Returns file paths, line numbers, and matching content.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        root: { type: "string", description: "Root hash or ref name" },
+        pattern: { type: "string", description: "Regex pattern to search for" },
+        glob: { type: "string", description: "Optional glob pattern to filter files (e.g., '**/*.js')" },
+        max_results: { type: "number", description: "Maximum results to return (default 100)" },
+        context_lines: { type: "number", description: "Lines of context before/after match (default 0)" }
+      },
+      required: ["root", "pattern"]
+    }
+  },
+  {
+    name: "gitfs_edit_at",
+    description: "Edit lines in a file. Replace lines[start..end) with new content. Use start=end to insert, content='' to delete.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        root: { type: "string", description: "Root hash or ref name" },
+        path: { type: "string", description: "Path to file" },
+        start: { type: "number", description: "Start line (0-indexed, inclusive)" },
+        end: { type: "number", description: "End line (exclusive)" },
+        content: { type: "string", description: "New content (lines joined by \\n). Empty string to delete." }
+      },
+      required: ["root", "path", "start", "end", "content"]
     }
   },
 
@@ -359,6 +403,38 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const result = gitfs.readAt(root, path, start, end)
         return {
           content: [{ type: "text", text: result !== null ? JSON.stringify(result) : "null" }]
+        }
+      }
+
+      case "gitfs_glob": {
+        const { root, pattern } = args as { root: string; pattern: string }
+        const results = gitfs.glob(root, pattern)
+        return {
+          content: [{ type: "text", text: JSON.stringify(results) }]
+        }
+      }
+
+      case "gitfs_grep": {
+        const { root, pattern, glob, max_results, context_lines } = args as {
+          root: string; pattern: string; glob?: string; max_results?: number; context_lines?: number
+        }
+        const results = gitfs.grep(root, pattern, {
+          glob,
+          maxResults: max_results,
+          contextLines: context_lines
+        })
+        return {
+          content: [{ type: "text", text: JSON.stringify(results) }]
+        }
+      }
+
+      case "gitfs_edit_at": {
+        const { root, path, start, end, content } = args as {
+          root: string; path: string; start: number; end: number; content: string
+        }
+        const newRoot = gitfs.editAt(root, path, start, end, content)
+        return {
+          content: [{ type: "text", text: newRoot }]
         }
       }
 

@@ -349,11 +349,146 @@ export class GitFS {
     return arr.slice(s, e)
   }
 
-  // Convenience: open + read
-  readAt(root: string, path: string, start?: number, end?: number): unknown {
+  // Convenience: open + read (returns content + total for partial reads)
+  readAt(root: string, path: string, start?: number, end?: number): { type: ObjectType; hash: string; content: unknown; total: number | string } | null {
     const opened = this.openAt(root, path)
     if (!opened) return null
-    return this.read(opened.hash, start, end)
+    const content = this.read(opened.hash, start, end)
+    return {
+      type: opened.type,
+      hash: opened.hash,
+      content,
+      total: opened.meta  // tree=entry count, text=line count, bytes=byte count, symlink=target
+    }
+  }
+
+  // Find files matching a glob pattern
+  glob(root: string, pattern: string): string[] {
+    const rootHash = this.resolveRoot(root)
+    if (!rootHash) return []
+
+    const results: string[] = []
+    this.globWalk(rootHash, "", pattern, results)
+    return results.sort()
+  }
+
+  private globWalk(treeHash: string, prefix: string, pattern: string, results: string[]): void {
+    const obj = this.loadObject(treeHash)
+    if (!obj || obj.type !== "tree") return
+
+    for (const entry of obj.entries) {
+      const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name
+
+      if (entry.type === "tree") {
+        // Always recurse into directories for ** patterns
+        this.globWalk(entry.hash, fullPath, pattern, results)
+      } else {
+        // Match file against pattern
+        if (this.matchGlob(fullPath, pattern)) {
+          results.push(fullPath)
+        }
+      }
+    }
+  }
+
+  private matchGlob(path: string, pattern: string): boolean {
+    // Convert glob to regex
+    // ** matches any path segments, * matches within segment, ? matches single char
+    const regexStr = pattern
+      .replace(/[.+^${}()|[\]\\]/g, "\\$&")  // Escape regex chars except * and ?
+      .replace(/\*\*/g, "{{GLOBSTAR}}")       // Temp placeholder for **
+      .replace(/\*/g, "[^/]*")                // * matches non-slash
+      .replace(/\?/g, "[^/]")                 // ? matches single non-slash
+      .replace(/{{GLOBSTAR}}/g, ".*")         // ** matches anything
+      .replace(/\{([^}]+)\}/g, (_, alts) => `(${alts.split(",").join("|")})`)  // {a,b} alternation
+
+    const regex = new RegExp(`^${regexStr}$`)
+    return regex.test(path)
+  }
+
+  // Search for content matching a pattern
+  grep(root: string, pattern: string, options: { glob?: string; maxResults?: number; contextLines?: number } = {}): Array<{ path: string; line: number; content: string; context?: string[] }> {
+    const rootHash = this.resolveRoot(root)
+    if (!rootHash) return []
+
+    const { glob: globPattern, maxResults = 100, contextLines = 0 } = options
+    const results: Array<{ path: string; line: number; content: string; context?: string[] }> = []
+    const regex = new RegExp(pattern)
+
+    this.grepWalk(rootHash, "", regex, globPattern, maxResults, contextLines, results)
+    return results
+  }
+
+  private grepWalk(
+    treeHash: string,
+    prefix: string,
+    regex: RegExp,
+    globPattern: string | undefined,
+    maxResults: number,
+    contextLines: number,
+    results: Array<{ path: string; line: number; content: string; context?: string[] }>
+  ): void {
+    if (results.length >= maxResults) return
+
+    const obj = this.loadObject(treeHash)
+    if (!obj || obj.type !== "tree") return
+
+    for (const entry of obj.entries) {
+      if (results.length >= maxResults) return
+
+      const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name
+
+      if (entry.type === "tree") {
+        this.grepWalk(entry.hash, fullPath, regex, globPattern, maxResults, contextLines, results)
+      } else if (entry.type === "text") {
+        // Check glob filter
+        if (globPattern && !this.matchGlob(fullPath, globPattern)) continue
+
+        const textObj = this.loadObject(entry.hash) as TextObject
+        if (!textObj) continue
+
+        for (let i = 0; i < textObj.lines.length && results.length < maxResults; i++) {
+          if (regex.test(textObj.lines[i])) {
+            const result: { path: string; line: number; content: string; context?: string[] } = {
+              path: fullPath,
+              line: i,
+              content: textObj.lines[i]
+            }
+
+            if (contextLines > 0) {
+              const start = Math.max(0, i - contextLines)
+              const end = Math.min(textObj.lines.length, i + contextLines + 1)
+              result.context = textObj.lines.slice(start, end)
+            }
+
+            results.push(result)
+          }
+        }
+      }
+    }
+  }
+
+  // Edit lines in a file (replace, insert, or delete)
+  editAt(root: string, path: string, start: number, end: number, content: string): string {
+    const rootHash = this.resolveRoot(root)
+    if (!rootHash) throw new Error(`Root not found: ${root}`)
+
+    const opened = this.openAt(root, path)
+    if (!opened) throw new Error(`File not found: ${path}`)
+    if (opened.type !== "text") throw new Error(`Cannot edit non-text file: ${path}`)
+
+    const obj = this.loadObject(opened.hash) as TextObject
+    const lines = [...obj.lines]
+
+    // Parse new content into lines (empty string = delete)
+    const newLines = content === "" ? [] : content.split("\n")
+
+    // Replace lines[start..end) with newLines
+    lines.splice(start, end - start, ...newLines)
+
+    // Write the modified content
+    const newContent = lines.join("\n")
+    return this.writeAt(root, path, newContent)
   }
 
   // Write objects
