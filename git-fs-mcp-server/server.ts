@@ -11,7 +11,6 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema
 } from "@modelcontextprotocol/sdk/types.js"
-import { chromium, type Browser } from "playwright"
 import { spawn } from "child_process"
 import { gitfs } from "./storage.js"
 
@@ -21,16 +20,6 @@ function openBrowser(url: string): void {
     : process.platform === "win32" ? "start"
     : "xdg-open"
   spawn(cmd, [url], { detached: true, stdio: "ignore" }).unref()
-}
-
-// Shared browser instance
-let browser: Browser | null = null
-
-async function getBrowser(): Promise<Browser> {
-  if (!browser) {
-    browser = await chromium.launch({ headless: true })
-  }
-  return browser
 }
 
 const server = new Server(
@@ -228,17 +217,14 @@ const TOOLS = [
     }
   },
 
-  // Screenshot
+  // Screenshot (via extension)
   {
     name: "gitfs_screenshot",
-    description: "Take a screenshot of a URL using headless Chrome. Returns the screenshot as a base64 PNG image. Useful for visual verification of web pages.",
+    description: "Take a screenshot of a URL using the connected browser. Navigates to the URL, waits for load, then captures. Requires browser connection (via eval-client.js) or Chrome extension.",
     inputSchema: {
       type: "object",
       properties: {
-        url: { type: "string", description: "URL to screenshot (e.g., 'http://localhost:3456/refs/work/HEAD/')" },
-        width: { type: "number", description: "Viewport width in pixels (default 1280)" },
-        height: { type: "number", description: "Viewport height in pixels (default 720)" },
-        fullPage: { type: "boolean", description: "Capture full scrollable page (default false)" }
+        url: { type: "string", description: "URL to screenshot (e.g., 'http://localhost:3456/refs/work/HEAD/')" }
       },
       required: ["url"]
     }
@@ -286,7 +272,7 @@ const TOOLS = [
   // Screen capture from user's browser
   {
     name: "gitfs_capture",
-    description: "Capture a screenshot from the user's actual browser using the Screen Capture API. First call prompts user to select their tab. Subsequent calls reuse the stream (no re-prompt). Returns the current visible state including any JS-modified content.",
+    description: "Capture a screenshot from the user's actual browser. Prefers Chrome extension (no prompts), falls back to Screen Capture API (prompts on reload). Returns the current visible state including any JS-modified content.",
     inputSchema: {
       type: "object",
       properties: {
@@ -436,49 +422,118 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "gitfs_screenshot": {
-        const { url, width = 1280, height = 720, fullPage = false } = args as {
+        const { url } = args as {
           url: string
           width?: number
           height?: number
           fullPage?: boolean
         }
-        const b = await getBrowser()
-        // Use fresh context with cache disabled
-        const context = await b.newContext({
-          viewport: { width, height },
-          bypassCSP: true,
-        })
-        const page = await context.newPage()
-        try {
-          // Disable cache via CDP
-          const client = await page.context().newCDPSession(page)
-          await client.send("Network.setCacheDisabled", { cacheDisabled: true })
+        const connectedExtensions = gitfs.getConnectedExtensions()
+        const connectedBrowsers = gitfs.getConnectedBrowsers()
 
-          // Capture response headers from the main document
-          let responseHeaders: Record<string, string> = {}
-          page.on("response", (response) => {
-            if (response.url() === url || response.url() === url.replace(/\/$/, "")) {
-              responseHeaders = response.headers()
-            }
-          })
-
-          await page.goto(url, { waitUntil: "networkidle" })
-          const buffer = await page.screenshot({ fullPage, type: "png" })
-          const base64 = buffer.toString("base64")
-
-          // Format headers for display
-          const headerText = Object.entries(responseHeaders)
-            .map(([k, v]) => `${k}: ${v}`)
-            .join("\n")
-
+        if (connectedExtensions === 0 && connectedBrowsers === 0) {
           return {
-            content: [
-              { type: "text", text: `Response headers:\n${headerText}` },
-              { type: "image", data: base64, mimeType: "image/png" }
-            ]
+            content: [{
+              type: "text",
+              text: "No browser or extension connected.\n\nTo use gitfs_screenshot:\n1. Install Git-FS Capture extension (recommended)\n2. Use gitfs_serve(inject=true) and open page in browser"
+            }],
+            isError: true
           }
-        } finally {
-          await context.close()
+        }
+
+        // Navigate to the URL (this will disconnect eval-client, so don't await)
+        gitfs.evalInBrowser(`window.location = ${JSON.stringify(url)}`).catch(() => {})
+
+        // Wait for page to load - browser reconnects after navigation
+        // Poll for reconnection, then wait for readyState
+        const maxWait = 10000
+        const start = Date.now()
+        while (Date.now() - start < maxWait) {
+          await new Promise(r => setTimeout(r, 200))
+          if (gitfs.getConnectedBrowsers() > 0) {
+            try {
+              const ready = await gitfs.evalInBrowser(`return document.readyState`, 1000)
+              if (ready === "complete") break
+            } catch {
+              // Connection not ready yet, keep waiting
+            }
+          }
+        }
+        // Extra delay for rendering
+        await new Promise(r => setTimeout(r, 100))
+
+        // Capture via extension (preferred) or Screen Capture API
+        if (gitfs.getConnectedExtensions() > 0) {
+          try {
+            const result = await gitfs.captureViaExtension()
+            return {
+              content: [
+                { type: "text", text: `Screenshot of ${url}\n${result.width}x${result.height}` },
+                { type: "image", data: result.data, mimeType: "image/png" }
+              ]
+            }
+          } catch (err) {
+            return {
+              content: [{ type: "text", text: `Screenshot failed: ${err instanceof Error ? err.message : err}` }],
+              isError: true
+            }
+          }
+        }
+
+        // Fall back to gitfs_capture logic (Screen Capture API)
+        const code = `
+          async function capture() {
+            if (!window.__gitfs_capture_stream || !window.__gitfs_capture_stream.active) {
+              try {
+                window.__gitfs_capture_stream = await navigator.mediaDevices.getDisplayMedia({
+                  video: { displaySurface: 'browser' },
+                  audio: false,
+                  preferCurrentTab: true
+                });
+              } catch (e) {
+                return { error: e.message };
+              }
+            }
+            const stream = window.__gitfs_capture_stream;
+            const track = stream.getVideoTracks()[0];
+            if (!track || track.readyState !== 'live') {
+              window.__gitfs_capture_stream = null;
+              return { error: 'Capture stream ended' };
+            }
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.muted = true;
+            await new Promise(r => { video.onloadedmetadata = r; });
+            await video.play();
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            video.pause();
+            video.srcObject = null;
+            return {
+              width: canvas.width,
+              height: canvas.height,
+              data: canvas.toDataURL('image/png').replace(/^data:image\\/png;base64,/, '')
+            };
+          }
+          return capture();
+        `
+        const result = await gitfs.evalInBrowser(code, 30000) as { error?: string; width?: number; height?: number; data?: string }
+
+        if (result.error) {
+          return {
+            content: [{ type: "text", text: `Screenshot failed: ${result.error}` }],
+            isError: true
+          }
+        }
+
+        return {
+          content: [
+            { type: "text", text: `Screenshot of ${url}\n${result.width}x${result.height}` },
+            { type: "image", data: result.data!, mimeType: "image/png" }
+          ]
         }
       }
 
@@ -635,12 +690,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "gitfs_capture": {
         const { stop = false } = args as { stop?: boolean }
+        const connectedExtensions = gitfs.getConnectedExtensions()
         const connectedBrowsers = gitfs.getConnectedBrowsers()
+
+        // Prefer extension (no prompts), fall back to Screen Capture API
+        if (connectedExtensions > 0) {
+          // Use Chrome extension - no permission prompts!
+          try {
+            const result = await gitfs.captureViaExtension()
+            return {
+              content: [
+                { type: "text", text: `Captured ${result.width}x${result.height} via extension\nURL: ${result.url}` },
+                { type: "image", data: result.data, mimeType: "image/png" }
+              ]
+            }
+          } catch (err) {
+            return {
+              content: [{ type: "text", text: `Extension capture failed: ${err instanceof Error ? err.message : err}` }],
+              isError: true
+            }
+          }
+        }
+
+        // Fall back to Screen Capture API (requires browser connection)
         if (connectedBrowsers === 0) {
           return {
             content: [{
               type: "text",
-              text: "No browser connected.\n\nTo use gitfs_capture:\n1. Use gitfs_serve(inject=true) to auto-inject eval-client.js\n2. Open the page in a browser"
+              text: "No browser or extension connected.\n\nOptions:\n1. Install Git-FS Capture extension (recommended - no prompts)\n2. Use gitfs_serve(inject=true) and open page in browser"
             }],
             isError: true
           }
@@ -662,7 +739,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           }
         }
 
-        // Capture screenshot using Screen Capture API
+        // Capture screenshot using Screen Capture API (will prompt user)
         const code = `
           async function capture() {
             // Get or create screen capture stream

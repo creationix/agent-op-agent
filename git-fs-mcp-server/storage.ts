@@ -76,10 +76,15 @@ export class GitFS {
   // SSE subscribers: ref -> Set of controllers
   private sseSubscribers = new Map<string, Set<ReadableStreamDefaultController>>()
 
-  // WebSocket eval support
+  // WebSocket eval support (browser pages with eval-client.js)
   private wsClients = new Set<WebSocket>()
   private pendingEvals = new Map<string, PendingEval>()
   private evalIdCounter = 0
+
+  // WebSocket extension support (Chrome extension for screenshots)
+  private extClients = new Set<WebSocket>()
+  private pendingCaptures = new Map<string, PendingEval>()
+  private captureIdCounter = 0
 
   // Database path
   private dbPath: string
@@ -547,9 +552,16 @@ export class GitFS {
       fetch(req: Request, server: { upgrade: (req: Request) => boolean }) {
         const url = new URL(req.url)
 
-        // Handle WebSocket upgrade for /ws/eval
+        // Handle WebSocket upgrade for /ws/eval (browser pages)
         if (url.pathname === "/ws/eval") {
-          const success = server.upgrade(req)
+          const success = server.upgrade(req, { data: { type: "eval" } })
+          if (success) return undefined
+          return new Response("WebSocket upgrade failed", { status: 500 })
+        }
+
+        // Handle WebSocket upgrade for /ws/ext (Chrome extension)
+        if (url.pathname === "/ws/ext") {
+          const success = server.upgrade(req, { data: { type: "ext" } })
           if (success) return undefined
           return new Response("WebSocket upgrade failed", { status: 500 })
         }
@@ -557,22 +569,48 @@ export class GitFS {
         return self.handleRequest(req)
       },
       websocket: {
-        open(ws: WebSocket) {
-          self.wsClients.add(ws)
-          ws.send(JSON.stringify({ type: "connected", clients: self.wsClients.size }))
+        open(ws: WebSocket & { data?: { type: string } }) {
+          const wsType = ws.data?.type || "eval"
+          if (wsType === "ext") {
+            self.extClients.add(ws)
+            ws.send(JSON.stringify({ type: "connected", client: "extension" }))
+            console.error(`[gitfs] Extension connected (${self.extClients.size} total)`)
+          } else {
+            self.wsClients.add(ws)
+            ws.send(JSON.stringify({ type: "connected", clients: self.wsClients.size }))
+          }
         },
-        message(ws: WebSocket, message: string | Buffer) {
+        message(ws: WebSocket & { data?: { type: string } }, message: string | Buffer) {
+          const wsType = ws.data?.type || "eval"
           try {
-            const data = JSON.parse(message.toString()) as EvalResponse
-            if (data.type === "result" && data.id) {
-              const pending = self.pendingEvals.get(data.id)
-              if (pending) {
-                clearTimeout(pending.timeout)
-                self.pendingEvals.delete(data.id)
-                if (data.success) {
-                  pending.resolve(data.result)
-                } else {
-                  pending.reject(new Error(data.error || "Unknown error"))
+            const data = JSON.parse(message.toString())
+
+            if (wsType === "ext") {
+              // Handle extension messages (capture results)
+              if (data.type === "capture-result" && data.id) {
+                const pending = self.pendingCaptures.get(data.id)
+                if (pending) {
+                  clearTimeout(pending.timeout)
+                  self.pendingCaptures.delete(data.id)
+                  if (data.error) {
+                    pending.reject(new Error(data.error))
+                  } else {
+                    pending.resolve(data)
+                  }
+                }
+              }
+            } else {
+              // Handle eval client messages
+              if (data.type === "result" && data.id) {
+                const pending = self.pendingEvals.get(data.id)
+                if (pending) {
+                  clearTimeout(pending.timeout)
+                  self.pendingEvals.delete(data.id)
+                  if (data.success) {
+                    pending.resolve(data.result)
+                  } else {
+                    pending.reject(new Error(data.error || "Unknown error"))
+                  }
                 }
               }
             }
@@ -580,8 +618,14 @@ export class GitFS {
             // Ignore malformed messages
           }
         },
-        close(ws: WebSocket) {
-          self.wsClients.delete(ws)
+        close(ws: WebSocket & { data?: { type: string } }) {
+          const wsType = ws.data?.type || "eval"
+          if (wsType === "ext") {
+            self.extClients.delete(ws)
+            console.error(`[gitfs] Extension disconnected (${self.extClients.size} remaining)`)
+          } else {
+            self.wsClients.delete(ws)
+          }
         }
       }
     })
@@ -644,6 +688,38 @@ export class GitFS {
   // Get connected browser count
   getConnectedBrowsers(): number {
     return this.wsClients.size
+  }
+
+  // Get connected extension count
+  getConnectedExtensions(): number {
+    return this.extClients.size
+  }
+
+  // Capture screenshot via Chrome extension
+  async captureViaExtension(timeout: number = 10000): Promise<{ width: number; height: number; url: string; title: string; data: string }> {
+    if (this.extClients.size === 0) {
+      throw new Error("No extension connected. Install the Git-FS Capture extension and reload.")
+    }
+
+    const id = `cap-${++this.captureIdCounter}`
+
+    return new Promise((resolve, reject) => {
+      const timeoutHandle = setTimeout(() => {
+        this.pendingCaptures.delete(id)
+        reject(new Error("Extension capture timed out"))
+      }, timeout)
+
+      this.pendingCaptures.set(id, { resolve, reject, timeout: timeoutHandle })
+
+      // Send capture request to all connected extensions (first to respond wins)
+      for (const client of this.extClients) {
+        try {
+          client.send(JSON.stringify({ type: "capture", id }))
+        } catch {
+          // Client might have disconnected
+        }
+      }
+    })
   }
 
   private handleSSE(ref: string): Response {

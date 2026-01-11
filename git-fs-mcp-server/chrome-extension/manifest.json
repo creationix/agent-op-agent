@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Git-FS Capture",
+  "version": "1.0.0",
+  "description": "Screenshot capture for Git-FS MCP Server - no permission prompts",
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

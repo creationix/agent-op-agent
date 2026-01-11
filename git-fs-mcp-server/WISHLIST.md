@@ -33,9 +33,14 @@ When starting server with `gitfs_serve(inject=true)`, automatically injects eval
 ### `gitfs_dom` - Get DOM Snapshot
 Returns simplified DOM tree with tag names, key attributes (id, class, href), and text content. Great for understanding page structure.
 
-### `gitfs_capture` - Screen Capture from User's Browser
+### `gitfs_capture` + Chrome Extension
 
-True screenshot via Screen Capture API. First call prompts user to share tab, subsequent calls reuse the stream. Captures exact current state including JS-modified content.
+Screenshot from user's actual browser. Two modes:
+
+1. **With extension (recommended)**: No prompts ever, survives reload/navigation
+2. **Without extension**: Uses Screen Capture API, prompts on reload
+
+Extension: `chrome-extension/` folder - uses content script to detect port, background service worker to capture via `chrome.tabs.captureVisibleTab()`.
 
 ---
 

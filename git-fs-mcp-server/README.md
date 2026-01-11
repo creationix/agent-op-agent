@@ -8,7 +8,7 @@ A persistent, content-addressable filesystem for LLM agents with immutable snaps
 - **Immutable snapshots**: Every write creates a new root hash
 - **Time travel**: Access any historical state by its root hash
 - **Web server**: Preview content at `http://localhost:PORT/ref/path`
-- **Screenshot tool**: Visual feedback loop - see what users see
+- **Screenshot/Capture**: Visual feedback via Chrome extension or Screen Capture API
 - **HTTP caching**: ETag (content hash) and Last-Modified headers
 
 ## Best Practices for Agents
@@ -21,7 +21,7 @@ The most powerful pattern combines visual feedback with browser interaction:
 1. gitfs_serve(port=0, inject=true)  # Start server with eval injection
 2. gitfs_open(url)                   # Open in user's browser
 3. gitfs_write_at(...)               # Write/update files
-4. gitfs_screenshot(url)             # See the result (headless)
+4. gitfs_screenshot(url)             # See the result
 5. gitfs_eval(code)                  # Interact with live page
 6. gitfs_console()                   # Check for errors
 7. Iterate based on feedback
@@ -29,8 +29,8 @@ The most powerful pattern combines visual feedback with browser interaction:
 
 **Two feedback channels:**
 
-- `gitfs_screenshot` - headless Chrome, see rendered output
-- `gitfs_eval/console` - user's actual browser, full interaction
+- `gitfs_screenshot/capture` - visual verification via Chrome extension
+- `gitfs_eval/console` - interact with and debug the live page
 
 ### Working with refs/work/HEAD
 
@@ -41,25 +41,22 @@ gitfs_write_at(root="refs/work/HEAD", path="src/app.js", content="...")
 # refs/work/HEAD automatically points to the new root
 ```
 
-### Using the Screenshot Tool
+### Taking Screenshots
 
-Take screenshots to verify your changes visually:
+Use `gitfs_screenshot` to navigate to a URL and capture it:
 
 ```
-# Basic screenshot
+# Screenshot a URL (navigates browser, waits for load, captures)
 gitfs_screenshot(url="http://localhost:3456/refs/work/HEAD/")
-
-# Full page capture
-gitfs_screenshot(url="...", fullPage=true)
-
-# Custom viewport
-gitfs_screenshot(url="...", width=375, height=667)  # Mobile
 ```
 
-The screenshot tool returns:
+Or use `gitfs_capture` for the current browser state (no navigation):
 
-- Response headers (ETag, Last-Modified, Content-Type)
-- PNG image of the rendered page
+```
+gitfs_capture()  # Captures whatever is currently visible
+```
+
+Both require the Chrome extension or browser connection via eval-client.js.
 
 ### Building Web Apps
 
@@ -80,7 +77,7 @@ gitfs_write_at("refs/work/HEAD", "app.js", "// updated code...")
 gitfs_eval("location.reload()")   # Reload when ready
 
 # Verify
-gitfs_screenshot(url)  # Visual verification (headless)
+gitfs_screenshot(url)  # Visual verification
 gitfs_console()        # Check for errors
 ```
 
@@ -238,8 +235,8 @@ Shows: tag names, key attributes (id, class, href, src, type, name, value), dire
 | `gitfs_export` | Export tree to zip file |
 | `gitfs_serve` | Start web server |
 | `gitfs_open` | Open URL (navigates if browser connected) |
-| `gitfs_screenshot` | Take screenshot of URL (headless) |
-| `gitfs_capture` | Screenshot from user's browser (Screen Capture API) |
+| `gitfs_screenshot` | Navigate to URL and capture screenshot |
+| `gitfs_capture` | Capture current browser state (no navigation) |
 | `gitfs_eval` | Execute JavaScript in browser |
 | `gitfs_console` | Get console logs from browser |
 | `gitfs_dom` | Get simplified DOM tree snapshot |
@@ -247,16 +244,27 @@ Shows: tag names, key attributes (id, class, href, src, type, name, value), dire
 ### Screenshot vs Capture
 
 | Feature | `gitfs_screenshot` | `gitfs_capture` |
-| ------- | ------------------ | ------------------ |
-| Source | Headless Chrome | User's actual browser |
+| ------- | ------------------ | --------------- |
+| Navigation | Navigates to URL first | No navigation |
 | State | Fresh page load | Current state (scroll, forms, etc.) |
-| Permission | None | Prompts on first use + after reload |
-| Speed | ~2s (new context) | ~100ms (if stream active) |
+| Use case | Verify specific URL | Capture what user sees now |
+
+Both tools require the Chrome extension or browser connection. With the extension installed, neither requires permission prompts.
 
 **When to use each:**
 
-- `gitfs_screenshot` - Edit→reload→verify loop (no permission needed)
-- `gitfs_capture` - See scroll position, form state, animations, or debug what user sees without reloading
+- `gitfs_screenshot(url)` - Verify a specific URL after making changes
+- `gitfs_capture()` - See what user sees: scroll position, form state, animations
+
+### Chrome Extension (Recommended)
+
+For prompt-free screenshots, install the Git-FS Capture extension:
+
+1. Open `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked" → select `chrome-extension/` folder
+
+With the extension, `gitfs_capture` works without any permission prompts, even after page reloads.
 
 ## Storage Layout
 
@@ -304,13 +312,12 @@ Clients can reload when the hash changes for instant updates.
 
 ## Important Notes for Agents
 
-1. **Always start with `gitfs_serve`** before taking screenshots
+1. **Always start with `gitfs_serve`** before using browser features
 2. **Use port 0** for auto-assignment if the default port is busy
 3. **Use `inject=true`** to auto-inject eval-client.js into all HTML pages
-4. **Screenshot after writes** to verify changes visually
+4. **Install Chrome extension** for prompt-free screenshots (gitfs_screenshot and gitfs_capture)
 5. **Use `gitfs_eval` with `return`** - code runs in async function, so `return document.title` not just `document.title`
 6. **`gitfs_open` is smart** - navigates existing browser if connected, opens new tab if not
-7. **Check response headers** in screenshot output to verify caching works
-8. **The server must be restarted** after MCP server restarts to pick up changes
-9. **refs/work/* refs auto-update** - other refs require manual `set_ref`
-10. **Hash URLs are immutable** - get `Cache-Control: immutable` header for permanent caching
+7. **The server must be restarted** after MCP server restarts to pick up changes
+8. **refs/work/* refs auto-update** - other refs require manual `set_ref`
+9. **Hash URLs are immutable** - get `Cache-Control: immutable` header for permanent caching
