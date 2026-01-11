@@ -97,6 +97,20 @@ Results saved to `encoding-formats/llm-accuracy-<date>.json` or `encoding-format
 4. `ANTHROPIC_API_KEY=... bun scripts/count-claude-tokens.ts` - recount Claude tokens
 5. `bun scripts/update-summary.ts` - regenerate SUMMARY.md tables
 
+## MCP Server
+
+The `jot-mcp-server/` directory contains a Model Context Protocol server exposing Jot tools:
+
+```bash
+cd jot-mcp-server && bun install  # first time only
+bun jot-mcp-server/server.ts      # run server (stdio)
+bun jot-mcp-server/test-client.ts # test all tools
+```
+
+Tools: `jot_encode`, `jot_decode`, `jot_compare`
+
+See `jot-mcp-server/README.md` for Claude Desktop/Claude Code integration.
+
 ## Key Files
 
 - `encoding-formats/SUMMARY.md` - token comparison results
@@ -105,3 +119,4 @@ Results saved to `encoding-formats/llm-accuracy-<date>.json` or `encoding-format
 - `encoding-formats/jot/FORMAT.md` - Jot format specification
 - `encoding-formats/json/*.json` - 18 source test documents
 - `scripts/test-llm-accuracy.ts` - LLM encode/decode accuracy testing
+- `jot-mcp-server/server.ts` - MCP server for Jot tools

@@ -3,6 +3,14 @@
     "lmstudio-mcp": {
       "command": "docker",
       "args": ["run", "-i", "--rm", "--network=host", "ghcr.io/infinitimeless/lmstudio-mcp:latest"]
+    },
+    "jot": {
+      "command": "bun",
+      "args": ["run", "/Users/tim/Code/agent-op-agent/jot-mcp-server/server.ts"]
+    },
+    "git-fs": {
+      "command": "bun",
+      "args": ["run", "/Users/tim/Code/agent-op-agent/git-fs-mcp-server/server.ts"]
     }
   }
 }

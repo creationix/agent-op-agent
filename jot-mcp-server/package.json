@@ -1,0 +1,14 @@
+{
+  "name": "jot-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server providing Jot format encoding/decoding tools",
+  "type": "module",
+  "main": "server.ts",
+  "scripts": {
+    "start": "bun server.ts",
+    "check": "bun test-client.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
