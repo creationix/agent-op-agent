@@ -70,6 +70,18 @@ Extension: `chrome-extension/` folder - uses content script to detect port, back
 
 ## High Priority
 
+### LSP Support for VFS Development
+
+**Problem**: When developing code inside the VFS (e.g., building an IDE or complex app), there's no language server support. TypeScript errors, autocomplete, and refactoring tools aren't available. Had to move compiler development to the host filesystem to get proper IDE support.
+
+**Proposed Solution**:
+1. Bridge existing LSP servers (tsserver, etc.) to work with gitfs paths
+2. Or: `gitfs_sync` tool to bidirectionally sync a gitfs path with a host directory for development
+
+**Use case**: Building complex applications like Encantis IDE directly in gitfs with full TypeScript support.
+
+---
+
 ### `gitfs_import` - Import from Local Filesystem
 
 **Problem**: Want to use existing files (CSS frameworks, images, data files) from the user's machine without manual copy-paste.

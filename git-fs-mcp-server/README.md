@@ -81,6 +81,44 @@ gitfs_screenshot(url)  # Visual verification
 gitfs_console()        # Check for errors
 ```
 
+### Building Code Editors with Syntax Highlighting
+
+For editable syntax-highlighted code, use the transparent textarea overlay technique:
+
+```html
+<div class="editor-container">
+  <!-- Highlighted code underneath -->
+  <div class="syntax-highlight" id="highlight"></div>
+  <!-- Transparent textarea on top for editing -->
+  <textarea id="editor" spellcheck="false"></textarea>
+</div>
+
+<style>
+.editor-container { position: relative; }
+.syntax-highlight {
+  position: absolute;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  /* Same padding/font as textarea */
+}
+textarea {
+  position: relative;
+  background: transparent;
+  color: transparent;
+  caret-color: white; /* Visible cursor */
+  /* Same padding/font as highlight div */
+}
+</style>
+```
+
+**Key points:**
+
+- Textarea handles all input/selection (native behavior)
+- Highlight div shows colorized code underneath
+- Sync scroll positions on textarea scroll event
+- Re-highlight on every input event
+
 ### Writing Binary Files
 
 Use `gitfs_write_bytes` for images, then reference by hash:
