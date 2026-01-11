@@ -191,6 +191,34 @@ gitfs_console(clear=true) # Get and clear the buffer
 - On-demand reload gives you control (no auto-reload surprises)
 - Great for testing multi-page apps and user flows
 
+### DOM Inspection (gitfs_dom)
+
+Get a simplified view of the page structure without writing query code:
+
+```
+gitfs_dom()                          # Full body
+gitfs_dom(selector="nav")            # Specific element
+gitfs_dom(selector="main", depth=3)  # Shallow view
+```
+
+**Example output:**
+
+```
+<body>
+  <header>
+    <h1>Page Title</h1>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="/">Home</a>
+        <li><a href="/about">About</a>
+  <main id="content">
+    <form>
+      <input id="search" type="text" value="query...">
+      <button type="submit">Search</button>
+```
+
+Shows: tag names, key attributes (id, class, href, src, type, name, value), direct text content (truncated). Skips script/style/svg.
+
 ## Tools Reference
 
 | Tool | Description |
@@ -210,9 +238,25 @@ gitfs_console(clear=true) # Get and clear the buffer
 | `gitfs_export` | Export tree to zip file |
 | `gitfs_serve` | Start web server |
 | `gitfs_open` | Open URL (navigates if browser connected) |
-| `gitfs_screenshot` | Take screenshot of URL |
+| `gitfs_screenshot` | Take screenshot of URL (headless) |
+| `gitfs_capture` | Screenshot from user's browser (Screen Capture API) |
 | `gitfs_eval` | Execute JavaScript in browser |
 | `gitfs_console` | Get console logs from browser |
+| `gitfs_dom` | Get simplified DOM tree snapshot |
+
+### Screenshot vs Capture
+
+| Feature | `gitfs_screenshot` | `gitfs_capture` |
+| ------- | ------------------ | ------------------ |
+| Source | Headless Chrome | User's actual browser |
+| State | Fresh page load | Current state (scroll, forms, etc.) |
+| Permission | None | Prompts on first use + after reload |
+| Speed | ~2s (new context) | ~100ms (if stream active) |
+
+**When to use each:**
+
+- `gitfs_screenshot` - Edit→reload→verify loop (no permission needed)
+- `gitfs_capture` - See scroll position, form state, animations, or debug what user sees without reloading
 
 ## Storage Layout
 

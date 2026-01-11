@@ -268,6 +268,31 @@ const TOOLS = [
         clear: { type: "boolean", description: "Clear the console buffer after reading (default false)" }
       }
     }
+  },
+
+  // DOM snapshot
+  {
+    name: "gitfs_dom",
+    description: "Get a simplified DOM tree from the connected browser. Returns tag names, key attributes (id, class, href, src), and text content. Useful for understanding page structure without writing query code.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        selector: { type: "string", description: "CSS selector to start from (default: 'body')" },
+        depth: { type: "number", description: "Max depth to traverse (default: 6)" }
+      }
+    }
+  },
+
+  // Screen capture from user's browser
+  {
+    name: "gitfs_capture",
+    description: "Capture a screenshot from the user's actual browser using the Screen Capture API. First call prompts user to select their tab. Subsequent calls reuse the stream (no re-prompt). Returns the current visible state including any JS-modified content.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        stop: { type: "boolean", description: "Stop the capture stream (user will need to re-grant permission on next capture)" }
+      }
+    }
   }
 ]
 
@@ -503,6 +528,219 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             type: "text",
             text: JSON.stringify(result, null, 2)
           }]
+        }
+      }
+
+      case "gitfs_dom": {
+        const { selector = "body", depth = 6 } = args as { selector?: string; depth?: number }
+        const connectedBrowsers = gitfs.getConnectedBrowsers()
+        if (connectedBrowsers === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No browser connected.\n\nTo use gitfs_dom:\n1. Use gitfs_serve(inject=true) to auto-inject eval-client.js\n2. Open the page in a browser"
+            }],
+            isError: true
+          }
+        }
+
+        // DOM serialization code
+        const code = `
+          function serializeDOM(el, maxDepth, currentDepth = 0) {
+            if (!el || currentDepth > maxDepth) return null;
+
+            // Skip script, style, and invisible elements
+            const tag = el.tagName?.toLowerCase();
+            if (!tag || ['script', 'style', 'noscript', 'svg', 'path'].includes(tag)) return null;
+
+            // Build node representation
+            let node = '<' + tag;
+
+            // Key attributes
+            if (el.id) node += ' id="' + el.id + '"';
+            if (el.className && typeof el.className === 'string') {
+              const classes = el.className.trim();
+              if (classes) node += ' class="' + classes.split(/\\s+/).slice(0, 3).join(' ') + (el.className.split(/\\s+/).length > 3 ? '...' : '') + '"';
+            }
+            if (el.href) node += ' href="' + el.href + '"';
+            if (el.src) node += ' src="' + el.src + '"';
+            if (el.type) node += ' type="' + el.type + '"';
+            if (el.name) node += ' name="' + el.name + '"';
+            if (el.value && tag === 'input') node += ' value="' + el.value.slice(0, 20) + (el.value.length > 20 ? '...' : '') + '"';
+
+            node += '>';
+
+            // Get direct text content (not from children)
+            let text = '';
+            for (const child of el.childNodes) {
+              if (child.nodeType === 3) { // Text node
+                const t = child.textContent.trim();
+                if (t) text += t + ' ';
+              }
+            }
+            text = text.trim();
+            if (text) {
+              text = text.slice(0, 50) + (text.length > 50 ? '...' : '');
+            }
+
+            // Get children
+            const children = [];
+            for (const child of el.children) {
+              const serialized = serializeDOM(child, maxDepth, currentDepth + 1);
+              if (serialized) children.push(serialized);
+            }
+
+            // Format output
+            if (children.length === 0 && text) {
+              return node + text + '</' + tag + '>';
+            } else if (children.length === 0) {
+              return node;
+            } else {
+              return { node, text: text || undefined, children };
+            }
+          }
+
+          const root = document.querySelector(${JSON.stringify(selector)});
+          if (!root) return 'Element not found: ' + ${JSON.stringify(selector)};
+          return serializeDOM(root, ${depth});
+        `
+
+        const result = await gitfs.evalInBrowser(code)
+
+        // Format tree as indented text for readability
+        function formatTree(node: unknown, indent = 0): string {
+          const pad = "  ".repeat(indent)
+          if (typeof node === "string") {
+            return pad + node
+          }
+          if (node && typeof node === "object" && "node" in node) {
+            const obj = node as { node: string; text?: string; children?: unknown[] }
+            let out = pad + obj.node
+            if (obj.text) out += " " + obj.text
+            if (obj.children) {
+              out += "\n" + obj.children.map(c => formatTree(c, indent + 1)).join("\n")
+            }
+            return out
+          }
+          return pad + String(node)
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: formatTree(result)
+          }]
+        }
+      }
+
+      case "gitfs_capture": {
+        const { stop = false } = args as { stop?: boolean }
+        const connectedBrowsers = gitfs.getConnectedBrowsers()
+        if (connectedBrowsers === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No browser connected.\n\nTo use gitfs_capture:\n1. Use gitfs_serve(inject=true) to auto-inject eval-client.js\n2. Open the page in a browser"
+            }],
+            isError: true
+          }
+        }
+
+        if (stop) {
+          // Stop the capture stream
+          const code = `
+            if (window.__gitfs_capture_stream) {
+              window.__gitfs_capture_stream.getTracks().forEach(t => t.stop());
+              window.__gitfs_capture_stream = null;
+              return 'Capture stream stopped';
+            }
+            return 'No active capture stream';
+          `
+          const result = await gitfs.evalInBrowser(code)
+          return {
+            content: [{ type: "text", text: String(result) }]
+          }
+        }
+
+        // Capture screenshot using Screen Capture API
+        const code = `
+          async function capture() {
+            // Get or create screen capture stream
+            if (!window.__gitfs_capture_stream || !window.__gitfs_capture_stream.active) {
+              try {
+                window.__gitfs_capture_stream = await navigator.mediaDevices.getDisplayMedia({
+                  video: { displaySurface: 'browser' },
+                  audio: false,
+                  preferCurrentTab: true
+                });
+              } catch (e) {
+                if (e.name === 'NotAllowedError') {
+                  return { error: 'Permission denied. User must grant screen capture permission.' };
+                }
+                return { error: e.message };
+              }
+            }
+
+            const stream = window.__gitfs_capture_stream;
+            const track = stream.getVideoTracks()[0];
+
+            if (!track || track.readyState !== 'live') {
+              window.__gitfs_capture_stream = null;
+              return { error: 'Capture stream ended. Call gitfs_capture again to re-grant permission.' };
+            }
+
+            // Create video element to capture frame
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.muted = true;
+
+            await new Promise((resolve, reject) => {
+              video.onloadedmetadata = resolve;
+              video.onerror = reject;
+              setTimeout(() => reject(new Error('Video load timeout')), 5000);
+            });
+
+            await video.play();
+
+            // Wait a frame for the video to render
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+            // Capture to canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+
+            // Cleanup video element
+            video.pause();
+            video.srcObject = null;
+
+            // Return as base64 PNG (strip data URL prefix)
+            const dataUrl = canvas.toDataURL('image/png');
+            return {
+              width: canvas.width,
+              height: canvas.height,
+              data: dataUrl.replace(/^data:image\\/png;base64,/, '')
+            };
+          }
+          return capture();
+        `
+
+        const result = await gitfs.evalInBrowser(code, 30000) as { error?: string; width?: number; height?: number; data?: string }
+
+        if (result.error) {
+          return {
+            content: [{ type: "text", text: `Capture failed: ${result.error}` }],
+            isError: true
+          }
+        }
+
+        return {
+          content: [
+            { type: "text", text: `Captured ${result.width}x${result.height} from user's browser` },
+            { type: "image", data: result.data!, mimeType: "image/png" }
+          ]
         }
       }
 

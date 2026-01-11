@@ -30,24 +30,16 @@ Opens URL in user's browser. If browser already connected via WebSocket, navigat
 ### Auto-injection (`inject=true`)
 When starting server with `gitfs_serve(inject=true)`, automatically injects eval-client.js into all HTML pages.
 
+### `gitfs_dom` - Get DOM Snapshot
+Returns simplified DOM tree with tag names, key attributes (id, class, href), and text content. Great for understanding page structure.
+
+### `gitfs_capture` - Screen Capture from User's Browser
+
+True screenshot via Screen Capture API. First call prompts user to share tab, subsequent calls reuse the stream. Captures exact current state including JS-modified content.
+
 ---
 
 ## High Priority
-
-### `gitfs_dom` - Get DOM Snapshot
-
-**Problem**: Can read individual values via eval, but can't easily see the full page structure. Have to guess element selectors.
-
-**Proposed API**:
-```
-gitfs_dom(selector?, depth?)
-```
-
-**Returns**: Simplified DOM tree with tag names, key attributes (id, class, href), and text content. Limited depth for readability.
-
-**Use case**: "What's the structure of the nav?" → see `<nav><ul><li><a href="/">Home</a>...` without writing query code.
-
----
 
 ### `gitfs_import` - Import from Local Filesystem
 
@@ -231,7 +223,7 @@ Most of these leverage what we already have:
 
 **Via eval-client.js (already connected):**
 
-- `gitfs_dom` - Just need to serialize DOM structure
+- ~~`gitfs_dom`~~ ✓ Implemented
 - `gitfs_network` - Intercept fetch/XHR, store in window.__gitfs_network
 - `gitfs_perf` - Read Performance API and PerformanceObserver data
 
