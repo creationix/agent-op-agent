@@ -162,6 +162,24 @@ Server: http://localhost:52363
 
 ---
 
+### App Launcher with Demo Mode - COMPLETE
+
+**Snapshot**: [app-launcher-v1](http://localhost:52363/refs/tags/app-launcher-v1/)
+
+**Features**:
+
+- Central app launcher with cards for all 6 apps
+- Home links (🏠) added to all apps for easy navigation
+- Demo mode button that runs forever:
+  - Randomly picks apps
+  - App-specific demo scripts (clicking tabs, compiling, running)
+  - Self-healing: returns home on errors
+  - 5 second pause on home screen to allow stopping
+  - Visual countdown and highlights
+- Shared demo-runner.js script loaded by all apps
+
+---
+
 ## Session Complete
 
 All tasks from TASKS.md completed:
@@ -171,3 +189,4 @@ All tasks from TASKS.md completed:
 - ✅ Encantis IDE (v1-v4: file explorer, syntax highlighting, compiler, WASM execution)
 - ✅ JSONito Playground
 - ✅ Nibs Playground
+- ✅ App Launcher with Demo Mode

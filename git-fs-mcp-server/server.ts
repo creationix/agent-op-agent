@@ -300,6 +300,18 @@ const TOOLS = [
     }
   },
 
+  // Server request logs
+  {
+    name: "gitfs_logs",
+    description: "Get HTTP request logs from the server. Shows which URLs were requested, response status, whether it was a cache hit (304), and timing. Useful for debugging caching issues and understanding what the browser is actually requesting.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        clear: { type: "boolean", description: "Clear the log buffer after reading (default false)" }
+      }
+    }
+  },
+
   // DOM snapshot
   {
     name: "gitfs_dom",
@@ -671,6 +683,35 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [{
             type: "text",
             text: JSON.stringify(result, null, 2)
+          }]
+        }
+      }
+
+      case "gitfs_logs": {
+        const { clear = false } = args as { clear?: boolean }
+        const logs = gitfs.getRequestLogs(clear)
+
+        if (logs.length === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No requests logged yet."
+            }]
+          }
+        }
+
+        // Format logs nicely
+        const formatted = logs.map(log => {
+          const time = new Date(log.timestamp).toLocaleTimeString()
+          const status = log.cached ? `304 (cached)` : `${log.status}`
+          const ms = log.duration.toFixed(1)
+          return `${time} ${log.method} ${log.url} → ${status} (${ms}ms)`
+        }).join("\n")
+
+        return {
+          content: [{
+            type: "text",
+            text: formatted
           }]
         }
       }

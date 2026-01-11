@@ -81,6 +81,48 @@ gitfs_screenshot(url)  # Visual verification
 gitfs_console()        # Check for errors
 ```
 
+### Building Complex Modules (Compilers, Parsers, etc.)
+
+For complex logic that benefits from TypeScript and IDE support, develop in the host filesystem and bundle for browser:
+
+```bash
+# 1. Create TypeScript source with proper types
+# /host/mycompiler/compiler.ts
+
+# 2. Build for browser with bun
+bun build --format=iife --outdir=dist compiler.ts
+
+# 3. Add global export (IIFE doesn't export by default)
+# Append: window.MyCompiler = MyCompiler;
+
+# 4. Write to gitfs
+gitfs_write_at("refs/work/HEAD", "compiler.js", bundledCode)
+
+# 5. Load in HTML
+# <script src="compiler.js"></script>
+```
+
+**Why this matters:**
+
+- Full TypeScript support, autocomplete, error checking
+- Can run tests locally before deploying to VFS
+- Complex parsers/compilers are hard to debug without proper tooling
+
+### Loading External Libraries
+
+For browser libraries (e.g., wabt.js for WASM), load from CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/wabt@1.0.32/index.js"></script>
+<script>
+  // Initialize async
+  const wabt = await WabtModule();
+  const module = wabt.parseWat('module.wat', watSource);
+  const { buffer } = module.toBinary({});
+  // buffer is now WASM binary
+</script>
+```
+
 ### Building Code Editors with Syntax Highlighting
 
 For editable syntax-highlighted code, use the transparent textarea overlay technique:
@@ -285,6 +327,47 @@ gitfs_dom(selector="main", depth=3)  # Shallow view
 
 Shows: tag names, key attributes (id, class, href, src, type, name, value), direct text content (truncated). Skips script/style/svg.
 
+### Debugging
+
+**Server request logs:**
+
+```python
+gitfs_logs()        # See recent requests
+gitfs_logs(clear=true)  # Get and clear buffer
+```
+
+Output shows timestamp, method, URL, status, cache hits, and timing:
+
+```text
+10:00:17 AM GET /refs/work/HEAD/app.js → 200 (0.6ms)
+10:00:23 AM GET /refs/work/HEAD/style.css → 304 (cached) (0.2ms)
+```
+
+**When changes don't appear:**
+
+1. Check `gitfs_logs()` - if no requests, browser is using stale cache
+2. Force reload: `gitfs_eval("location.reload(true)")` (hard reload)
+3. For persistent issues, navigate away and back: `gitfs_eval("location.href = '/'; setTimeout(() => location.href = '/refs/work/HEAD/', 100)")`
+
+**Browser console errors:**
+
+```python
+gitfs_console()  # Check for JS errors after loading
+```
+
+**Server restart after code changes:**
+
+The HTTP server (`gitfs_serve`) runs as a separate process from the MCP server. After updating server code:
+
+1. Kill old server: find process on port and kill, or restart terminal
+2. Start fresh: `gitfs_serve(port=0, inject=true)`
+
+**Cache behavior:**
+
+- Hash-based URLs (immutable): `Cache-Control: public, max-age=31536000, immutable`
+- Ref-based URLs (mutable): `Cache-Control: no-cache` (always revalidates with ETag)
+- ETag is the content hash - unchanged content returns 304
+
 ## Tools Reference
 
 | Tool | Description |
@@ -312,6 +395,7 @@ Shows: tag names, key attributes (id, class, href, src, type, name, value), dire
 | `gitfs_resize` | Resize browser window or get current size |
 | `gitfs_eval` | Execute JavaScript in browser |
 | `gitfs_console` | Get console logs from browser |
+| `gitfs_logs` | Get HTTP request logs from server |
 | `gitfs_dom` | Get simplified DOM tree snapshot |
 
 ### Screenshot vs Capture
@@ -326,8 +410,20 @@ Both tools require the Chrome extension or browser connection. With the extensio
 
 **When to use each:**
 
-- `gitfs_screenshot(url)` - Verify a specific URL after making changes
-- `gitfs_capture()` - See what user sees: scroll position, form state, animations
+- `gitfs_screenshot(url)` - Verify a specific URL after making changes (fresh page load)
+- `gitfs_capture()` - See state after interactions (button clicks, form fills, compile results)
+
+**Important:** After `gitfs_eval("someAction()")`, use `gitfs_capture()` not `gitfs_screenshot()` to see the result. Screenshot navigates to a fresh page, losing any state changes from your eval.
+
+```
+# Wrong - loses state from compile()
+gitfs_eval("compile()")
+gitfs_screenshot(url)  # Fresh page load, compile never happened
+
+# Right - captures current state
+gitfs_eval("compile()")
+gitfs_capture()  # Shows result of compile()
+```
 
 ### Chrome Extension (Recommended)
 

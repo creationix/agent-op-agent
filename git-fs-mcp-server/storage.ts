@@ -67,6 +67,17 @@ interface PendingEval {
   timeout: ReturnType<typeof setTimeout>
 }
 
+// Request log entry
+export interface RequestLogEntry {
+  timestamp: number
+  method: string
+  url: string
+  status: number
+  cached: boolean  // true if 304 response
+  etag?: string
+  duration: number
+}
+
 export class GitFS {
   // In-memory cache
   private objectCache = new Map<string, StoredObject>()
@@ -85,6 +96,10 @@ export class GitFS {
   private extClients = new Set<WebSocket>()
   private pendingCaptures = new Map<string, PendingEval>()
   private captureIdCounter = 0
+
+  // Request logging (circular buffer, max 100 entries)
+  private requestLogs: RequestLogEntry[] = []
+  private maxRequestLogs = 100
 
   // Database path
   private dbPath: string
@@ -830,6 +845,15 @@ export class GitFS {
     return this.extClients.size
   }
 
+  // Get request logs (and optionally clear)
+  getRequestLogs(clear: boolean = false): RequestLogEntry[] {
+    const logs = [...this.requestLogs]
+    if (clear) {
+      this.requestLogs = []
+    }
+    return logs
+  }
+
   // Capture screenshot via Chrome extension
   async captureViaExtension(timeout: number = 10000): Promise<{ width: number; height: number; url: string; title: string; data: string }> {
     if (this.extClients.size === 0) {
@@ -962,6 +986,31 @@ export class GitFS {
   }
 
   private handleRequest(req: Request): Response {
+    const start = performance.now()
+    const response = this.handleRequestInner(req)
+    const duration = performance.now() - start
+
+    // Log the request
+    const url = new URL(req.url)
+    this.requestLogs.push({
+      timestamp: Date.now(),
+      method: req.method,
+      url: url.pathname,
+      status: response.status,
+      cached: response.status === 304,
+      etag: response.headers.get("ETag") || undefined,
+      duration
+    })
+
+    // Keep only last N entries (circular buffer)
+    if (this.requestLogs.length > this.maxRequestLogs) {
+      this.requestLogs.shift()
+    }
+
+    return response
+  }
+
+  private handleRequestInner(req: Request): Response {
     const url = new URL(req.url)
     let pathname = decodeURIComponent(url.pathname)
 
@@ -1062,10 +1111,14 @@ ${refs.map(r => `<tr><td><a href="/${r.ref}/">${r.ref}</a></td><td><code>${r.has
       return new Response(null, { status: 304, headers })
     }
 
-    // Helper to build headers with optional Last-Modified and immutable caching
+    // Helper to build headers with optional Last-Modified and caching
     const buildHeaders = (base: Record<string, string>) => {
       if (lastModified) base["Last-Modified"] = lastModified
-      if (isImmutable) base["Cache-Control"] = "public, max-age=31536000, immutable"
+      if (isImmutable) {
+        base["Cache-Control"] = "public, max-age=31536000, immutable"
+      } else {
+        base["Cache-Control"] = "no-cache"  // Always revalidate with ETag
+      }
       return base
     }
 

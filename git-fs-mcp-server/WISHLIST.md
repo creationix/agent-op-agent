@@ -57,6 +57,24 @@ Edit specific line ranges without rewriting entire file. Replace, insert, or del
 
 Resize browser window for responsive testing. Get current size or set new dimensions.
 
+### `gitfs_logs` - Server Request Logs
+
+Get HTTP request logs from the server. Shows which URLs were requested, response status, cache hits (304), and timing.
+
+```python
+gitfs_logs()        # Get recent requests
+gitfs_logs(clear=true)  # Get and clear buffer
+```
+
+**Output format:**
+
+```text
+10:00:17 AM GET /refs/work/HEAD/encantis-ide/ → 200 (0.6ms)
+10:00:23 AM GET /refs/work/HEAD/style.css → 304 (cached) (0.2ms)
+```
+
+**Use case:** Debugging caching issues - see if browser is hitting server or using stale cache. Essential for diagnosing "why isn't my change showing up?" problems.
+
 ### `gitfs_capture` + Chrome Extension
 
 Screenshot from user's actual browser. Two modes:
@@ -82,6 +100,47 @@ Extension: `chrome-extension/` folder - uses content script to detect port, back
 
 ---
 
+### App Launcher Generation
+
+**Problem**: After building multiple apps, there's no central index to navigate between them. Had to manually create an app launcher.
+
+**Proposed API**:
+```
+gitfs_index(root, options?)  # Generate index.html listing all apps
+```
+
+**Returns**: Hash of generated index.html with links to all app directories.
+
+**Auto-detect**: Scan for directories with index.html, extract title/description from HTML.
+
+---
+
+### Demo Mode / Automated Testing
+
+**Problem**: Want to show off multiple apps or run automated tests, but have to manually navigate and click.
+
+**Proposed Features**:
+
+1. `gitfs_demo(script)` - Run a sequence of actions across apps
+2. Self-healing: If page state is unexpected, navigate home and try next app
+3. Randomized app selection for continuous demos
+4. Pause between actions for visual feedback
+
+**Script format**:
+
+```javascript
+{
+  apps: [
+    { url: 'app1/', actions: ['click #btn', 'wait 1000', 'type #input hello'] },
+    { url: 'app2/', actions: ['click .compile', 'capture'] }
+  ],
+  loop: true,
+  pauseBetweenApps: 3000
+}
+```
+
+---
+
 ### `gitfs_import` - Import from Local Filesystem
 
 **Problem**: Want to use existing files (CSS frameworks, images, data files) from the user's machine without manual copy-paste.
@@ -95,9 +154,11 @@ gitfs_import(localPath, gitfsPath)  # One-time import
 
 ---
 
-### `gitfs_network` - Capture Network Requests
+### `gitfs_network` - Capture Browser Network Requests
 
 **Problem**: Can't see failed API calls, CORS errors, or slow requests. Have to guess why things aren't working.
+
+**Note**: `gitfs_logs` captures requests TO the git-fs server. This tool would capture requests FROM the browser (to external APIs, CDNs, etc.).
 
 **Proposed API**:
 ```
