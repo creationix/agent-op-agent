@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Screenshot capture for Git-FS MCP Server - no permission prompts",
   "permissions": [
-    "tabs"
+    "tabs",
+    "windows"
   ],
   "host_permissions": [
     "<all_urls>"

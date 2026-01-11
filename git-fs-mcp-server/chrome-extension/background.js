@@ -40,6 +40,12 @@ function connect(port) {
         if (msg.type === 'capture') {
           const result = await captureTab();
           ws.send(JSON.stringify({ type: 'capture-result', id: msg.id, ...result }));
+        } else if (msg.type === 'resize') {
+          const result = await resizeWindow(msg.width, msg.height);
+          ws.send(JSON.stringify({ type: 'resize-result', id: msg.id, ...result }));
+        } else if (msg.type === 'get-size') {
+          const result = await getWindowSize();
+          ws.send(JSON.stringify({ type: 'get-size-result', id: msg.id, ...result }));
         }
       } catch (err) {
         console.error('[gitfs-ext] Message error:', err);
@@ -77,6 +83,38 @@ async function captureTab() {
       url: tab.url,
       title: tab.title,
       data: base64
+    };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+// Resize the current window
+async function resizeWindow(width, height) {
+  try {
+    const win = await chrome.windows.getCurrent();
+    await chrome.windows.update(win.id, { width, height });
+    // Get updated size (may differ due to min size constraints)
+    const updated = await chrome.windows.get(win.id);
+    return {
+      width: updated.width,
+      height: updated.height
+    };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+// Get current window size
+async function getWindowSize() {
+  try {
+    const win = await chrome.windows.getCurrent();
+    return {
+      width: win.width,
+      height: win.height,
+      left: win.left,
+      top: win.top,
+      state: win.state
     };
   } catch (err) {
     return { error: err.message };

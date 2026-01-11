@@ -586,8 +586,8 @@ export class GitFS {
             const data = JSON.parse(message.toString())
 
             if (wsType === "ext") {
-              // Handle extension messages (capture results)
-              if (data.type === "capture-result" && data.id) {
+              // Handle extension messages (capture, resize, get-size results)
+              if ((data.type === "capture-result" || data.type === "resize-result" || data.type === "get-size-result") && data.id) {
                 const pending = self.pendingCaptures.get(data.id)
                 if (pending) {
                   clearTimeout(pending.timeout)
@@ -715,6 +715,58 @@ export class GitFS {
       for (const client of this.extClients) {
         try {
           client.send(JSON.stringify({ type: "capture", id }))
+        } catch {
+          // Client might have disconnected
+        }
+      }
+    })
+  }
+
+  // Resize browser window via Chrome extension
+  async resizeViaExtension(width: number, height: number, timeout: number = 5000): Promise<{ width: number; height: number }> {
+    if (this.extClients.size === 0) {
+      throw new Error("No extension connected. Install the Git-FS Capture extension and reload.")
+    }
+
+    const id = `rsz-${++this.captureIdCounter}`
+
+    return new Promise((resolve, reject) => {
+      const timeoutHandle = setTimeout(() => {
+        this.pendingCaptures.delete(id)
+        reject(new Error("Extension resize timed out"))
+      }, timeout)
+
+      this.pendingCaptures.set(id, { resolve: resolve as (result: unknown) => void, reject, timeout: timeoutHandle })
+
+      for (const client of this.extClients) {
+        try {
+          client.send(JSON.stringify({ type: "resize", id, width, height }))
+        } catch {
+          // Client might have disconnected
+        }
+      }
+    })
+  }
+
+  // Get browser window size via Chrome extension
+  async getSizeViaExtension(timeout: number = 5000): Promise<{ width: number; height: number; left: number; top: number; state: string }> {
+    if (this.extClients.size === 0) {
+      throw new Error("No extension connected. Install the Git-FS Capture extension and reload.")
+    }
+
+    const id = `gsz-${++this.captureIdCounter}`
+
+    return new Promise((resolve, reject) => {
+      const timeoutHandle = setTimeout(() => {
+        this.pendingCaptures.delete(id)
+        reject(new Error("Extension get-size timed out"))
+      }, timeout)
+
+      this.pendingCaptures.set(id, { resolve: resolve as (result: unknown) => void, reject, timeout: timeoutHandle })
+
+      for (const client of this.extClients) {
+        try {
+          client.send(JSON.stringify({ type: "get-size", id }))
         } catch {
           // Client might have disconnected
         }

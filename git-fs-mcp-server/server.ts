@@ -279,6 +279,19 @@ const TOOLS = [
         stop: { type: "boolean", description: "Stop the capture stream (user will need to re-grant permission on next capture)" }
       }
     }
+  },
+
+  // Window resize
+  {
+    name: "gitfs_resize",
+    description: "Resize the browser window or get current size. Useful for testing responsive designs at different viewport sizes. Requires Chrome extension.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        width: { type: "number", description: "New window width in pixels" },
+        height: { type: "number", description: "New window height in pixels" }
+      }
+    }
   }
 ]
 
@@ -818,6 +831,41 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             { type: "text", text: `Captured ${result.width}x${result.height} from user's browser` },
             { type: "image", data: result.data!, mimeType: "image/png" }
           ]
+        }
+      }
+
+      case "gitfs_resize": {
+        const { width, height } = args as { width?: number; height?: number }
+        const connectedExtensions = gitfs.getConnectedExtensions()
+
+        if (connectedExtensions === 0) {
+          return {
+            content: [{
+              type: "text",
+              text: "No extension connected.\n\nTo use gitfs_resize, install the Git-FS Capture extension."
+            }],
+            isError: true
+          }
+        }
+
+        // If no dimensions provided, just get current size
+        if (width === undefined && height === undefined) {
+          const size = await gitfs.getSizeViaExtension()
+          return {
+            content: [{
+              type: "text",
+              text: `Window size: ${size.width}x${size.height}\nPosition: (${size.left}, ${size.top})\nState: ${size.state}`
+            }]
+          }
+        }
+
+        // Resize the window
+        const result = await gitfs.resizeViaExtension(width!, height!)
+        return {
+          content: [{
+            type: "text",
+            text: `Resized to ${result.width}x${result.height}`
+          }]
         }
       }
 
