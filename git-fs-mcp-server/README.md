@@ -93,6 +93,37 @@ hash = gitfs_write_bytes(base64="iVBORw0KGgo...")
 gitfs_write_at("refs/work/HEAD", "image.png", "sha256:" + hash)
 ```
 
+### Navigating and Editing Files
+
+Use glob/grep to find files, then edit specific lines:
+
+```
+# Find all HTML files
+gitfs_glob("refs/work/HEAD", "**/*.html")
+
+# Search for a function definition
+gitfs_grep("refs/work/HEAD", "function handleClick", {glob: "**/*.js"})
+
+# Read first 50 lines (response includes total line count)
+gitfs_read_at("refs/work/HEAD", "app.js", {start: 0, end: 50})
+# Returns: {type, hash, content: [...50 lines...], total: 200}
+
+# Edit specific lines without rewriting whole file
+gitfs_edit_at("refs/work/HEAD", "app.js", {
+  start: 10,   # line 10 (0-indexed)
+  end: 15,     # through line 14
+  content: "// new code here\nconsole.log('updated')"
+})
+
+# Insert a line (start = end)
+gitfs_edit_at("refs/work/HEAD", "app.js", {start: 0, end: 0, content: "// header"})
+
+# Delete lines (empty content)
+gitfs_edit_at("refs/work/HEAD", "app.js", {start: 10, end: 15, content: ""})
+```
+
+**Why this matters**: Editing a 500-line file no longer requires reading and rewriting all 500 lines.
+
 ### Creating Snapshots
 
 Save important states as named refs before making changes:
@@ -226,7 +257,10 @@ Shows: tag names, key attributes (id, class, href, src, type, name, value), dire
 | `gitfs_delete_ref` | Delete a ref |
 | `gitfs_open_at` | Get type/hash/metadata at path |
 | `gitfs_read` | Read content by hash |
-| `gitfs_read_at` | Open + read in one call |
+| `gitfs_read_at` | Open + read in one call (includes total for partial reads) |
+| `gitfs_glob` | Find files matching glob pattern |
+| `gitfs_grep` | Search content with regex |
+| `gitfs_edit_at` | Edit lines in a file (replace/insert/delete) |
 | `gitfs_write_text` | Write text, get hash |
 | `gitfs_write_bytes` | Write binary (base64), get hash |
 | `gitfs_write_link` | Write symlink, get hash |
@@ -237,6 +271,7 @@ Shows: tag names, key attributes (id, class, href, src, type, name, value), dire
 | `gitfs_open` | Open URL (navigates if browser connected) |
 | `gitfs_screenshot` | Navigate to URL and capture screenshot |
 | `gitfs_capture` | Capture current browser state (no navigation) |
+| `gitfs_resize` | Resize browser window or get current size |
 | `gitfs_eval` | Execute JavaScript in browser |
 | `gitfs_console` | Get console logs from browser |
 | `gitfs_dom` | Get simplified DOM tree snapshot |
