@@ -118,6 +118,56 @@ Server: http://localhost:52363
 
 ---
 
-### Other Format Playgrounds - IN PROGRESS
+### JSONito Playground - COMPLETE
 
-**Next**: Build jsonito and nibs playgrounds
+**Snapshot**: [jsonito-v1](http://localhost:52363/refs/tags/jsonito-v1/jsonito-playground/)
+
+**Features**:
+
+- JSON input editor with live encoding
+- JSONito output with syntax highlighting (references, strings, numbers, tags)
+- Decoded view for round-trip verification
+- Annotated view showing token types
+- Size comparison stats
+- Full JSONito encoder/decoder implementation:
+  - Base64 number encoding
+  - ZigZag signed integer encoding
+  - Duplicate detection and reference deduplication
+  - String encoding (short form with ' suffix, long form with ~ prefix)
+
+**Stats on sample**: 220 JSON bytes → 123 JSONito bytes (44.1% savings)
+
+---
+
+### Nibs Playground - COMPLETE
+
+**Snapshot**: [nibs-v1](http://localhost:52363/refs/tags/nibs-v1/nibs-playground/)
+
+**Features**:
+
+- JSON input editor with live encoding
+- Hex view with color-coded bytes by type (ZIGZAG/FLOAT/SIMPLE/UTF8/LIST/MAP)
+- ASCII representation alongside hex
+- Tree view showing nested structure with type badges
+- Decoded view for round-trip verification
+- Size comparison stats
+- Simplified Nibs encoder/decoder:
+  - Integer pair encoding (4-bit type + variable length value)
+  - ZigZag signed integers
+  - IEEE 754 float64
+  - UTF-8 strings
+  - Lists and Maps
+
+**Stats on sample**: 165 JSON bytes → 110 Nibs bytes (33.3% savings)
+
+---
+
+## Session Complete
+
+All tasks from TASKS.md completed:
+
+- ✅ D2 Playground
+- ✅ N2 Playground
+- ✅ Encantis IDE (v1-v4: file explorer, syntax highlighting, compiler, WASM execution)
+- ✅ JSONito Playground
+- ✅ Nibs Playground
