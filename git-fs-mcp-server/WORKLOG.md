@@ -97,12 +97,27 @@ Server: http://localhost:52363
 
 ---
 
-### Encantis IDE v4 - IN PROGRESS
+### Encantis IDE v4 - COMPLETE
 
-**Next**: Add WASM execution
+**Snapshot**: [encantis-v4](http://localhost:52363/refs/tags/encantis-v4/encantis-ide/)
 
-**Planned**:
-- Compile WAT to WASM using wabt.js or browser APIs
-- Create execution environment
-- Call exported functions with input values
-- Display return values in console
+**Features**:
+
+- Full WASM execution pipeline
+- wabt.js integration for WAT → WASM compilation
+- WebAssembly instantiation and execution
+- Automatic discovery and calling of exported functions
+- Result display in console tab
+- Error handling with descriptive messages
+
+**Test Result**: main() returns 150
+
+- add(10, 20) = 30
+- factorial(5) = 120
+- 30 + 120 = 150 ✓
+
+---
+
+### Other Format Playgrounds - IN PROGRESS
+
+**Next**: Build jsonito and nibs playgrounds
